@@ -417,9 +417,20 @@
       "description": "Мобильное приложение",
       "slugs": {
         "/app": "en",
-        "/sovellus": "Finnish (FI)",
+        "/applicatie": "Dutch (NL)",
+        "/anwendung": "German (DE)",
         "/application": "French (FR)",
-        "/aplikacja": "Polish (PL)"
+        "/aplicacion": "Spanish (ES)",
+        "/applicazione": "Italian (IT)",
+        "/aplikacja": "Polish (PL)",
+        "/sovellus": "Finnish (FI)",
+        "/applikasjon": "Norwegian (NO)",
+        "/aplicacao": "Portuguese (PT)",
+        "/aplikace": "Czech (CS)",
+        "/aplicatie": "Romanian (RO)",
+        "/efarmogh": "Greek (GR)",
+        "/rakendus": "Estonian (EE)",
+        "/alkalmazas": "Hungarian (HU)"
       }
     },
     "games": {
@@ -532,6 +543,7 @@
         "/sportfogadas": "Hungarian (HU)",
         "/vadslagning": "Swedish (SV)",
         "/weddenschappen": "Dutch (NL)",
+        "/wedden": "Dutch (NL)",
         "/wetten": "German (DE)",
         "/paris": "French (FR)",
         "/parier": "French (FR)",
