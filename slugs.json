@@ -430,7 +430,9 @@
         "/aplicatie": "Romanian (RO)",
         "/efarmogh": "Greek (GR)",
         "/rakendus": "Estonian (EE)",
-        "/alkalmazas": "Hungarian (HU)"
+        "/mobiilirakendus": "Estonian (EE)",
+        "/alkalmazas": "Hungarian (HU)",
+        "/mobilalkalmazas": "Hungarian (HU)"
       }
     },
     "games": {
