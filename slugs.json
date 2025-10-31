@@ -598,6 +598,27 @@
         "online-slots"
       ]
     },
+    "rules": {
+      "description": "Правила",
+      "slugs": {
+        "/regler": "Swedish (SV)",
+        "/regels": "Dutch (NL)",
+        "/regeln": "German (DE)",
+        "/regles": "French (FR)",
+        "/reglas": "Spanish (ES)",
+        "/regole": "Italian (IT)",
+        "/zasady": "Polish (PL)",
+        "/saannot": "Finnish (FI)",
+        "/kanones": "Greek (EL)",
+        "/pravidla": "Czech (CS)",
+        "/regras": "Portuguese (PT)",
+        "/reguli": "Romanian (RO)",
+        "/reeglid": "Estonian (ET)",
+        "/szabalyok": "Hungarian (HU)",
+        "/rules": "en"
+      },
+      "aliases": ["regler"]
+    },
     "⭐ - основной вариант": {
       "description": "⭐ - основной вариант",
       "slugs": {
