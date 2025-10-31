@@ -1,6 +1,6 @@
 {
-  "version": "2.0",
-  "updated": "2025-10-26",
+  "version": "2.1",
+  "updated": "2025-10-31",
   "pageGroups": {
     "main": {
       "description": "Главная страница",
@@ -28,13 +28,13 @@
         "/pt-PT": "Portuguese (PT)",
         "/pt": "Portuguese (PT)",
         "/cs-CZ": "Czech (CS)",
-        "/cz": "Czech (CS)",
+        "/cs": "Czech (CS)",
         "/ro-RO": "Romanian (RO)",
         "/ro": "Romanian (RO)",
-        "/el-GR": "Greek (GR)",
-        "/gr": "Greek (GR)",
-        "/et-EE": "Estonian (EE)",
-        "/ee": "Estonian (EE)",
+        "/el-GR": "Greek (EL)",
+        "/el": "Greek (EL)",
+        "/et-EE": "Estonian (ET)",
+        "/et": "Estonian (ET)",
         "/hu-HU": "Hungarian (HU)",
         "/hu": "Hungarian (HU)",
         "en-GB": "en",
