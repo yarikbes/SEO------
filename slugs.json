@@ -1,6 +1,6 @@
 {
-  "version": "2.2",
-  "updated": "2025-10-31",
+  "version": "2.3",
+  "updated": "2025-11-10",
   "pageGroups": {
     "main": {
       "description": "Главная страница",
@@ -37,8 +37,17 @@
         "/et": "Estonian (ET)",
         "/hu-hu": "Hungarian (HU)",
         "/hu": "Hungarian (HU)",
-        "/en-gb": "en",
-        "/": "en"
+        "/en-gb": "English (GB)",
+        "/en-nz": "English (NZ)",
+        "/en-ca": "English (CA)",
+        "/en-au": "English (AU)",
+        "/en": "English",
+        "/es-ar": "Spanish (AR)",
+        "/fr-ca": "French (CA)",
+        "/pt-br": "Portuguese (BR)",
+        "/de-at": "German (AT)",
+        "/de-ch": "German (CH)",
+        "/": "English"
       }
     },
     "privacy": {
@@ -76,9 +85,9 @@
         "/politiki-aporritou": "Greek (GR)",
         "/privaatsuspoliitika": "Estonian (EE)",
         "/adatvedelmi-szabalyzat": "Hungarian (HU)",
-        "/privacy-notice": "en",
-        "/privacy": "en",
-        "/privacy-policy": "en"
+        "/privacy-notice": "English (GB)",
+        "/privacy": "English (NZ, CA)",
+        "/privacy-policy": "English"
       },
       "aliases": [
         "privacy",
@@ -110,8 +119,8 @@
         "/conditions-generales": "French (FR)",
         "/obchodni-podminky": "Czech (CS)",
         "/aszf": "Hungarian (HU)",
-        "/terms": "en",
-        "/terms-condition": "en"
+        "/terms": "English",
+        "/terms-condition": "English"
       },
       "aliases": [
         "terms",
@@ -138,8 +147,8 @@
         "/vastutustundlik-mangimine": "Estonian (EE)",
         "/felelos-jatek": "Hungarian (HU)",
         "/verantwoord-spelen": "Dutch (NL)",
-        "/responsible": "en",
-        "/responsible-gaming": "en"
+        "/responsible": "English",
+        "/responsible-gaming": "English"
       },
       "aliases": [
         "responsible",
@@ -164,8 +173,8 @@
         "/politiki-cookies": "Greek (GR)",
         "/kupsisepoliitika": "Estonian (EE)",
         "/suti-szabalyzat": "Hungarian (HU)",
-        "/cookies-policy": "en",
-        "/cookies": "en"
+        "/cookies-policy": "English",
+        "/cookies": "English"
       },
       "aliases": [
         "cookies-policy",
@@ -178,7 +187,7 @@
         "/vanliga-fragor": "Swedish (SV)",
         "/veelgestelde-vragen": "Dutch (NL)",
         "/haufig-gestellte-fragen": "German (DE)",
-        "/faq": "en",
+        "/faq": "English",
         "/preguntas-frecuentes": "Spanish (ES)",
         "/domande-frequenti": "Italian (IT)",
         "/czesto-zadawane-pytania": "Polish (PL)",
@@ -204,13 +213,13 @@
         "/contactos": "Portuguese (PT)",
         "/epikoinonia": "Greek (GR)",
         "/kapcsolat": "Hungarian (HU)",
-        "/contacts": "en"
+        "/contacts": "English"
       }
     },
     "support": {
       "description": "Поддержка",
       "slugs": {
-        "/support": "en",
+        "/support": "English",
         "/soporte": "Spanish (ES)",
         "/supporto": "Italian (IT)",
         "/wsparcie": "Polish (PL)",
@@ -243,7 +252,7 @@
         "/logi-sisse": "Estonian (EE)",
         "/bejelentkezes": "Hungarian (HU)",
         "/zaloguj-sie": "Polish (PL)",
-        "/login": "en"
+        "/login": "English"
       }
     },
     "bonus": {
@@ -252,7 +261,7 @@
         "/bonusar": "Swedish (SV)",
         "/bonussen": "Dutch (NL)",
         "/bonusangebote": "German (DE)",
-        "/bonus": "en",
+        "/bonus": "English",
         "/bonos": "Spanish (ES)",
         "/bono": "Spanish (ES)",
         "/bonusy": "Czech (CS)",
@@ -303,8 +312,8 @@
         "/bonuszkod": "Hungarian (HU)",
         "/bonuskod": "Swedish (SV)",
         "/bonusz-kod": "Hungarian (HU)",
-        "/promo-code": "en",
-        "/bonus-code": "en"
+        "/promo-code": "English",
+        "/bonus-code": "English"
       },
       "aliases": [
         "promo-code",
@@ -334,7 +343,7 @@
         "/geen-stortingsbonus": "Dutch (NL)",
         "/bonus-ohne-einzahlung": "German (DE)",
         "/gratis-bonus": "Dutch (NL)",
-        "/no-deposit-bonus": "en"
+        "/no-deposit-bonus": "English"
       }
     },
     "review": {
@@ -363,7 +372,7 @@
         "/opinie": "Polish (PL)",
         "/omtale": "Norwegian (NO)",
         "/bewertung": "German (DE)",
-        "/review": "en"
+        "/review": "English"
       }
     },
     "withdrawal": {
@@ -389,7 +398,7 @@
         "/kifizetes": "Hungarian (HU)",
         "/uttag": "Swedish (SV)",
         "/wyplata": "Polish (PL)",
-        "/withdrawal": "en"
+        "/withdrawal": "English"
       }
     },
     "freeSpins": {
@@ -403,7 +412,7 @@
         "/darmowe-spiny": "Polish (PL)",
         "/ilmaiskierrokset": "Finnish (FI)",
         "/gratisspinn": "Norwegian (NO)",
-        "/free-spins": "en",
+        "/free-spins": "English",
         "/volne-tocky": "Czech (CS)",
         "/rotiri-gratuite": "Romanian (RO)",
         "/dorean-spins": "Greek (GR)",
@@ -416,7 +425,7 @@
     "app": {
       "description": "Мобильное приложение",
       "slugs": {
-        "/app": "en",
+        "/app": "English",
         "/applicatie": "Dutch (NL)",
         "/anwendung": "German (DE)",
         "/application": "French (FR)",
@@ -454,7 +463,7 @@
         "/paichnia": "Greek (GR)",
         "/mangud": "Estonian (EE)",
         "/jatekok": "Hungarian (HU)",
-        "/games": "en"
+        "/games": "English"
       }
     },
     "lottery": {
@@ -470,13 +479,13 @@
         "/loterii": "Estonian (EE)",
         "/lotto": "Hungarian (HU)",
         "/lottosorsolas": "Hungarian (HU)",
-        "/lottery": "en"
+        "/lottery": "English"
       }
     },
     "vipProgram": {
       "description": "VIP программа",
       "slugs": {
-        "/vip-program": "en",
+        "/vip-program": "English",
         "/vip-programma": "Greek (GR)",
         "/vip-programm": "Estonian (EE)",
         "/programme-vip": "French (FR)",
@@ -505,19 +514,19 @@
         "/epivevaiosi-taytotitas": "Greek (GR)",
         "/konto-kinnitus": "Estonian (EE)",
         "/azonositas": "Hungarian (HU)",
-        "/verification": "en"
+        "/verification": "English"
       }
     },
     "cashback": {
       "description": "Кэшбэк",
       "slugs": {
-        "/cashback": "en"
+        "/cashback": "English"
       }
     },
     "sport": {
       "description": "Спорт",
       "slugs": {
-        "/sport": "en",
+        "/sport": "English",
         "/deportes": "Spanish (ES)",
         "/urheilu": "Finnish (FI)",
         "/desportos": "Portuguese (PT)",
@@ -560,8 +569,8 @@
         "/stoixima": "Greek (GR)",
         "/kihlveod": "Estonian (EE)",
         "/fogadas": "Hungarian (HU)",
-        "/sports-betting": "en",
-        "/betting": "en"
+        "/sports-betting": "English",
+        "/betting": "English"
       },
       "aliases": [
         "betting",
@@ -571,7 +580,7 @@
     "slots": {
       "description": "Слоты",
       "slugs": {
-        "/slots": "en",
+        "/slots": "English",
         "/slot": "Italian (IT)",
         "/sloty": "Czech (CS)",
         "/kolikkopelit": "Finnish (FI)",
@@ -591,7 +600,7 @@
         "/pacanele": "Romanian (RO)",
         "/froutakia": "Greek (GR)",
         "/nyerogepek": "Hungarian (HU)",
-        "/online-slots": "en"
+        "/online-slots": "English"
       },
       "aliases": [
         "slots",
@@ -615,14 +624,14 @@
         "/reguli": "Romanian (RO)",
         "/reeglid": "Estonian (ET)",
         "/szabalyok": "Hungarian (HU)",
-        "/rules": "en"
+        "/rules": "English"
       },
       "aliases": ["regler"]
     },
     "⭐ - основной вариант": {
       "description": "⭐ - основной вариант",
       "slugs": {
-        "⭐ - основной вариант": "en"
+        "⭐ - основной вариант": "English"
       }
     }
   }
