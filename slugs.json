@@ -94,6 +94,7 @@
         "/politiki-aporritou": "Greek (GR)",
         "/privaatsuspoliitika": "Estonian (EE)",
         "/adatvedelmi-szabalyzat": "Hungarian (HU)",
+        "/pravilnik-o-zasebnosti": "Slovenian (SI)",
         "/privacy-notice": "English (GB)",
         "/privacy": "English (NZ, CA)",
         "/privacy-policy": "English"
@@ -122,6 +123,7 @@
         "/oroi-kai-proypotheseis": "Greek (GR)",
         "/kasutustingimused": "Estonian (EE)",
         "/felhasznalasi-feltetelek": "Hungarian (HU)",
+        "/pogoji-uporabe": "Slovenian (SI)",
         "/allmanna-villkor": "Swedish (SV)",
         "/algemene-voorwaarden": "Dutch (NL)",
         "/nutzungsbedingungen": "German (DE)",
@@ -155,6 +157,7 @@
         "/ypeythino-paichnidi": "Greek (GR)",
         "/vastutustundlik-mangimine": "Estonian (EE)",
         "/felelos-jatek": "Hungarian (HU)",
+        "/odgovorno-igranje": "Slovenian (SI)",
         "/verantwoord-spelen": "Dutch (NL)",
         "/responsible": "English",
         "/responsible-gaming": "English"
@@ -182,6 +185,7 @@
         "/politiki-cookies": "Greek (GR)",
         "/kupsisepoliitika": "Estonian (EE)",
         "/suti-szabalyzat": "Hungarian (HU)",
+        "/politika-piskotkov": "Slovenian (SI)",
         "/cookies-policy": "English",
         "/cookies": "English"
       },
@@ -208,7 +212,8 @@
         "/intrebari-frecvente": "Romanian (RO)",
         "/sychnes-erotiseis": "Greek (GR)",
         "/korduma-kippuvad-kusimused": "Estonian (EE)",
-        "/gyakran-ismetelt-kerdesek": "Hungarian (HU)"
+        "/gyakran-ismetelt-kerdesek": "Hungarian (HU)",
+        "/pogosto-zastavljena-vprasanja": "Slovenian (SI)"
       }
     },
     "contacts": {
@@ -222,6 +227,7 @@
         "/contactos": "Portuguese (PT)",
         "/epikoinonia": "Greek (GR)",
         "/kapcsolat": "Hungarian (HU)",
+        "/stik": "Slovenian (SI)",
         "/contacts": "English"
       }
     },
@@ -238,7 +244,8 @@
         "/suport": "Romanian (RO)",
         "/ypostirixi": "Greek (GR)",
         "/tugi": "Estonian (EE)",
-        "/tamogatas": "Hungarian (HU)"
+        "/tamogatas": "Hungarian (HU)",
+        "/pomoc": "Slovenian (SI)"
       }
     },
     "login": {
@@ -261,6 +268,7 @@
         "/logi-sisse": "Estonian (EE)",
         "/bejelentkezes": "Hungarian (HU)",
         "/zaloguj-sie": "Polish (PL)",
+        "/prijava": "Slovenian (SI)",
         "/login": "English"
       }
     },
@@ -279,7 +287,8 @@
         "/bonuser": "Norwegian (NO)",
         "/bonusuri": "Romanian (RO)",
         "/boonused": "Estonian (EE)",
-        "/bonuszok": "Hungarian (HU)"
+        "/bonuszok": "Hungarian (HU)",
+        "/bonusi": "Slovenian (SI)"
       }
     },
     "promoCode": {
@@ -321,6 +330,8 @@
         "/bonuszkod": "Hungarian (HU)",
         "/bonuskod": "Swedish (SV)",
         "/bonusz-kod": "Hungarian (HU)",
+        "/promocijska-koda": "Slovenian (SI)",
+        "/bonusna-koda": "Slovenian (SI)",
         "/promo-code": "English",
         "/bonus-code": "English"
       },
@@ -348,6 +359,7 @@
         "/bonus-choris-katathesi": "Greek (GR)",
         "/boonus-ilma-sissemakseta": "Estonian (EE)",
         "/befizetes-nelkuli-bonusz": "Hungarian (HU)",
+        "/bonus-brez-pologa": "Slovenian (SI)",
         "/bonus-utan-insattning": "Swedish (SV)",
         "/geen-stortingsbonus": "Dutch (NL)",
         "/bonus-ohne-einzahlung": "German (DE)",
@@ -381,6 +393,7 @@
         "/opinie": "Polish (PL)",
         "/omtale": "Norwegian (NO)",
         "/bewertung": "German (DE)",
+        "/ocena": "Slovenian (SI)",
         "/review": "English"
       }
     },
@@ -407,6 +420,7 @@
         "/kifizetes": "Hungarian (HU)",
         "/uttag": "Swedish (SV)",
         "/wyplata": "Polish (PL)",
+        "/dvig": "Slovenian (SI)",
         "/withdrawal": "English"
       }
     },
@@ -427,6 +441,7 @@
         "/dorean-spins": "Greek (GR)",
         "/tasuta-spinnid": "Estonian (EE)",
         "/ingyenes-porgetesek": "Hungarian (HU)",
+        "/brezplacni-vrtljaji": "Slovenian (SI)",
         "/giros-gratis": "Spanish (ES)",
         "/rodadas-gratis": "Portuguese (PT)"
       }
@@ -450,7 +465,8 @@
         "/rakendus": "Estonian (EE)",
         "/mobiilirakendus": "Estonian (EE)",
         "/alkalmazas": "Hungarian (HU)",
-        "/mobilalkalmazas": "Hungarian (HU)"
+        "/mobilalkalmazas": "Hungarian (HU)",
+        "/aplikacija": "Slovenian (SI)"
       }
     },
     "games": {
@@ -472,6 +488,7 @@
         "/paichnia": "Greek (GR)",
         "/mangud": "Estonian (EE)",
         "/jatekok": "Hungarian (HU)",
+        "/igre": "Slovenian (SI)",
         "/games": "English"
       }
     },
@@ -488,6 +505,7 @@
         "/loterii": "Estonian (EE)",
         "/lotto": "Hungarian (HU)",
         "/lottosorsolas": "Hungarian (HU)",
+        "/loterija": "Slovenian (SI)",
         "/lottery": "English"
       }
     },
@@ -501,7 +519,8 @@
         "/programa-vip": "Portuguese (PT)",
         "/programma-vip": "Italian (IT)",
         "/program-vip": "Romanian (RO)",
-        "/vip-ohjelma": "Finnish (FI)"
+        "/vip-ohjelma": "Finnish (FI)",
+        "/vip-klub": "Slovenian (SI)"
       }
     },
     "verification": {
@@ -523,6 +542,7 @@
         "/epivevaiosi-taytotitas": "Greek (GR)",
         "/konto-kinnitus": "Estonian (EE)",
         "/azonositas": "Hungarian (HU)",
+        "/preverjanje": "Slovenian (SI)",
         "/verification": "English"
       }
     },
@@ -539,7 +559,8 @@
         "/deportes": "Spanish (ES)",
         "/urheilu": "Finnish (FI)",
         "/desportos": "Portuguese (PT)",
-        "/athlimata": "Greek (GR)"
+        "/athlimata": "Greek (GR)",
+        "/sporty": "Slovenian (SI)"
       }
     },
     "betting": {
@@ -578,6 +599,8 @@
         "/stoixima": "Greek (GR)",
         "/kihlveod": "Estonian (EE)",
         "/fogadas": "Hungarian (HU)",
+        "/stave": "Slovenian (SI)",
+        "/sportne-stave": "Slovenian (SI)",
         "/sports-betting": "English",
         "/betting": "English"
       },
@@ -609,6 +632,7 @@
         "/pacanele": "Romanian (RO)",
         "/froutakia": "Greek (GR)",
         "/nyerogepek": "Hungarian (HU)",
+        "/igralni-avtomati": "Slovenian (SI)",
         "/online-slots": "English"
       },
       "aliases": [
@@ -633,6 +657,7 @@
         "/reguli": "Romanian (RO)",
         "/reeglid": "Estonian (ET)",
         "/szabalyok": "Hungarian (HU)",
+        "/pravila": "Slovenian (SI)",
         "/rules": "English"
       },
       "aliases": ["regler"]
