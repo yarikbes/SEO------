@@ -1,6 +1,6 @@
 {
-  "version": "2.3",
-  "updated": "2025-11-10",
+  "version": "2.4",
+  "updated": "2025-11-17",
   "pageGroups": {
     "main": {
       "description": "Главная страница",
@@ -8,10 +8,12 @@
         "/sv-se": "Swedish (SV)",
         "/sv": "Swedish (SV)",
         "/nl-nl": "Dutch (NL)",
+        "/nl-be": "Dutch (BE)",
         "/nl": "Dutch (NL)",
         "/de-de": "German (DE)",
         "/de": "German (DE)",
         "/fr-fr": "French (FR)",
+        "/fr-be": "French (BE)",
         "/fr": "French (FR)",
         "/es-es": "Spanish (ES)",
         "/es": "Spanish (ES)",
