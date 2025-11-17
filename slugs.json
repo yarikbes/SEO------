@@ -351,6 +351,7 @@
         "/bonus-senza-deposito": "Italian (IT)",
         "/bonus-bez-depozytu": "Polish (PL)",
         "/ilman-talletusta-bonus": "Finnish (FI)",
+        "/ilmainen-bonus": "Finnish (FI)",
         "/bonus-uden-indskud": "Danish (DA)",
         "/bonus-uten-innskudd": "Norwegian (NO)",
         "/bonus-sem-deposito": "Portuguese (PT)",
@@ -549,24 +550,7 @@
     "cashback": {
       "description": "Кэшбэк",
       "slugs": {
-        "/cashback": "English",
-        "/pengarembali": "Swedish (SV)",
-        "/contant-terug": "Dutch (NL)",
-        "/geld-zuruck": "German (DE)",
-        "/remboursement": "French (FR)",
-        "/reembolso": "Spanish (ES)",
-        "/rimborso": "Italian (IT)",
-        "/zwrot-gotowki": "Polish (PL)",
-        "/kassan-palautus": "Finnish (FI)",
-        "/kontant-tilbage": "Danish (DA)",
-        "/penger-tilbake": "Norwegian (NO)",
-        "/devolucao": "Portuguese (PT)",
-        "/penize-zpet": "Czech (CS)",
-        "/bani-inapoi": "Romanian (RO)",
-        "/epistrofi-metriton": "Greek (GR)",
-        "/raha-tagasi": "Estonian (EE)",
-        "/penzvisszateres": "Hungarian (HU)",
-        "/povracilo-denarja": "Slovenian (SI)"
+        "/cashback": "English"
       }
     },
     "sport": {
