@@ -1,5 +1,5 @@
 {
-  "version": "2.4",
+  "version": "2.5",
   "updated": "2025-11-17",
   "pageGroups": {
     "main": {
@@ -33,6 +33,8 @@
         "/cs": "Czech (CS)",
         "/ro-ro": "Romanian (RO)",
         "/ro": "Romanian (RO)",
+        "/sl-si": "Slovenian (SI)",
+        "/sl": "Slovenian (SI)",
         "/el-gr": "Greek (EL)",
         "/el": "Greek (EL)",
         "/et-ee": "Estonian (ET)",
@@ -44,12 +46,16 @@
         "/en-ca": "English (CA)",
         "/en-au": "English (AU)",
         "/en-us": "English (US)",
+        "/en-ie": "English (IE)",
         "/en": "English",
         "/es-ar": "Spanish (AR)",
+        "/es-mx": "Spanish (MX)",
         "/fr-ca": "French (CA)",
+        "/fr-ch": "French (CH)",
         "/pt-br": "Portuguese (BR)",
         "/de-at": "German (AT)",
         "/de-ch": "German (CH)",
+        "/it-ch": "Italian (CH)",
         "/": "English"
       }
     },
