@@ -58,7 +58,11 @@
         "/de-at": "German (AT)",
         "/de-ch": "German (CH)",
         "/it-ch": "Italian (CH)"
-      }
+      },
+      "aliases": [
+        "",
+        "/"
+      ]
     },
     "privacy": {
       "description": "Политика конфиденциальности",
