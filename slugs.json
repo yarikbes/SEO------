@@ -1,6 +1,6 @@
 {
-  "version": "2.5",
-  "updated": "2025-11-17",
+  "version": "2.6",
+  "updated": "2025-12-03",
   "pageGroups": {
     "main": {
       "description": "Главная страница",
@@ -54,10 +54,10 @@
         "/fr-ca": "French (CA)",
         "/fr-ch": "French (CH)",
         "/pt-br": "Portuguese (BR)",
+        "/de-be": "German (BE)",
         "/de-at": "German (AT)",
         "/de-ch": "German (CH)",
-        "/it-ch": "Italian (CH)",
-        "/": "English"
+        "/it-ch": "Italian (CH)"
       }
     },
     "privacy": {
@@ -194,6 +194,26 @@
         "cookies-policy",
         "cookies"
       ]
+    },
+    "kyc": {
+      "description": "Политика KYC",
+      "slugs": {
+        "/kyc": "English (UK, US, AU, NZ, IE)",
+        "/kyc-policy": "Swedish (SV)",
+        "/kyc-beleid": "Dutch (NL)",
+        "/kyc-richtlinie": "German (DE, AT)",
+        "/politique-kyc": "French (FR)",
+        "/politica-kyc": "Spanish (ES, MX, AR), Italian (IT), Portuguese (PT, BR), Romanian (RO)",
+        "/polityka-kyc": "Polish (PL)",
+        "/kyc-kaytanto": "Finnish (FI)",
+        "/kyc-politik": "Danish (DA)",
+        "/kyc-retningslinjer": "Norwegian (NO)",
+        "/kyc-pravidla": "Czech (CS)",
+        "/kyc-pravila": "Slovenian (SI)",
+        "/politiki-kyc": "Greek (GR)",
+        "/kyc-poliitika": "Estonian (EE)",
+        "/kyc-szabalyzat": "Hungarian (HU)"
+      }
     },
     "faq": {
       "description": "Часто задаваемые вопросы",
@@ -416,7 +436,8 @@
         "/uttak": "Norwegian (NO)",
         "/levantamento": "Portuguese (PT)",
         "/vyber": "Czech (CS)",
-        "/retrageri /retragere": "Romanian (RO)",
+        "/retrageri": "Romanian (RO)",
+        "/retragere": "Romanian (RO)",
         "/analipsi": "Greek (GR)",
         "/valjamakse": "Estonian (EE)",
         "/kifizetes": "Hungarian (HU)",
@@ -663,12 +684,6 @@
         "/rules": "English"
       },
       "aliases": ["regler"]
-    },
-    "⭐ - основной вариант": {
-      "description": "⭐ - основной вариант",
-      "slugs": {
-        "⭐ - основной вариант": "English"
-      }
     }
   }
 }
