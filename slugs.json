@@ -1,108 +1,1918 @@
 {
-  "version": "2.6",
+  "version": "2.7",
   "updated": "2025-12-03",
   "pageGroups": {
+    "app": {
+      "description": "Мобильное приложение",
+      "slugs": {
+        "/alkalmazas": {
+          "codes": [
+            "hu-HU"
+          ]
+        },
+        "/anwendung": {
+          "codes": [
+            "de-AT",
+            "de-DE"
+          ]
+        },
+        "/aplicacao": {
+          "codes": [
+            "pt-BR",
+            "pt-PT"
+          ]
+        },
+        "/aplicacion": {
+          "codes": [
+            "es-AR",
+            "es-ES",
+            "es-MX"
+          ]
+        },
+        "/aplicatie": {
+          "codes": [
+            "ro-RO"
+          ]
+        },
+        "/aplikace": {
+          "codes": [
+            "cs-CZ"
+          ]
+        },
+        "/aplikacija": {
+          "codes": [
+            "sl-SI"
+          ]
+        },
+        "/aplikacja": {
+          "codes": [
+            "pl-PL"
+          ]
+        },
+        "/app": {
+          "codes": [
+            "cs-CZ",
+            "da-DK",
+            "de-AT",
+            "de-DE",
+            "el-GR",
+            "en-AU",
+            "en-GB",
+            "en-IE",
+            "en-NZ",
+            "en-US",
+            "es-AR",
+            "es-ES",
+            "es-MX",
+            "et-EE",
+            "fi-FI",
+            "fr-FR",
+            "ga-IE",
+            "hu-HU",
+            "it-IT",
+            "nb-NO",
+            "nl-NL",
+            "pl-PL",
+            "pt-BR",
+            "pt-PT",
+            "ro-RO",
+            "sv-SE"
+          ]
+        },
+        "/applicatie": {
+          "codes": [
+            "nl-NL"
+          ]
+        },
+        "/application": {
+          "codes": [
+            "fr-FR"
+          ]
+        },
+        "/applicazione": {
+          "codes": [
+            "it-IT"
+          ]
+        },
+        "/applikasjon": {
+          "codes": [
+            "nb-NO"
+          ]
+        },
+        "/efarmogh": {
+          "codes": [
+            "el-GR"
+          ]
+        },
+        "/mobiilirakendus": {
+          "codes": [
+            "et-EE"
+          ]
+        },
+        "/mobilalkalmazas": {
+          "codes": [
+            "hu-HU"
+          ]
+        },
+        "/rakendus": {
+          "codes": [
+            "et-EE"
+          ]
+        },
+        "/sovellus": {
+          "codes": [
+            "fi-FI"
+          ]
+        }
+      }
+    },
+    "betting": {
+      "description": "Ставки на спорт",
+      "slugs": {
+        "/apostas": {
+          "codes": [
+            "pt-BR",
+            "pt-PT"
+          ]
+        },
+        "/apostas-desportivas": {
+          "codes": [
+            "pt-BR",
+            "pt-PT"
+          ]
+        },
+        "/apuestas": {
+          "codes": [
+            "es-AR",
+            "es-ES",
+            "es-MX"
+          ]
+        },
+        "/apuestas-deportivas": {
+          "codes": [
+            "es-AR",
+            "es-ES",
+            "es-MX"
+          ]
+        },
+        "/betting": {
+          "codes": [
+            "en-AU",
+            "en-GB",
+            "en-IE",
+            "en-NZ",
+            "en-US",
+            "ga-IE"
+          ]
+        },
+        "/fogadas": {
+          "codes": [
+            "hu-HU"
+          ]
+        },
+        "/kihlveod": {
+          "codes": [
+            "et-EE"
+          ]
+        },
+        "/odds": {
+          "codes": [
+            "nb-NO"
+          ]
+        },
+        "/parier": {
+          "codes": [
+            "fr-FR"
+          ]
+        },
+        "/paris": {
+          "codes": [
+            "fr-FR"
+          ]
+        },
+        "/paris-sportifs": {
+          "codes": [
+            "fr-FR"
+          ]
+        },
+        "/pariuri": {
+          "codes": [
+            "ro-RO"
+          ]
+        },
+        "/pariuri-sportive": {
+          "codes": [
+            "ro-RO"
+          ]
+        },
+        "/sazky": {
+          "codes": [
+            "cs-CZ"
+          ]
+        },
+        "/scommesse": {
+          "codes": [
+            "it-IT"
+          ]
+        },
+        "/scommesse-sportive": {
+          "codes": [
+            "it-IT"
+          ]
+        },
+        "/spordikihlveod": {
+          "codes": [
+            "et-EE"
+          ]
+        },
+        "/sportfogadas": {
+          "codes": [
+            "hu-HU"
+          ]
+        },
+        "/sportne-stave": {
+          "codes": [
+            "sl-SI"
+          ]
+        },
+        "/sportovni-sazky": {
+          "codes": [
+            "cs-CZ"
+          ]
+        },
+        "/sports-betting": {
+          "codes": [
+            "en-AU",
+            "en-GB",
+            "en-IE",
+            "en-NZ",
+            "en-US",
+            "ga-IE"
+          ]
+        },
+        "/sportsodds": {
+          "codes": [
+            "nb-NO"
+          ]
+        },
+        "/sportspel": {
+          "codes": [
+            "sv-SE"
+          ]
+        },
+        "/sportspil": {
+          "codes": [
+            "da-DK"
+          ]
+        },
+        "/sportweddenschappen": {
+          "codes": [
+            "nl-NL"
+          ]
+        },
+        "/sportwetten": {
+          "codes": [
+            "de-AT",
+            "de-DE"
+          ]
+        },
+        "/stave": {
+          "codes": [
+            "sl-SI"
+          ]
+        },
+        "/stoixima": {
+          "codes": [
+            "el-GR"
+          ]
+        },
+        "/stoixima-athlitika": {
+          "codes": [
+            "el-GR"
+          ]
+        },
+        "/urheiluvedonlyonti": {
+          "codes": [
+            "fi-FI"
+          ]
+        },
+        "/vadslagning": {
+          "codes": [
+            "sv-SE"
+          ]
+        },
+        "/vedonlyonti": {
+          "codes": [
+            "fi-FI"
+          ]
+        },
+        "/wedden": {
+          "codes": [
+            "nl-NL"
+          ]
+        },
+        "/weddenschappen": {
+          "codes": [
+            "nl-NL"
+          ]
+        },
+        "/wetten": {
+          "codes": [
+            "de-AT",
+            "de-DE"
+          ]
+        },
+        "/zaklady": {
+          "codes": [
+            "pl-PL"
+          ]
+        },
+        "/zaklady-sportowe": {
+          "codes": [
+            "pl-PL"
+          ]
+        }
+      },
+      "aliases": [
+        "betting",
+        "sports-betting"
+      ]
+    },
+    "bonus": {
+      "description": "Бонусы",
+      "slugs": {
+        "/bono": {
+          "codes": [
+            "es-AR",
+            "es-ES",
+            "es-MX"
+          ]
+        },
+        "/bonos": {
+          "codes": [
+            "es-AR",
+            "es-ES",
+            "es-MX"
+          ]
+        },
+        "/bonukset": {
+          "codes": [
+            "fi-FI"
+          ]
+        },
+        "/bonus": {
+          "codes": [
+            "el-GR",
+            "en-AU",
+            "en-GB",
+            "en-IE",
+            "en-NZ",
+            "en-US",
+            "fr-FR",
+            "ga-IE",
+            "it-IT",
+            "pt-BR",
+            "pt-PT"
+          ]
+        },
+        "/bonusangebote": {
+          "codes": [
+            "de-AT",
+            "de-DE"
+          ]
+        },
+        "/bonusar": {
+          "codes": [
+            "sv-SE"
+          ]
+        },
+        "/bonuser": {
+          "codes": [
+            "nb-NO"
+          ]
+        },
+        "/bonusi": {
+          "codes": [
+            "sl-SI"
+          ]
+        },
+        "/bonussen": {
+          "codes": [
+            "nl-NL"
+          ]
+        },
+        "/bonusser": {
+          "codes": [
+            "da-DK"
+          ]
+        },
+        "/bonusuri": {
+          "codes": [
+            "ro-RO"
+          ]
+        },
+        "/bonusy": {
+          "codes": [
+            "cs-CZ",
+            "pl-PL"
+          ]
+        },
+        "/bonuszok": {
+          "codes": [
+            "hu-HU"
+          ]
+        },
+        "/boonused": {
+          "codes": [
+            "et-EE"
+          ]
+        }
+      }
+    },
+    "cashback": {
+      "description": "Кэшбэк",
+      "slugs": {
+        "/cashback": {
+          "codes": [
+            "cs-CZ",
+            "da-DK",
+            "de-AT",
+            "de-DE",
+            "el-GR",
+            "en-AU",
+            "en-GB",
+            "en-IE",
+            "en-NZ",
+            "en-US",
+            "es-AR",
+            "es-ES",
+            "es-MX",
+            "et-EE",
+            "fi-FI",
+            "fr-FR",
+            "ga-IE",
+            "hu-HU",
+            "it-IT",
+            "nb-NO",
+            "nl-NL",
+            "pl-PL",
+            "pt-BR",
+            "pt-PT",
+            "ro-RO",
+            "sl-SI",
+            "sv-SE"
+          ]
+        }
+      }
+    },
+    "contacts": {
+      "description": "Контакты",
+      "slugs": {
+        "/contact": {
+          "codes": [
+            "fr-FR",
+            "nl-NL",
+            "ro-RO"
+          ]
+        },
+        "/contacto": {
+          "codes": [
+            "es-AR",
+            "es-ES",
+            "es-MX"
+          ]
+        },
+        "/contactos": {
+          "codes": [
+            "pt-BR",
+            "pt-PT"
+          ]
+        },
+        "/contacts": {
+          "codes": [
+            "en-AU",
+            "en-GB",
+            "en-IE",
+            "en-NZ",
+            "en-US",
+            "ga-IE"
+          ]
+        },
+        "/contatti": {
+          "codes": [
+            "it-IT"
+          ]
+        },
+        "/epikoinonia": {
+          "codes": [
+            "el-GR"
+          ]
+        },
+        "/kapcsolat": {
+          "codes": [
+            "hu-HU"
+          ]
+        },
+        "/kontakt": {
+          "codes": [
+            "cs-CZ",
+            "da-DK",
+            "de-AT",
+            "de-DE",
+            "et-EE",
+            "nb-NO",
+            "pl-PL",
+            "sv-SE"
+          ]
+        },
+        "/stik": {
+          "codes": [
+            "sl-SI"
+          ]
+        },
+        "/yhteystiedot": {
+          "codes": [
+            "fi-FI"
+          ]
+        }
+      }
+    },
+    "cookies": {
+      "description": "Политика cookies",
+      "slugs": {
+        "/cookie-policy": {
+          "codes": [
+            "it-IT"
+          ]
+        },
+        "/cookie-richtlinie": {
+          "codes": [
+            "de-AT",
+            "de-DE"
+          ]
+        },
+        "/cookiebeleid": {
+          "codes": [
+            "nl-NL"
+          ]
+        },
+        "/cookiepolicy": {
+          "codes": [
+            "sv-SE"
+          ]
+        },
+        "/cookiepolitik": {
+          "codes": [
+            "da-DK"
+          ]
+        },
+        "/cookies": {
+          "codes": [
+            "en-AU",
+            "en-GB",
+            "en-IE",
+            "en-NZ",
+            "en-US",
+            "ga-IE"
+          ]
+        },
+        "/cookies-policy": {
+          "codes": [
+            "en-AU",
+            "en-GB",
+            "en-IE",
+            "en-NZ",
+            "en-US",
+            "ga-IE"
+          ]
+        },
+        "/evastekaytanto": {
+          "codes": [
+            "fi-FI"
+          ]
+        },
+        "/informasjonskapsler": {
+          "codes": [
+            "nb-NO"
+          ]
+        },
+        "/kupsisepoliitika": {
+          "codes": [
+            "et-EE"
+          ]
+        },
+        "/politica-cookie": {
+          "codes": [
+            "ro-RO"
+          ]
+        },
+        "/politica-de-cookies": {
+          "codes": [
+            "es-AR",
+            "es-ES",
+            "es-MX",
+            "pt-BR",
+            "pt-PT"
+          ]
+        },
+        "/politika-piskotkov": {
+          "codes": [
+            "sl-SI"
+          ]
+        },
+        "/politiki-cookies": {
+          "codes": [
+            "el-GR"
+          ]
+        },
+        "/politique-de-cookies": {
+          "codes": [
+            "fr-FR"
+          ]
+        },
+        "/polityka-cookies": {
+          "codes": [
+            "pl-PL"
+          ]
+        },
+        "/suti-szabalyzat": {
+          "codes": [
+            "hu-HU"
+          ]
+        },
+        "/zasady-cookies": {
+          "codes": [
+            "cs-CZ"
+          ]
+        }
+      },
+      "aliases": [
+        "cookies-policy",
+        "cookies"
+      ]
+    },
+    "en": {
+      "description": "en",
+      "slugs": {
+        "/cs": {
+          "codes": [
+            "cs-CZ"
+          ]
+        },
+        "/da": {
+          "codes": [
+            "da-DK"
+          ]
+        },
+        "/de": {
+          "codes": [
+            "de-DE"
+          ]
+        },
+        "/de-at": {
+          "codes": [
+            "de-AT"
+          ]
+        },
+        "/de-ch": {
+          "codes": [
+            "de-CH",
+            "fr-CH",
+            "it-CH"
+          ]
+        },
+        "/el": {
+          "codes": [
+            "el-GR"
+          ]
+        },
+        "/en": {
+          "codes": [
+            "en-GB",
+            "en-US"
+          ]
+        },
+        "/en-au": {
+          "codes": [
+            "en-AU"
+          ]
+        },
+        "/en-ca": {
+          "codes": [
+            "en-CA",
+            "fr-CA"
+          ]
+        },
+        "/en-ie": {
+          "codes": [
+            "en-IE",
+            "ga-IE"
+          ]
+        },
+        "/en-nz": {
+          "codes": [
+            "en-NZ"
+          ]
+        },
+        "/es": {
+          "codes": [
+            "es-ES"
+          ]
+        },
+        "/es-ar": {
+          "codes": [
+            "es-AR"
+          ]
+        },
+        "/es-mx": {
+          "codes": [
+            "es-MX"
+          ]
+        },
+        "/et": {
+          "codes": [
+            "et-EE"
+          ]
+        },
+        "/fi": {
+          "codes": [
+            "fi-FI"
+          ]
+        },
+        "/fr": {
+          "codes": [
+            "fr-FR"
+          ]
+        },
+        "/hu": {
+          "codes": [
+            "hu-HU"
+          ]
+        },
+        "/it": {
+          "codes": [
+            "it-IT"
+          ]
+        },
+        "/nb": {
+          "codes": [
+            "nb-NO"
+          ]
+        },
+        "/nl": {
+          "codes": [
+            "nl-NL"
+          ]
+        },
+        "/nl-be": {
+          "codes": [
+            "de-BE",
+            "fr-BE",
+            "nl-BE"
+          ]
+        },
+        "/pl": {
+          "codes": [
+            "pl-PL"
+          ]
+        },
+        "/pt": {
+          "codes": [
+            "pt-PT"
+          ]
+        },
+        "/pt-br": {
+          "codes": [
+            "pt-BR"
+          ]
+        },
+        "/ro": {
+          "codes": [
+            "ro-RO"
+          ]
+        },
+        "/sl": {
+          "codes": [
+            "sl-SI"
+          ]
+        },
+        "/sv": {
+          "codes": [
+            "sv-SE"
+          ]
+        }
+      }
+    },
+    "faq": {
+      "description": "Часто задаваемые вопросы",
+      "slugs": {
+        "/caste-dotazy": {
+          "codes": [
+            "cs-CZ"
+          ]
+        },
+        "/czesto-zadawane-pytania": {
+          "codes": [
+            "pl-PL"
+          ]
+        },
+        "/domande-frequenti": {
+          "codes": [
+            "it-IT"
+          ]
+        },
+        "/faq": {
+          "codes": [
+            "en-AU",
+            "en-GB",
+            "en-IE",
+            "en-NZ",
+            "en-US",
+            "fr-FR",
+            "ga-IE"
+          ]
+        },
+        "/gyakran-ismetelt-kerdesek": {
+          "codes": [
+            "hu-HU"
+          ]
+        },
+        "/haufig-gestellte-fragen": {
+          "codes": [
+            "de-AT",
+            "de-DE"
+          ]
+        },
+        "/intrebari-frecvente": {
+          "codes": [
+            "ro-RO"
+          ]
+        },
+        "/korduma-kippuvad-kusimused": {
+          "codes": [
+            "et-EE"
+          ]
+        },
+        "/ofte-stillede-sporgsmal": {
+          "codes": [
+            "da-DK"
+          ]
+        },
+        "/ofte-stilte-sporsmal": {
+          "codes": [
+            "nb-NO"
+          ]
+        },
+        "/perguntas-frequentes": {
+          "codes": [
+            "pt-BR",
+            "pt-PT"
+          ]
+        },
+        "/pogosto-zastavljena-vprasanja": {
+          "codes": [
+            "sl-SI"
+          ]
+        },
+        "/preguntas-frecuentes": {
+          "codes": [
+            "es-AR",
+            "es-ES",
+            "es-MX"
+          ]
+        },
+        "/sychnes-erotiseis": {
+          "codes": [
+            "el-GR"
+          ]
+        },
+        "/usein-kysytyt-kysymykset": {
+          "codes": [
+            "fi-FI"
+          ]
+        },
+        "/vanliga-fragor": {
+          "codes": [
+            "sv-SE"
+          ]
+        },
+        "/veelgestelde-vragen": {
+          "codes": [
+            "nl-NL"
+          ]
+        }
+      }
+    },
+    "freeSpins": {
+      "description": "Бесплатные вращения",
+      "slugs": {
+        "/brezplacni-vrtljaji": {
+          "codes": [
+            "sl-SI"
+          ]
+        },
+        "/darmowe-spiny": {
+          "codes": [
+            "pl-PL"
+          ]
+        },
+        "/dorean-spins": {
+          "codes": [
+            "el-GR"
+          ]
+        },
+        "/free-spins": {
+          "codes": [
+            "en-AU",
+            "en-GB",
+            "en-IE",
+            "en-NZ",
+            "en-US",
+            "ga-IE",
+            "pt-BR",
+            "pt-PT"
+          ]
+        },
+        "/freispiele": {
+          "codes": [
+            "de-AT",
+            "de-DE"
+          ]
+        },
+        "/giri-gratis": {
+          "codes": [
+            "it-IT"
+          ]
+        },
+        "/giros-gratis": {
+          "codes": [
+            "es-AR",
+            "es-ES",
+            "es-MX"
+          ]
+        },
+        "/gratis-spins": {
+          "codes": [
+            "da-DK",
+            "nl-NL",
+            "sv-SE"
+          ]
+        },
+        "/gratisspinn": {
+          "codes": [
+            "nb-NO"
+          ]
+        },
+        "/ilmaiskierrokset": {
+          "codes": [
+            "fi-FI"
+          ]
+        },
+        "/ingyenes-porgetesek": {
+          "codes": [
+            "hu-HU"
+          ]
+        },
+        "/rodadas-gratis": {
+          "codes": [
+            "pt-BR",
+            "pt-PT"
+          ]
+        },
+        "/rotiri-gratuite": {
+          "codes": [
+            "ro-RO"
+          ]
+        },
+        "/tasuta-spinnid": {
+          "codes": [
+            "et-EE"
+          ]
+        },
+        "/tiradas-gratis": {
+          "codes": [
+            "es-AR",
+            "es-ES",
+            "es-MX"
+          ]
+        },
+        "/tours-gratuits": {
+          "codes": [
+            "fr-FR"
+          ]
+        },
+        "/volne-tocky": {
+          "codes": [
+            "cs-CZ"
+          ]
+        }
+      }
+    },
+    "games": {
+      "description": "Игры",
+      "slugs": {
+        "/games": {
+          "codes": [
+            "en-AU",
+            "en-GB",
+            "en-IE",
+            "en-NZ",
+            "en-US",
+            "ga-IE"
+          ]
+        },
+        "/giochi": {
+          "codes": [
+            "it-IT"
+          ]
+        },
+        "/gry": {
+          "codes": [
+            "pl-PL"
+          ]
+        },
+        "/hry": {
+          "codes": [
+            "cs-CZ"
+          ]
+        },
+        "/igre": {
+          "codes": [
+            "sl-SI"
+          ]
+        },
+        "/jatekok": {
+          "codes": [
+            "hu-HU"
+          ]
+        },
+        "/jeux": {
+          "codes": [
+            "fr-FR"
+          ]
+        },
+        "/jocuri": {
+          "codes": [
+            "ro-RO"
+          ]
+        },
+        "/jogos": {
+          "codes": [
+            "pt-BR",
+            "pt-PT"
+          ]
+        },
+        "/juegos": {
+          "codes": [
+            "es-AR",
+            "es-ES",
+            "es-MX"
+          ]
+        },
+        "/mangud": {
+          "codes": [
+            "et-EE"
+          ]
+        },
+        "/paichnia": {
+          "codes": [
+            "el-GR"
+          ]
+        },
+        "/pelit": {
+          "codes": [
+            "fi-FI"
+          ]
+        },
+        "/spel": {
+          "codes": [
+            "sv-SE"
+          ]
+        },
+        "/spellen": {
+          "codes": [
+            "nl-NL"
+          ]
+        },
+        "/spiele": {
+          "codes": [
+            "de-AT",
+            "de-DE"
+          ]
+        },
+        "/spil": {
+          "codes": [
+            "da-DK"
+          ]
+        },
+        "/spill": {
+          "codes": [
+            "nb-NO"
+          ]
+        }
+      }
+    },
+    "kyc": {
+      "description": "Политика KYC",
+      "slugs": {
+        "/kyc": {
+          "codes": [
+            "en-AU",
+            "en-GB",
+            "en-IE",
+            "en-NZ",
+            "en-US",
+            "ga-IE"
+          ]
+        },
+        "/kyc-beleid": {
+          "codes": [
+            "nl-NL"
+          ]
+        },
+        "/kyc-kaytanto": {
+          "codes": [
+            "fi-FI"
+          ]
+        },
+        "/kyc-policy": {
+          "codes": [
+            "sv-SE"
+          ]
+        },
+        "/kyc-poliitika": {
+          "codes": [
+            "et-EE"
+          ]
+        },
+        "/kyc-politik": {
+          "codes": [
+            "da-DK"
+          ]
+        },
+        "/kyc-pravidla": {
+          "codes": [
+            "cs-CZ"
+          ]
+        },
+        "/kyc-pravila": {
+          "codes": [
+            "sl-SI"
+          ]
+        },
+        "/kyc-retningslinjer": {
+          "codes": [
+            "nb-NO"
+          ]
+        },
+        "/kyc-richtlinie": {
+          "codes": [
+            "de-AT",
+            "de-DE"
+          ]
+        },
+        "/kyc-szabalyzat": {
+          "codes": [
+            "hu-HU"
+          ]
+        },
+        "/politica-kyc": {
+          "codes": [
+            "es-AR",
+            "es-ES",
+            "es-MX",
+            "it-IT",
+            "pt-BR",
+            "pt-PT",
+            "ro-RO"
+          ]
+        },
+        "/politiki-kyc": {
+          "codes": [
+            "el-GR"
+          ]
+        },
+        "/politique-kyc": {
+          "codes": [
+            "fr-FR"
+          ]
+        },
+        "/polityka-kyc": {
+          "codes": [
+            "pl-PL"
+          ]
+        }
+      }
+    },
+    "login": {
+      "description": "Вход в систему",
+      "slugs": {
+        "/accesso": {
+          "codes": [
+            "it-IT"
+          ]
+        },
+        "/anmelden": {
+          "codes": [
+            "de-AT",
+            "de-DE"
+          ]
+        },
+        "/autentificare": {
+          "codes": [
+            "ro-RO"
+          ]
+        },
+        "/bejelentkezes": {
+          "codes": [
+            "hu-HU"
+          ]
+        },
+        "/connexion": {
+          "codes": [
+            "fr-FR"
+          ]
+        },
+        "/eisodos": {
+          "codes": [
+            "el-GR"
+          ]
+        },
+        "/iniciar-sesion": {
+          "codes": [
+            "es-AR",
+            "es-ES",
+            "es-MX"
+          ]
+        },
+        "/iniciar-sessao": {
+          "codes": [
+            "pt-BR",
+            "pt-PT"
+          ]
+        },
+        "/inloggen": {
+          "codes": [
+            "nl-NL"
+          ]
+        },
+        "/kirjaudu": {
+          "codes": [
+            "fi-FI"
+          ]
+        },
+        "/log-ind": {
+          "codes": [
+            "da-DK"
+          ]
+        },
+        "/logg-inn": {
+          "codes": [
+            "nb-NO"
+          ]
+        },
+        "/logga-in": {
+          "codes": [
+            "sv-SE"
+          ]
+        },
+        "/logi-sisse": {
+          "codes": [
+            "et-EE"
+          ]
+        },
+        "/login": {
+          "codes": [
+            "en-AU",
+            "en-GB",
+            "en-IE",
+            "en-NZ",
+            "en-US",
+            "ga-IE"
+          ]
+        },
+        "/logowanie": {
+          "codes": [
+            "pl-PL"
+          ]
+        },
+        "/prihlaseni": {
+          "codes": [
+            "cs-CZ"
+          ]
+        },
+        "/prijava": {
+          "codes": [
+            "sl-SI"
+          ]
+        },
+        "/zaloguj-sie": {
+          "codes": [
+            "pl-PL"
+          ]
+        }
+      }
+    },
+    "lottery": {
+      "description": "Лотерея",
+      "slugs": {
+        "/arpajaiset": {
+          "codes": [
+            "fi-FI"
+          ]
+        },
+        "/loteria": {
+          "codes": [
+            "el-GR",
+            "es-AR",
+            "es-ES",
+            "es-MX",
+            "pl-PL",
+            "pt-BR",
+            "pt-PT"
+          ]
+        },
+        "/loterie": {
+          "codes": [
+            "cs-CZ",
+            "fr-FR",
+            "ro-RO"
+          ]
+        },
+        "/loterii": {
+          "codes": [
+            "et-EE"
+          ]
+        },
+        "/loterij": {
+          "codes": [
+            "nl-NL"
+          ]
+        },
+        "/loterija": {
+          "codes": [
+            "sl-SI"
+          ]
+        },
+        "/lotteri": {
+          "codes": [
+            "da-DK",
+            "nb-NO",
+            "sv-SE"
+          ]
+        },
+        "/lotteria": {
+          "codes": [
+            "it-IT"
+          ]
+        },
+        "/lotterie": {
+          "codes": [
+            "de-AT",
+            "de-DE"
+          ]
+        },
+        "/lottery": {
+          "codes": [
+            "en-AU",
+            "en-GB",
+            "en-IE",
+            "en-NZ",
+            "en-US",
+            "ga-IE"
+          ]
+        },
+        "/lotto": {
+          "codes": [
+            "hu-HU"
+          ]
+        },
+        "/lottosorsolas": {
+          "codes": [
+            "hu-HU"
+          ]
+        }
+      }
+    },
     "main": {
       "description": "Главная страница",
       "slugs": {
-        "/sv-se": "Swedish (SV)",
-        "/sv": "Swedish (SV)",
-        "/nl-nl": "Dutch (NL)",
-        "/nl-be": "Dutch (BE)",
-        "/nl": "Dutch (NL)",
-        "/de-de": "German (DE)",
-        "/de": "German (DE)",
-        "/fr-fr": "French (FR)",
-        "/fr-be": "French (BE)",
-        "/fr": "French (FR)",
-        "/es-es": "Spanish (ES)",
-        "/es": "Spanish (ES)",
-        "/it-it": "Italian (IT)",
-        "/it": "Italian (IT)",
-        "/pl-pl": "Polish (PL)",
-        "/pl": "Polish (PL)",
-        "/fi-fi": "Finnish (FI)",
-        "/fi": "Finnish (FI)",
-        "/da-dk": "Danish (DA)",
-        "/da": "Danish (DA)",
-        "/nb-no": "Norwegian Bokmål (NO)",
-        "/nb": "Norwegian Bokmål (NB)",
-        "/pt-pt": "Portuguese (PT)",
-        "/pt": "Portuguese (PT)",
-        "/cs-cz": "Czech (CS)",
-        "/cs": "Czech (CS)",
-        "/ro-ro": "Romanian (RO)",
-        "/ro": "Romanian (RO)",
-        "/sl-si": "Slovenian (SI)",
-        "/sl": "Slovenian (SI)",
-        "/el-gr": "Greek (EL)",
-        "/el": "Greek (EL)",
-        "/et-ee": "Estonian (ET)",
-        "/et": "Estonian (ET)",
-        "/hu-hu": "Hungarian (HU)",
-        "/hu": "Hungarian (HU)",
-        "/en-gb": "English (GB)",
-        "/en-nz": "English (NZ)",
-        "/en-ca": "English (CA)",
-        "/en-au": "English (AU)",
-        "/en-us": "English (US)",
-        "/en-ie": "English (IE)",
-        "/ga-ie": "Irish (IE)",
-        "/en": "English",
-        "/es-ar": "Spanish (AR)",
-        "/es-mx": "Spanish (MX)",
-        "/fr-ca": "French (CA)",
-        "/fr-ch": "French (CH)",
-        "/pt-br": "Portuguese (BR)",
-        "/de-be": "German (BE)",
-        "/de-at": "German (AT)",
-        "/de-ch": "German (CH)",
-        "/it-ch": "Italian (CH)"
+        "/": {
+          "codes": [
+            "cs-CZ",
+            "da-DK",
+            "de-AT",
+            "de-BE",
+            "de-CH",
+            "de-DE",
+            "el-GR",
+            "en-AU",
+            "en-CA",
+            "en-GB",
+            "en-IE",
+            "en-NZ",
+            "en-US",
+            "es-AR",
+            "es-ES",
+            "es-MX",
+            "et-EE",
+            "fi-FI",
+            "fr-BE",
+            "fr-CA",
+            "fr-CH",
+            "fr-FR",
+            "ga-IE",
+            "hu-HU",
+            "it-CH",
+            "it-IT",
+            "nb-NO",
+            "nl-BE",
+            "nl-NL",
+            "pl-PL",
+            "pt-BR",
+            "pt-PT",
+            "ro-RO",
+            "sl-SI",
+            "sv-SE"
+          ]
+        },
+        "/cs-cz": {
+          "codes": [
+            "cs-CZ"
+          ]
+        },
+        "/da-dk": {
+          "codes": [
+            "da-DK"
+          ]
+        },
+        "/de-be": {
+          "codes": [
+            "de-BE",
+            "fr-BE",
+            "nl-BE"
+          ]
+        },
+        "/de-de": {
+          "codes": [
+            "de-DE"
+          ]
+        },
+        "/el-gr": {
+          "codes": [
+            "el-GR"
+          ]
+        },
+        "/en-gb": {
+          "codes": [
+            "en-GB"
+          ]
+        },
+        "/en-us": {
+          "codes": [
+            "en-US"
+          ]
+        },
+        "/es-es": {
+          "codes": [
+            "es-ES"
+          ]
+        },
+        "/et-ee": {
+          "codes": [
+            "et-EE"
+          ]
+        },
+        "/fi-fi": {
+          "codes": [
+            "fi-FI"
+          ]
+        },
+        "/fr-be": {
+          "codes": [
+            "de-BE",
+            "fr-BE",
+            "nl-BE"
+          ]
+        },
+        "/fr-ca": {
+          "codes": [
+            "en-CA",
+            "fr-CA"
+          ]
+        },
+        "/fr-ch": {
+          "codes": [
+            "de-CH",
+            "fr-CH",
+            "it-CH"
+          ]
+        },
+        "/fr-fr": {
+          "codes": [
+            "fr-FR"
+          ]
+        },
+        "/ga-ie": {
+          "codes": [
+            "en-IE",
+            "ga-IE"
+          ]
+        },
+        "/hu-hu": {
+          "codes": [
+            "hu-HU"
+          ]
+        },
+        "/it-ch": {
+          "codes": [
+            "de-CH",
+            "fr-CH",
+            "it-CH"
+          ]
+        },
+        "/it-it": {
+          "codes": [
+            "it-IT"
+          ]
+        },
+        "/nb-no": {
+          "codes": [
+            "nb-NO"
+          ]
+        },
+        "/nl-nl": {
+          "codes": [
+            "nl-NL"
+          ]
+        },
+        "/pl-pl": {
+          "codes": [
+            "pl-PL"
+          ]
+        },
+        "/pt-pt": {
+          "codes": [
+            "pt-PT"
+          ]
+        },
+        "/ro-ro": {
+          "codes": [
+            "ro-RO"
+          ]
+        },
+        "/sl-si": {
+          "codes": [
+            "sl-SI"
+          ]
+        },
+        "/sv-se": {
+          "codes": [
+            "sv-SE"
+          ]
+        }
       },
       "aliases": [
         "",
         "/"
       ]
     },
+    "noDepositBonus": {
+      "description": "Бонус без депозита",
+      "slugs": {
+        "/befizetes-nelkuli-bonusz": {
+          "codes": [
+            "hu-HU"
+          ]
+        },
+        "/bono-sin-deposito": {
+          "codes": [
+            "es-AR",
+            "es-ES",
+            "es-MX"
+          ]
+        },
+        "/bonus-bez-depozytu": {
+          "codes": [
+            "pl-PL"
+          ]
+        },
+        "/bonus-bez-vkladu": {
+          "codes": [
+            "cs-CZ"
+          ]
+        },
+        "/bonus-brez-pologa": {
+          "codes": [
+            "sl-SI"
+          ]
+        },
+        "/bonus-choris-katathesi": {
+          "codes": [
+            "el-GR"
+          ]
+        },
+        "/bonus-fara-depunere": {
+          "codes": [
+            "ro-RO"
+          ]
+        },
+        "/bonus-ohne-einzahlung": {
+          "codes": [
+            "de-AT",
+            "de-DE"
+          ]
+        },
+        "/bonus-sans-depot": {
+          "codes": [
+            "fr-FR"
+          ]
+        },
+        "/bonus-sem-deposito": {
+          "codes": [
+            "pt-BR",
+            "pt-PT"
+          ]
+        },
+        "/bonus-senza-deposito": {
+          "codes": [
+            "it-IT"
+          ]
+        },
+        "/bonus-uden-indskud": {
+          "codes": [
+            "da-DK"
+          ]
+        },
+        "/bonus-utan-insattning": {
+          "codes": [
+            "sv-SE"
+          ]
+        },
+        "/bonus-uten-innskudd": {
+          "codes": [
+            "nb-NO"
+          ]
+        },
+        "/bonus-zonder-storting": {
+          "codes": [
+            "nl-NL"
+          ]
+        },
+        "/boonus-ilma-sissemakseta": {
+          "codes": [
+            "et-EE"
+          ]
+        },
+        "/geen-stortingsbonus": {
+          "codes": [
+            "nl-NL"
+          ]
+        },
+        "/gratis-bonus": {
+          "codes": [
+            "nl-NL"
+          ]
+        },
+        "/ilmainen-bonus": {
+          "codes": [
+            "fi-FI"
+          ]
+        },
+        "/ilman-talletusta-bonus": {
+          "codes": [
+            "fi-FI"
+          ]
+        },
+        "/ingen-insattningsbonus": {
+          "codes": [
+            "sv-SE"
+          ]
+        },
+        "/kein-einzahlungsbonus": {
+          "codes": [
+            "de-AT",
+            "de-DE"
+          ]
+        },
+        "/no-deposit-bonus": {
+          "codes": [
+            "en-AU",
+            "en-GB",
+            "en-IE",
+            "en-NZ",
+            "en-US",
+            "ga-IE"
+          ]
+        }
+      }
+    },
     "privacy": {
       "description": "Политика конфиденциальности",
       "slugs": {
-        "/integritetsmeddelande": "Swedish (SV)",
-        "/privacyverklaring": "Dutch (NL)",
-        "/datenschutzhinweis": "German (DE)",
-        "/notice-de-confidentialite": "French (FR)",
-        "/aviso-de-privacidad": "Spanish (ES)",
-        "/informativa-sulla-privacy": "Italian (IT)",
-        "/informacja-o-ochronie-danych": "Polish (PL)",
-        "/tietosuojaseloste": "Finnish (FI)",
-        "/privatlivsmeddelelse": "Danish (DA)",
-        "/personvernerklaering": "Norwegian (NO)",
-        "/aviso-de-privacidade": "Portuguese (PT)",
-        "/oznameni-o-ochrane-osobnich-udaju": "Czech (CS)",
-        "/notificare-privind-confidentialitatea": "Romanian (RO)",
-        "/eidopoiisi-aporritou": "Greek (GR)",
-        "/privaatsusteade": "Estonian (EE)",
-        "/adatvedelmi-nyilatkozat": "Hungarian (HU)",
-        "/integritetspolicy": "Swedish (SV)",
-        "/privacybeleid": "Dutch (NL)",
-        "/datenschutz": "German (DE)",
-        "/politique-de-confidentialite": "French (FR)",
-        "/politica-de-privacidad": "Spanish (ES)",
-        "/informativa-privacy": "Italian (IT)",
-        "/polityka-prywatnosci": "Polish (PL)",
-        "/tietosuoja": "Finnish (FI)",
-        "/privatlivspolitik": "Danish (DA)",
-        "/personvern": "Norwegian (NO)",
-        "/politica-de-privacidade": "Portuguese (PT)",
-        "/ochrana-osobnich-udaju": "Czech (CS)",
-        "/politica-de-confidentialitate": "Romanian (RO)",
-        "/politiki-aporritou": "Greek (GR)",
-        "/privaatsuspoliitika": "Estonian (EE)",
-        "/adatvedelmi-szabalyzat": "Hungarian (HU)",
-        "/pravilnik-o-zasebnosti": "Slovenian (SI)",
-        "/privacy-notice": "English (GB)",
-        "/privacy": "English (NZ, CA)",
-        "/privacy-policy": "English"
+        "/adatvedelmi-nyilatkozat": {
+          "codes": [
+            "hu-HU"
+          ]
+        },
+        "/adatvedelmi-szabalyzat": {
+          "codes": [
+            "hu-HU"
+          ]
+        },
+        "/aviso-de-privacidad": {
+          "codes": [
+            "es-AR",
+            "es-ES",
+            "es-MX"
+          ]
+        },
+        "/aviso-de-privacidade": {
+          "codes": [
+            "pt-BR",
+            "pt-PT"
+          ]
+        },
+        "/datenschutz": {
+          "codes": [
+            "de-AT",
+            "de-DE"
+          ]
+        },
+        "/datenschutzhinweis": {
+          "codes": [
+            "de-AT",
+            "de-DE"
+          ]
+        },
+        "/eidopoiisi-aporritou": {
+          "codes": [
+            "el-GR"
+          ]
+        },
+        "/informacja-o-ochronie-danych": {
+          "codes": [
+            "pl-PL"
+          ]
+        },
+        "/informativa-privacy": {
+          "codes": [
+            "it-IT"
+          ]
+        },
+        "/informativa-sulla-privacy": {
+          "codes": [
+            "it-IT"
+          ]
+        },
+        "/integritetsmeddelande": {
+          "codes": [
+            "sv-SE"
+          ]
+        },
+        "/integritetspolicy": {
+          "codes": [
+            "sv-SE"
+          ]
+        },
+        "/notice-de-confidentialite": {
+          "codes": [
+            "fr-FR"
+          ]
+        },
+        "/notificare-privind-confidentialitatea": {
+          "codes": [
+            "ro-RO"
+          ]
+        },
+        "/ochrana-osobnich-udaju": {
+          "codes": [
+            "cs-CZ"
+          ]
+        },
+        "/oznameni-o-ochrane-osobnich-udaju": {
+          "codes": [
+            "cs-CZ"
+          ]
+        },
+        "/personvern": {
+          "codes": [
+            "nb-NO"
+          ]
+        },
+        "/personvernerklaering": {
+          "codes": [
+            "nb-NO"
+          ]
+        },
+        "/politica-de-confidentialitate": {
+          "codes": [
+            "ro-RO"
+          ]
+        },
+        "/politica-de-privacidad": {
+          "codes": [
+            "es-AR",
+            "es-ES",
+            "es-MX"
+          ]
+        },
+        "/politica-de-privacidade": {
+          "codes": [
+            "pt-BR",
+            "pt-PT"
+          ]
+        },
+        "/politiki-aporritou": {
+          "codes": [
+            "el-GR"
+          ]
+        },
+        "/politique-de-confidentialite": {
+          "codes": [
+            "fr-FR"
+          ]
+        },
+        "/polityka-prywatnosci": {
+          "codes": [
+            "pl-PL"
+          ]
+        },
+        "/pravilnik-o-zasebnosti": {
+          "codes": [
+            "sl-SI"
+          ]
+        },
+        "/privaatsuspoliitika": {
+          "codes": [
+            "et-EE"
+          ]
+        },
+        "/privaatsusteade": {
+          "codes": [
+            "et-EE"
+          ]
+        },
+        "/privacy": {
+          "codes": [
+            "en-AU",
+            "en-GB",
+            "en-IE",
+            "en-NZ",
+            "en-US",
+            "ga-IE"
+          ]
+        },
+        "/privacy-notice": {
+          "codes": [
+            "en-AU",
+            "en-GB",
+            "en-IE",
+            "en-NZ",
+            "en-US",
+            "ga-IE"
+          ]
+        },
+        "/privacy-policy": {
+          "codes": [
+            "en-AU",
+            "en-GB",
+            "en-IE",
+            "en-NZ",
+            "en-US",
+            "ga-IE"
+          ]
+        },
+        "/privacybeleid": {
+          "codes": [
+            "nl-NL"
+          ]
+        },
+        "/privacyverklaring": {
+          "codes": [
+            "nl-NL"
+          ]
+        },
+        "/privatlivsmeddelelse": {
+          "codes": [
+            "da-DK"
+          ]
+        },
+        "/privatlivspolitik": {
+          "codes": [
+            "da-DK"
+          ]
+        },
+        "/tietosuoja": {
+          "codes": [
+            "fi-FI"
+          ]
+        },
+        "/tietosuojaseloste": {
+          "codes": [
+            "fi-FI"
+          ]
+        }
       },
       "aliases": [
         "privacy",
@@ -110,584 +1920,1334 @@
         "privacy-notice"
       ]
     },
-    "terms": {
-      "description": "Условия использования",
-      "slugs": {
-        "/anvandarvillkor": "Swedish (SV)",
-        "/gebruiksvoorwaarden": "Dutch (NL)",
-        "/agb": "German (DE)",
-        "/conditions-dutilisation": "French (FR)",
-        "/terminos-y-condiciones": "Spanish (ES)",
-        "/termini-e-condizioni": "Italian (IT)",
-        "/regulamin": "Polish (PL)",
-        "/kayttoehdot": "Finnish (FI)",
-        "/vilkar-og-betingelser": "Norwegian (NO)",
-        "/termos-e-condicoes": "Portuguese (PT)",
-        "/vseobecne-obchodni-podminky": "Czech (CS)",
-        "/termeni-si-conditii": "Romanian (RO)",
-        "/oroi-kai-proypotheseis": "Greek (GR)",
-        "/kasutustingimused": "Estonian (EE)",
-        "/felhasznalasi-feltetelek": "Hungarian (HU)",
-        "/pogoji-uporabe": "Slovenian (SI)",
-        "/allmanna-villkor": "Swedish (SV)",
-        "/algemene-voorwaarden": "Dutch (NL)",
-        "/nutzungsbedingungen": "German (DE)",
-        "/conditions-generales": "French (FR)",
-        "/obchodni-podminky": "Czech (CS)",
-        "/aszf": "Hungarian (HU)",
-        "/terms": "English",
-        "/terms-condition": "English"
-      },
-      "aliases": [
-        "terms",
-        "terms-condition"
-      ]
-    },
-    "responsible": {
-      "description": "Ответственная игра",
-      "slugs": {
-        "/ansvarsfullt-spelande": "Swedish (SV)",
-        "/verantwoord-gokken": "Dutch (NL)",
-        "/verantwortungsvolles-spielen": "German (DE)",
-        "/jeu-responsable": "French (FR)",
-        "/juego-responsable": "Spanish (ES)",
-        "/gioco-responsabile": "Italian (IT)",
-        "/odpowiedzialna-gra": "Polish (PL)",
-        "/vastuullinen-pelaaminen": "Finnish (FI)",
-        "/ansvarligt-spil": "Danish (DA)",
-        "/ansvarlig-spilling": "Norwegian (NO)",
-        "/jogo-responsavel": "Portuguese (PT)",
-        "/zodpovedne-hrani": "Czech (CS)",
-        "/joc-responsabil": "Romanian (RO)",
-        "/ypeythino-paichnidi": "Greek (GR)",
-        "/vastutustundlik-mangimine": "Estonian (EE)",
-        "/felelos-jatek": "Hungarian (HU)",
-        "/odgovorno-igranje": "Slovenian (SI)",
-        "/verantwoord-spelen": "Dutch (NL)",
-        "/responsible": "English",
-        "/responsible-gaming": "English"
-      },
-      "aliases": [
-        "responsible",
-        "responsible-gaming"
-      ]
-    },
-    "cookies": {
-      "description": "Политика cookies",
-      "slugs": {
-        "/cookiepolicy": "Swedish (SV)",
-        "/cookiebeleid": "Dutch (NL)",
-        "/cookie-richtlinie": "German (DE)",
-        "/politique-de-cookies": "French (FR)",
-        "/politica-de-cookies": "Portuguese (PT)",
-        "/cookie-policy": "Italian (IT)",
-        "/polityka-cookies": "Polish (PL)",
-        "/evastekaytanto": "Finnish (FI)",
-        "/cookiepolitik": "Danish (DA)",
-        "/informasjonskapsler": "Norwegian (NO)",
-        "/zasady-cookies": "Czech (CS)",
-        "/politica-cookie": "Romanian (RO)",
-        "/politiki-cookies": "Greek (GR)",
-        "/kupsisepoliitika": "Estonian (EE)",
-        "/suti-szabalyzat": "Hungarian (HU)",
-        "/politika-piskotkov": "Slovenian (SI)",
-        "/cookies-policy": "English",
-        "/cookies": "English"
-      },
-      "aliases": [
-        "cookies-policy",
-        "cookies"
-      ]
-    },
-    "kyc": {
-      "description": "Политика KYC",
-      "slugs": {
-        "/kyc": "English (UK, US, AU, NZ, IE)",
-        "/kyc-policy": "Swedish (SV)",
-        "/kyc-beleid": "Dutch (NL)",
-        "/kyc-richtlinie": "German (DE, AT)",
-        "/politique-kyc": "French (FR)",
-        "/politica-kyc": "Spanish (ES, MX, AR), Italian (IT), Portuguese (PT, BR), Romanian (RO)",
-        "/polityka-kyc": "Polish (PL)",
-        "/kyc-kaytanto": "Finnish (FI)",
-        "/kyc-politik": "Danish (DA)",
-        "/kyc-retningslinjer": "Norwegian (NO)",
-        "/kyc-pravidla": "Czech (CS)",
-        "/kyc-pravila": "Slovenian (SI)",
-        "/politiki-kyc": "Greek (GR)",
-        "/kyc-poliitika": "Estonian (EE)",
-        "/kyc-szabalyzat": "Hungarian (HU)"
-      }
-    },
-    "faq": {
-      "description": "Часто задаваемые вопросы",
-      "slugs": {
-        "/vanliga-fragor": "Swedish (SV)",
-        "/veelgestelde-vragen": "Dutch (NL)",
-        "/haufig-gestellte-fragen": "German (DE)",
-        "/faq": "English",
-        "/preguntas-frecuentes": "Spanish (ES)",
-        "/domande-frequenti": "Italian (IT)",
-        "/czesto-zadawane-pytania": "Polish (PL)",
-        "/usein-kysytyt-kysymykset": "Finnish (FI)",
-        "/ofte-stillede-sporgsmal": "Danish (DA)",
-        "/ofte-stilte-sporsmal": "Norwegian (NO)",
-        "/perguntas-frequentes": "Portuguese (PT)",
-        "/caste-dotazy": "Czech (CS)",
-        "/intrebari-frecvente": "Romanian (RO)",
-        "/sychnes-erotiseis": "Greek (GR)",
-        "/korduma-kippuvad-kusimused": "Estonian (EE)",
-        "/gyakran-ismetelt-kerdesek": "Hungarian (HU)",
-        "/pogosto-zastavljena-vprasanja": "Slovenian (SI)"
-      }
-    },
-    "contacts": {
-      "description": "Контакты",
-      "slugs": {
-        "/kontakt": "Estonian (EE)",
-        "/contact": "Romanian (RO)",
-        "/contacto": "Spanish (ES)",
-        "/contatti": "Italian (IT)",
-        "/yhteystiedot": "Finnish (FI)",
-        "/contactos": "Portuguese (PT)",
-        "/epikoinonia": "Greek (GR)",
-        "/kapcsolat": "Hungarian (HU)",
-        "/stik": "Slovenian (SI)",
-        "/contacts": "English"
-      }
-    },
-    "support": {
-      "description": "Поддержка",
-      "slugs": {
-        "/support": "English",
-        "/soporte": "Spanish (ES)",
-        "/supporto": "Italian (IT)",
-        "/wsparcie": "Polish (PL)",
-        "/tuki": "Finnish (FI)",
-        "/suporte": "Portuguese (PT)",
-        "/podpora": "Czech (CS)",
-        "/suport": "Romanian (RO)",
-        "/ypostirixi": "Greek (GR)",
-        "/tugi": "Estonian (EE)",
-        "/tamogatas": "Hungarian (HU)",
-        "/pomoc": "Slovenian (SI)"
-      }
-    },
-    "login": {
-      "description": "Вход в систему",
-      "slugs": {
-        "/logga-in": "Swedish (SV)",
-        "/inloggen": "Dutch (NL)",
-        "/anmelden": "German (DE)",
-        "/connexion": "French (FR)",
-        "/iniciar-sesion": "Spanish (ES)",
-        "/accesso": "Italian (IT)",
-        "/logowanie": "Polish (PL)",
-        "/kirjaudu": "Finnish (FI)",
-        "/log-ind": "Danish (DA)",
-        "/logg-inn": "Norwegian (NO)",
-        "/iniciar-sessao": "Portuguese (PT)",
-        "/prihlaseni": "Czech (CS)",
-        "/autentificare": "Romanian (RO)",
-        "/eisodos": "Greek (GR)",
-        "/logi-sisse": "Estonian (EE)",
-        "/bejelentkezes": "Hungarian (HU)",
-        "/zaloguj-sie": "Polish (PL)",
-        "/prijava": "Slovenian (SI)",
-        "/login": "English"
-      }
-    },
-    "bonus": {
-      "description": "Бонусы",
-      "slugs": {
-        "/bonusar": "Swedish (SV)",
-        "/bonussen": "Dutch (NL)",
-        "/bonusangebote": "German (DE)",
-        "/bonus": "English",
-        "/bonos": "Spanish (ES)",
-        "/bono": "Spanish (ES)",
-        "/bonusy": "Czech (CS)",
-        "/bonukset": "Finnish (FI)",
-        "/bonusser": "Danish (DA)",
-        "/bonuser": "Norwegian (NO)",
-        "/bonusuri": "Romanian (RO)",
-        "/boonused": "Estonian (EE)",
-        "/bonuszok": "Hungarian (HU)",
-        "/bonusi": "Slovenian (SI)"
-      }
-    },
     "promoCode": {
       "description": "Промокод / Бонус код",
       "slugs": {
-        "/kampanjkod": "Swedish (SV)",
-        "/promotiecode": "Dutch (NL)",
-        "/promocode": "German (DE)",
-        "/code-promo": "French (FR)",
-        "/codigo-promocional": "Portuguese (PT)",
-        "/codice-promozionale": "Italian (IT)",
-        "/kod-promocyjny": "Polish (PL)",
-        "/kampanjakoodi": "Finnish (FI)",
-        "/kampagnekode": "Danish (DA)",
-        "/kampanjekode": "Norwegian (NO)",
-        "/promo-kod": "Czech (CS)",
-        "/cod-promotional": "Romanian (RO)",
-        "/kodigo-prosforas": "Greek (GR)",
-        "/promokood": "Estonian (EE)",
-        "/promociokod": "Hungarian (HU)",
-        "/kwdikos-prosforas": "Greek (GR)",
-        "/sooduskood": "Estonian (EE)",
-        "/promocios-kod": "Hungarian (HU)",
-        "/bonus-kod": "Swedish (SV)",
-        "/bonuscode": "German (DE)",
-        "/code-bonus": "French (FR)",
-        "/codigo-bono": "Spanish (ES)",
-        "/codice-bonus": "Italian (IT)",
-        "/kod-bonusowy": "Polish (PL)",
-        "/bonuskoodi": "Finnish (FI)",
-        "/bonus-koodi": "Finnish (FI)",
-        "/bonus-kode": "Danish (DA)",
-        "/bonuskode": "Danish (DA)",
-        "/codigo-bonus": "Portuguese (PT)",
-        "/bonusovy-kod": "Czech (CS)",
-        "/cod-bonus": "Romanian (RO)",
-        "/kwdikos-bonus": "Greek (GR)",
-        "/boonuskood": "Estonian (EE)",
-        "/bonuszkod": "Hungarian (HU)",
-        "/bonuskod": "Swedish (SV)",
-        "/bonusz-kod": "Hungarian (HU)",
-        "/promocijska-koda": "Slovenian (SI)",
-        "/bonusna-koda": "Slovenian (SI)",
-        "/promo-code": "English",
-        "/bonus-code": "English"
+        "/bonus-code": {
+          "codes": [
+            "en-AU",
+            "en-GB",
+            "en-IE",
+            "en-NZ",
+            "en-US",
+            "ga-IE"
+          ]
+        },
+        "/bonus-kod": {
+          "codes": [
+            "sv-SE"
+          ]
+        },
+        "/bonus-kode": {
+          "codes": [
+            "da-DK"
+          ]
+        },
+        "/bonus-koodi": {
+          "codes": [
+            "fi-FI"
+          ]
+        },
+        "/bonuscode": {
+          "codes": [
+            "de-AT",
+            "de-DE",
+            "nl-NL"
+          ]
+        },
+        "/bonuskod": {
+          "codes": [
+            "sv-SE"
+          ]
+        },
+        "/bonuskode": {
+          "codes": [
+            "da-DK",
+            "nb-NO"
+          ]
+        },
+        "/bonuskoodi": {
+          "codes": [
+            "fi-FI"
+          ]
+        },
+        "/bonusna-koda": {
+          "codes": [
+            "sl-SI"
+          ]
+        },
+        "/bonusovy-kod": {
+          "codes": [
+            "cs-CZ"
+          ]
+        },
+        "/bonusz-kod": {
+          "codes": [
+            "hu-HU"
+          ]
+        },
+        "/bonuszkod": {
+          "codes": [
+            "hu-HU"
+          ]
+        },
+        "/boonuskood": {
+          "codes": [
+            "et-EE"
+          ]
+        },
+        "/cod-bonus": {
+          "codes": [
+            "ro-RO"
+          ]
+        },
+        "/cod-promotional": {
+          "codes": [
+            "ro-RO"
+          ]
+        },
+        "/code-bonus": {
+          "codes": [
+            "fr-FR"
+          ]
+        },
+        "/code-promo": {
+          "codes": [
+            "fr-FR"
+          ]
+        },
+        "/codice-bonus": {
+          "codes": [
+            "it-IT"
+          ]
+        },
+        "/codice-promozionale": {
+          "codes": [
+            "it-IT"
+          ]
+        },
+        "/codigo-bono": {
+          "codes": [
+            "es-AR",
+            "es-ES",
+            "es-MX"
+          ]
+        },
+        "/codigo-bonus": {
+          "codes": [
+            "pt-BR",
+            "pt-PT"
+          ]
+        },
+        "/codigo-promocional": {
+          "codes": [
+            "es-AR",
+            "es-ES",
+            "es-MX",
+            "pt-BR",
+            "pt-PT"
+          ]
+        },
+        "/kampagnekode": {
+          "codes": [
+            "da-DK"
+          ]
+        },
+        "/kampanjakoodi": {
+          "codes": [
+            "fi-FI"
+          ]
+        },
+        "/kampanjekode": {
+          "codes": [
+            "nb-NO"
+          ]
+        },
+        "/kampanjkod": {
+          "codes": [
+            "sv-SE"
+          ]
+        },
+        "/kod-bonusowy": {
+          "codes": [
+            "pl-PL"
+          ]
+        },
+        "/kod-promocyjny": {
+          "codes": [
+            "pl-PL"
+          ]
+        },
+        "/kodigo-prosforas": {
+          "codes": [
+            "el-GR"
+          ]
+        },
+        "/kwdikos-bonus": {
+          "codes": [
+            "el-GR"
+          ]
+        },
+        "/kwdikos-prosforas": {
+          "codes": [
+            "el-GR"
+          ]
+        },
+        "/promo-code": {
+          "codes": [
+            "en-AU",
+            "en-GB",
+            "en-IE",
+            "en-NZ",
+            "en-US",
+            "ga-IE"
+          ]
+        },
+        "/promo-kod": {
+          "codes": [
+            "cs-CZ"
+          ]
+        },
+        "/promocijska-koda": {
+          "codes": [
+            "sl-SI"
+          ]
+        },
+        "/promociokod": {
+          "codes": [
+            "hu-HU"
+          ]
+        },
+        "/promocios-kod": {
+          "codes": [
+            "hu-HU"
+          ]
+        },
+        "/promocode": {
+          "codes": [
+            "de-AT",
+            "de-DE"
+          ]
+        },
+        "/promokood": {
+          "codes": [
+            "et-EE"
+          ]
+        },
+        "/promotiecode": {
+          "codes": [
+            "nl-NL"
+          ]
+        },
+        "/sooduskood": {
+          "codes": [
+            "et-EE"
+          ]
+        }
       },
       "aliases": [
         "promo-code",
         "bonus-code"
       ]
     },
-    "noDepositBonus": {
-      "description": "Бонус без депозита",
+    "responsible": {
+      "description": "Ответственная игра",
       "slugs": {
-        "/ingen-insattningsbonus": "Swedish (SV)",
-        "/bonus-zonder-storting": "Dutch (NL)",
-        "/kein-einzahlungsbonus": "German (DE)",
-        "/bonus-sans-depot": "French (FR)",
-        "/bono-sin-deposito": "Spanish (ES)",
-        "/bonus-senza-deposito": "Italian (IT)",
-        "/bonus-bez-depozytu": "Polish (PL)",
-        "/ilman-talletusta-bonus": "Finnish (FI)",
-        "/ilmainen-bonus": "Finnish (FI)",
-        "/bonus-uden-indskud": "Danish (DA)",
-        "/bonus-uten-innskudd": "Norwegian (NO)",
-        "/bonus-sem-deposito": "Portuguese (PT)",
-        "/bonus-bez-vkladu": "Czech (CS)",
-        "/bonus-fara-depunere": "Romanian (RO)",
-        "/bonus-choris-katathesi": "Greek (GR)",
-        "/boonus-ilma-sissemakseta": "Estonian (EE)",
-        "/befizetes-nelkuli-bonusz": "Hungarian (HU)",
-        "/bonus-brez-pologa": "Slovenian (SI)",
-        "/bonus-utan-insattning": "Swedish (SV)",
-        "/geen-stortingsbonus": "Dutch (NL)",
-        "/bonus-ohne-einzahlung": "German (DE)",
-        "/gratis-bonus": "Dutch (NL)",
-        "/no-deposit-bonus": "English"
-      }
+        "/ansvarlig-spilling": {
+          "codes": [
+            "nb-NO"
+          ]
+        },
+        "/ansvarligt-spil": {
+          "codes": [
+            "da-DK"
+          ]
+        },
+        "/ansvarsfullt-spelande": {
+          "codes": [
+            "sv-SE"
+          ]
+        },
+        "/felelos-jatek": {
+          "codes": [
+            "hu-HU"
+          ]
+        },
+        "/gioco-responsabile": {
+          "codes": [
+            "it-IT"
+          ]
+        },
+        "/jeu-responsable": {
+          "codes": [
+            "fr-FR"
+          ]
+        },
+        "/joc-responsabil": {
+          "codes": [
+            "ro-RO"
+          ]
+        },
+        "/jogo-responsavel": {
+          "codes": [
+            "pt-BR",
+            "pt-PT"
+          ]
+        },
+        "/juego-responsable": {
+          "codes": [
+            "es-AR",
+            "es-ES",
+            "es-MX"
+          ]
+        },
+        "/odgovorno-igranje": {
+          "codes": [
+            "sl-SI"
+          ]
+        },
+        "/odpowiedzialna-gra": {
+          "codes": [
+            "pl-PL"
+          ]
+        },
+        "/responsible": {
+          "codes": [
+            "en-AU",
+            "en-GB",
+            "en-IE",
+            "en-NZ",
+            "en-US",
+            "ga-IE"
+          ]
+        },
+        "/responsible-gaming": {
+          "codes": [
+            "en-AU",
+            "en-GB",
+            "en-IE",
+            "en-NZ",
+            "en-US",
+            "ga-IE"
+          ]
+        },
+        "/vastutustundlik-mangimine": {
+          "codes": [
+            "et-EE"
+          ]
+        },
+        "/vastuullinen-pelaaminen": {
+          "codes": [
+            "fi-FI"
+          ]
+        },
+        "/verantwoord-gokken": {
+          "codes": [
+            "nl-NL"
+          ]
+        },
+        "/verantwoord-spelen": {
+          "codes": [
+            "nl-NL"
+          ]
+        },
+        "/verantwortungsvolles-spielen": {
+          "codes": [
+            "de-AT",
+            "de-DE"
+          ]
+        },
+        "/ypeythino-paichnidi": {
+          "codes": [
+            "el-GR"
+          ]
+        },
+        "/zodpovedne-hrani": {
+          "codes": [
+            "cs-CZ"
+          ]
+        }
+      },
+      "aliases": [
+        "responsible",
+        "responsible-gaming"
+      ]
     },
     "review": {
       "description": "Обзор казино",
       "slugs": {
-        "/recension": "Swedish (SV)",
-        "/recensie": "Dutch (NL)",
-        "/erfahrungen": "German (DE)",
-        "/avis": "French (FR)",
-        "/opiniones": "Spanish (ES)",
-        "/recensione": "Italian (IT)",
-        "/recenzja": "Polish (PL)",
-        "/arvostelu": "Finnish (FI)",
-        "/anmeldelse": "Norwegian (NO)",
-        "/avaliacao": "Portuguese (PT)",
-        "/recenze": "Czech (CS)",
-        "/recenzie": "Romanian (RO)",
-        "/kritiki": "Greek (GR)",
-        "/ulevaade": "Estonian (EE)",
-        "/ertekeles": "Hungarian (HU)",
-        "/oversikt": "Swedish (SV)",
-        "/beoordeling": "Dutch (NL)",
-        "/rezension": "German (DE)",
-        "/resenas": "Spanish (ES)",
-        "/resena": "Spanish (ES)",
-        "/opinie": "Polish (PL)",
-        "/omtale": "Norwegian (NO)",
-        "/bewertung": "German (DE)",
-        "/ocena": "Slovenian (SI)",
-        "/review": "English"
+        "/anmeldelse": {
+          "codes": [
+            "da-DK",
+            "nb-NO"
+          ]
+        },
+        "/arvostelu": {
+          "codes": [
+            "fi-FI"
+          ]
+        },
+        "/avaliacao": {
+          "codes": [
+            "pt-BR",
+            "pt-PT"
+          ]
+        },
+        "/avis": {
+          "codes": [
+            "fr-FR"
+          ]
+        },
+        "/beoordeling": {
+          "codes": [
+            "nl-NL"
+          ]
+        },
+        "/bewertung": {
+          "codes": [
+            "de-AT",
+            "de-DE"
+          ]
+        },
+        "/erfahrungen": {
+          "codes": [
+            "de-AT",
+            "de-DE"
+          ]
+        },
+        "/ertekeles": {
+          "codes": [
+            "hu-HU"
+          ]
+        },
+        "/kritiki": {
+          "codes": [
+            "el-GR"
+          ]
+        },
+        "/ocena": {
+          "codes": [
+            "sl-SI"
+          ]
+        },
+        "/omtale": {
+          "codes": [
+            "nb-NO"
+          ]
+        },
+        "/opinie": {
+          "codes": [
+            "pl-PL"
+          ]
+        },
+        "/opiniones": {
+          "codes": [
+            "es-AR",
+            "es-ES",
+            "es-MX"
+          ]
+        },
+        "/oversikt": {
+          "codes": [
+            "sv-SE"
+          ]
+        },
+        "/recensie": {
+          "codes": [
+            "nl-NL"
+          ]
+        },
+        "/recension": {
+          "codes": [
+            "sv-SE"
+          ]
+        },
+        "/recensione": {
+          "codes": [
+            "it-IT"
+          ]
+        },
+        "/recenze": {
+          "codes": [
+            "cs-CZ"
+          ]
+        },
+        "/recenzie": {
+          "codes": [
+            "ro-RO"
+          ]
+        },
+        "/recenzja": {
+          "codes": [
+            "pl-PL"
+          ]
+        },
+        "/resena": {
+          "codes": [
+            "es-AR",
+            "es-ES",
+            "es-MX"
+          ]
+        },
+        "/resenas": {
+          "codes": [
+            "es-AR",
+            "es-ES",
+            "es-MX"
+          ]
+        },
+        "/review": {
+          "codes": [
+            "en-AU",
+            "en-GB",
+            "en-IE",
+            "en-NZ",
+            "en-US",
+            "ga-IE"
+          ]
+        },
+        "/rezension": {
+          "codes": [
+            "de-AT",
+            "de-DE"
+          ]
+        },
+        "/ulevaade": {
+          "codes": [
+            "et-EE"
+          ]
+        }
       }
     },
-    "withdrawal": {
-      "description": "Вывод средств",
+    "rules": {
+      "description": "Правила",
       "slugs": {
-        "/utbetalning": "Swedish (SV)",
-        "/uitbetaling": "Dutch (NL)",
-        "/auszahlung": "German (DE)",
-        "/retrait": "French (FR)",
-        "/retiros": "Spanish (ES)",
-        "/retiro": "Spanish (ES)",
-        "/prelievo": "Italian (IT)",
-        "/wyplaty": "Polish (PL)",
-        "/nosto": "Finnish (FI)",
-        "/kotiutus": "Finnish (FI)",
-        "/udbetaling": "Danish (DA)",
-        "/uttak": "Norwegian (NO)",
-        "/levantamento": "Portuguese (PT)",
-        "/vyber": "Czech (CS)",
-        "/retrageri": "Romanian (RO)",
-        "/retragere": "Romanian (RO)",
-        "/analipsi": "Greek (GR)",
-        "/valjamakse": "Estonian (EE)",
-        "/kifizetes": "Hungarian (HU)",
-        "/uttag": "Swedish (SV)",
-        "/wyplata": "Polish (PL)",
-        "/dvig": "Slovenian (SI)",
-        "/withdrawal": "English"
-      }
-    },
-    "freeSpins": {
-      "description": "Бесплатные вращения",
-      "slugs": {
-        "/gratis-spins": "Danish (DA)",
-        "/freispiele": "German (DE)",
-        "/tours-gratuits": "French (FR)",
-        "/tiradas-gratis": "Spanish (ES)",
-        "/giri-gratis": "Italian (IT)",
-        "/darmowe-spiny": "Polish (PL)",
-        "/ilmaiskierrokset": "Finnish (FI)",
-        "/gratisspinn": "Norwegian (NO)",
-        "/free-spins": "English",
-        "/volne-tocky": "Czech (CS)",
-        "/rotiri-gratuite": "Romanian (RO)",
-        "/dorean-spins": "Greek (GR)",
-        "/tasuta-spinnid": "Estonian (EE)",
-        "/ingyenes-porgetesek": "Hungarian (HU)",
-        "/brezplacni-vrtljaji": "Slovenian (SI)",
-        "/giros-gratis": "Spanish (ES)",
-        "/rodadas-gratis": "Portuguese (PT)"
-      }
-    },
-    "app": {
-      "description": "Мобильное приложение",
-      "slugs": {
-        "/app": "English",
-        "/applicatie": "Dutch (NL)",
-        "/anwendung": "German (DE)",
-        "/application": "French (FR)",
-        "/aplicacion": "Spanish (ES)",
-        "/applicazione": "Italian (IT)",
-        "/aplikacja": "Polish (PL)",
-        "/sovellus": "Finnish (FI)",
-        "/applikasjon": "Norwegian (NO)",
-        "/aplicacao": "Portuguese (PT)",
-        "/aplikace": "Czech (CS)",
-        "/aplicatie": "Romanian (RO)",
-        "/efarmogh": "Greek (GR)",
-        "/rakendus": "Estonian (EE)",
-        "/mobiilirakendus": "Estonian (EE)",
-        "/alkalmazas": "Hungarian (HU)",
-        "/mobilalkalmazas": "Hungarian (HU)",
-        "/aplikacija": "Slovenian (SI)"
-      }
-    },
-    "games": {
-      "description": "Игры",
-      "slugs": {
-        "/spel": "Swedish (SV)",
-        "/spellen": "Dutch (NL)",
-        "/spiele": "German (DE)",
-        "/jeux": "French (FR)",
-        "/juegos": "Spanish (ES)",
-        "/giochi": "Italian (IT)",
-        "/gry": "Polish (PL)",
-        "/pelit": "Finnish (FI)",
-        "/spil": "Danish (DA)",
-        "/spill": "Norwegian (NO)",
-        "/jogos": "Portuguese (PT)",
-        "/hry": "Czech (CS)",
-        "/jocuri": "Romanian (RO)",
-        "/paichnia": "Greek (GR)",
-        "/mangud": "Estonian (EE)",
-        "/jatekok": "Hungarian (HU)",
-        "/igre": "Slovenian (SI)",
-        "/games": "English"
-      }
-    },
-    "lottery": {
-      "description": "Лотерея",
-      "slugs": {
-        "/lotteri": "Norwegian (NO)",
-        "/loterij": "Dutch (NL)",
-        "/lotterie": "German (DE)",
-        "/loterie": "Romanian (RO)",
-        "/loteria": "Greek (GR)",
-        "/lotteria": "Italian (IT)",
-        "/arpajaiset": "Finnish (FI)",
-        "/loterii": "Estonian (EE)",
-        "/lotto": "Hungarian (HU)",
-        "/lottosorsolas": "Hungarian (HU)",
-        "/loterija": "Slovenian (SI)",
-        "/lottery": "English"
-      }
-    },
-    "vipProgram": {
-      "description": "VIP программа",
-      "slugs": {
-        "/vip-program": "English",
-        "/vip-programma": "Greek (GR)",
-        "/vip-programm": "Estonian (EE)",
-        "/programme-vip": "French (FR)",
-        "/programa-vip": "Portuguese (PT)",
-        "/programma-vip": "Italian (IT)",
-        "/program-vip": "Romanian (RO)",
-        "/vip-ohjelma": "Finnish (FI)",
-        "/vip-klub": "Slovenian (SI)"
-      }
-    },
-    "verification": {
-      "description": "Верификация",
-      "slugs": {
-        "/verifiering": "Swedish (SV)",
-        "/verificatie": "Dutch (NL)",
-        "/verifizierung": "German (DE)",
-        "/verification-identite": "French (FR)",
-        "/verificacion-identidad": "Spanish (ES)",
-        "/verifica-identita": "Italian (IT)",
-        "/weryfikacja": "Polish (PL)",
-        "/tunnistautuminen": "Finnish (FI)",
-        "/verificering": "Danish (DA)",
-        "/verifisering": "Norwegian (NO)",
-        "/verificacao-de-identidade": "Portuguese (PT)",
-        "/overeni-identity": "Czech (CS)",
-        "/verificare-identitate": "Romanian (RO)",
-        "/epivevaiosi-taytotitas": "Greek (GR)",
-        "/konto-kinnitus": "Estonian (EE)",
-        "/azonositas": "Hungarian (HU)",
-        "/preverjanje": "Slovenian (SI)",
-        "/verification": "English"
-      }
-    },
-    "cashback": {
-      "description": "Кэшбэк",
-      "slugs": {
-        "/cashback": "English"
-      }
-    },
-    "sport": {
-      "description": "Спорт",
-      "slugs": {
-        "/sport": "English",
-        "/deportes": "Spanish (ES)",
-        "/urheilu": "Finnish (FI)",
-        "/desportos": "Portuguese (PT)",
-        "/athlimata": "Greek (GR)",
-        "/sporty": "Slovenian (SI)"
-      }
-    },
-    "betting": {
-      "description": "Ставки на спорт",
-      "slugs": {
-        "/sportspel": "Swedish (SV)",
-        "/sportweddenschappen": "Dutch (NL)",
-        "/sportwetten": "German (DE)",
-        "/paris-sportifs": "French (FR)",
-        "/apuestas-deportivas": "Spanish (ES)",
-        "/scommesse-sportive": "Italian (IT)",
-        "/zaklady-sportowe": "Polish (PL)",
-        "/urheiluvedonlyonti": "Finnish (FI)",
-        "/sportspil": "Danish (DA)",
-        "/sportsodds": "Norwegian (NO)",
-        "/apostas-desportivas": "Portuguese (PT)",
-        "/sportovni-sazky": "Czech (CS)",
-        "/pariuri-sportive": "Romanian (RO)",
-        "/stoixima-athlitika": "Greek (GR)",
-        "/spordikihlveod": "Estonian (EE)",
-        "/sportfogadas": "Hungarian (HU)",
-        "/vadslagning": "Swedish (SV)",
-        "/weddenschappen": "Dutch (NL)",
-        "/wedden": "Dutch (NL)",
-        "/wetten": "German (DE)",
-        "/paris": "French (FR)",
-        "/parier": "French (FR)",
-        "/apuestas": "Spanish (ES)",
-        "/scommesse": "Italian (IT)",
-        "/zaklady": "Polish (PL)",
-        "/vedonlyonti": "Finnish (FI)",
-        "/odds": "Norwegian (NO)",
-        "/apostas": "Portuguese (PT)",
-        "/sazky": "Czech (CS)",
-        "/pariuri": "Romanian (RO)",
-        "/stoixima": "Greek (GR)",
-        "/kihlveod": "Estonian (EE)",
-        "/fogadas": "Hungarian (HU)",
-        "/stave": "Slovenian (SI)",
-        "/sportne-stave": "Slovenian (SI)",
-        "/sports-betting": "English",
-        "/betting": "English"
+        "/kanones": {
+          "codes": [
+            "el-GR"
+          ]
+        },
+        "/pravidla": {
+          "codes": [
+            "cs-CZ"
+          ]
+        },
+        "/pravila": {
+          "codes": [
+            "sl-SI"
+          ]
+        },
+        "/reeglid": {
+          "codes": [
+            "et-EE"
+          ]
+        },
+        "/regeln": {
+          "codes": [
+            "de-AT",
+            "de-DE"
+          ]
+        },
+        "/regels": {
+          "codes": [
+            "nl-NL"
+          ]
+        },
+        "/reglas": {
+          "codes": [
+            "es-AR",
+            "es-ES",
+            "es-MX"
+          ]
+        },
+        "/regler": {
+          "codes": [
+            "da-DK",
+            "nb-NO",
+            "sv-SE"
+          ]
+        },
+        "/regles": {
+          "codes": [
+            "fr-FR"
+          ]
+        },
+        "/regole": {
+          "codes": [
+            "it-IT"
+          ]
+        },
+        "/regras": {
+          "codes": [
+            "pt-BR",
+            "pt-PT"
+          ]
+        },
+        "/reguli": {
+          "codes": [
+            "ro-RO"
+          ]
+        },
+        "/rules": {
+          "codes": [
+            "en-AU",
+            "en-GB",
+            "en-IE",
+            "en-NZ",
+            "en-US",
+            "ga-IE"
+          ]
+        },
+        "/saannot": {
+          "codes": [
+            "fi-FI"
+          ]
+        },
+        "/szabalyok": {
+          "codes": [
+            "hu-HU"
+          ]
+        },
+        "/zasady": {
+          "codes": [
+            "pl-PL"
+          ]
+        }
       },
       "aliases": [
-        "betting",
-        "sports-betting"
+        "regler"
       ]
     },
     "slots": {
       "description": "Слоты",
       "slugs": {
-        "/slots": "English",
-        "/slot": "Italian (IT)",
-        "/sloty": "Czech (CS)",
-        "/kolikkopelit": "Finnish (FI)",
-        "/sloturi": "Romanian (RO)",
-        "/slotimangud": "Estonian (EE)",
-        "/slotok": "Hungarian (HU)",
-        "/spelautomater": "Swedish (SV)",
-        "/gokkasten": "Dutch (NL)",
-        "/spielautomaten": "German (DE)",
-        "/machines-a-sous": "French (FR)",
-        "/tragaperras": "Spanish (ES)",
-        "/tragamonedas": "Spanish (ES)",
-        "/slot-machine": "Italian (IT)",
-        "/automaty": "Czech (CS)",
-        "/spilleautomater": "Norwegian (NO)",
-        "/caca-niqueis": "Portuguese (PT)",
-        "/pacanele": "Romanian (RO)",
-        "/froutakia": "Greek (GR)",
-        "/nyerogepek": "Hungarian (HU)",
-        "/igralni-avtomati": "Slovenian (SI)",
-        "/online-slots": "English"
+        "/automaty": {
+          "codes": [
+            "cs-CZ",
+            "pl-PL"
+          ]
+        },
+        "/caca-niqueis": {
+          "codes": [
+            "pt-BR",
+            "pt-PT"
+          ]
+        },
+        "/froutakia": {
+          "codes": [
+            "el-GR"
+          ]
+        },
+        "/gokkasten": {
+          "codes": [
+            "nl-NL"
+          ]
+        },
+        "/igralni-avtomati": {
+          "codes": [
+            "sl-SI"
+          ]
+        },
+        "/kolikkopelit": {
+          "codes": [
+            "fi-FI"
+          ]
+        },
+        "/machines-a-sous": {
+          "codes": [
+            "fr-FR"
+          ]
+        },
+        "/nyerogepek": {
+          "codes": [
+            "hu-HU"
+          ]
+        },
+        "/online-slots": {
+          "codes": [
+            "en-AU",
+            "en-GB",
+            "en-IE",
+            "en-NZ",
+            "en-US",
+            "ga-IE"
+          ]
+        },
+        "/pacanele": {
+          "codes": [
+            "ro-RO"
+          ]
+        },
+        "/slot": {
+          "codes": [
+            "it-IT"
+          ]
+        },
+        "/slot-machine": {
+          "codes": [
+            "it-IT"
+          ]
+        },
+        "/slotimangud": {
+          "codes": [
+            "et-EE"
+          ]
+        },
+        "/slotok": {
+          "codes": [
+            "hu-HU"
+          ]
+        },
+        "/slots": {
+          "codes": [
+            "de-AT",
+            "de-DE",
+            "en-AU",
+            "en-GB",
+            "en-IE",
+            "en-NZ",
+            "en-US",
+            "es-AR",
+            "es-ES",
+            "es-MX",
+            "et-EE",
+            "fr-FR",
+            "ga-IE",
+            "nl-NL",
+            "sv-SE"
+          ]
+        },
+        "/sloturi": {
+          "codes": [
+            "ro-RO"
+          ]
+        },
+        "/sloty": {
+          "codes": [
+            "cs-CZ",
+            "pl-PL"
+          ]
+        },
+        "/spelautomater": {
+          "codes": [
+            "sv-SE"
+          ]
+        },
+        "/spielautomaten": {
+          "codes": [
+            "de-AT",
+            "de-DE"
+          ]
+        },
+        "/spilleautomater": {
+          "codes": [
+            "da-DK",
+            "nb-NO"
+          ]
+        },
+        "/tragamonedas": {
+          "codes": [
+            "es-AR",
+            "es-ES",
+            "es-MX"
+          ]
+        },
+        "/tragaperras": {
+          "codes": [
+            "es-AR",
+            "es-ES",
+            "es-MX"
+          ]
+        }
       },
       "aliases": [
         "slots",
         "online-slots"
       ]
     },
-    "rules": {
-      "description": "Правила",
+    "sport": {
+      "description": "Спорт",
       "slugs": {
-        "/regler": "Swedish (SV)",
-        "/regels": "Dutch (NL)",
-        "/regeln": "German (DE)",
-        "/regles": "French (FR)",
-        "/reglas": "Spanish (ES)",
-        "/regole": "Italian (IT)",
-        "/zasady": "Polish (PL)",
-        "/saannot": "Finnish (FI)",
-        "/kanones": "Greek (EL)",
-        "/pravidla": "Czech (CS)",
-        "/regras": "Portuguese (PT)",
-        "/reguli": "Romanian (RO)",
-        "/reeglid": "Estonian (ET)",
-        "/szabalyok": "Hungarian (HU)",
-        "/pravila": "Slovenian (SI)",
-        "/rules": "English"
+        "/athlimata": {
+          "codes": [
+            "el-GR"
+          ]
+        },
+        "/deportes": {
+          "codes": [
+            "es-AR",
+            "es-ES",
+            "es-MX"
+          ]
+        },
+        "/desportos": {
+          "codes": [
+            "pt-BR",
+            "pt-PT"
+          ]
+        },
+        "/sport": {
+          "codes": [
+            "cs-CZ",
+            "da-DK",
+            "de-AT",
+            "de-DE",
+            "en-AU",
+            "en-GB",
+            "en-IE",
+            "en-NZ",
+            "en-US",
+            "et-EE",
+            "fr-FR",
+            "ga-IE",
+            "hu-HU",
+            "it-IT",
+            "nb-NO",
+            "nl-NL",
+            "pl-PL",
+            "ro-RO",
+            "sv-SE"
+          ]
+        },
+        "/sporty": {
+          "codes": [
+            "sl-SI"
+          ]
+        },
+        "/urheilu": {
+          "codes": [
+            "fi-FI"
+          ]
+        }
+      }
+    },
+    "support": {
+      "description": "Поддержка",
+      "slugs": {
+        "/podpora": {
+          "codes": [
+            "cs-CZ"
+          ]
+        },
+        "/pomoc": {
+          "codes": [
+            "sl-SI"
+          ]
+        },
+        "/soporte": {
+          "codes": [
+            "es-AR",
+            "es-ES",
+            "es-MX"
+          ]
+        },
+        "/suport": {
+          "codes": [
+            "ro-RO"
+          ]
+        },
+        "/suporte": {
+          "codes": [
+            "pt-BR",
+            "pt-PT"
+          ]
+        },
+        "/support": {
+          "codes": [
+            "da-DK",
+            "de-AT",
+            "de-DE",
+            "en-AU",
+            "en-GB",
+            "en-IE",
+            "en-NZ",
+            "en-US",
+            "fr-FR",
+            "ga-IE",
+            "nb-NO",
+            "nl-NL",
+            "sv-SE"
+          ]
+        },
+        "/supporto": {
+          "codes": [
+            "it-IT"
+          ]
+        },
+        "/tamogatas": {
+          "codes": [
+            "hu-HU"
+          ]
+        },
+        "/tugi": {
+          "codes": [
+            "et-EE"
+          ]
+        },
+        "/tuki": {
+          "codes": [
+            "fi-FI"
+          ]
+        },
+        "/wsparcie": {
+          "codes": [
+            "pl-PL"
+          ]
+        },
+        "/ypostirixi": {
+          "codes": [
+            "el-GR"
+          ]
+        }
+      }
+    },
+    "terms": {
+      "description": "Условия использования",
+      "slugs": {
+        "/agb": {
+          "codes": [
+            "de-AT",
+            "de-DE"
+          ]
+        },
+        "/algemene-voorwaarden": {
+          "codes": [
+            "nl-NL"
+          ]
+        },
+        "/allmanna-villkor": {
+          "codes": [
+            "sv-SE"
+          ]
+        },
+        "/anvandarvillkor": {
+          "codes": [
+            "sv-SE"
+          ]
+        },
+        "/aszf": {
+          "codes": [
+            "hu-HU"
+          ]
+        },
+        "/conditions-dutilisation": {
+          "codes": [
+            "fr-FR"
+          ]
+        },
+        "/conditions-generales": {
+          "codes": [
+            "fr-FR"
+          ]
+        },
+        "/felhasznalasi-feltetelek": {
+          "codes": [
+            "hu-HU"
+          ]
+        },
+        "/gebruiksvoorwaarden": {
+          "codes": [
+            "nl-NL"
+          ]
+        },
+        "/kasutustingimused": {
+          "codes": [
+            "et-EE"
+          ]
+        },
+        "/kayttoehdot": {
+          "codes": [
+            "fi-FI"
+          ]
+        },
+        "/nutzungsbedingungen": {
+          "codes": [
+            "de-AT",
+            "de-DE"
+          ]
+        },
+        "/obchodni-podminky": {
+          "codes": [
+            "cs-CZ"
+          ]
+        },
+        "/oroi-kai-proypotheseis": {
+          "codes": [
+            "el-GR"
+          ]
+        },
+        "/pogoji-uporabe": {
+          "codes": [
+            "sl-SI"
+          ]
+        },
+        "/regulamin": {
+          "codes": [
+            "pl-PL"
+          ]
+        },
+        "/termeni-si-conditii": {
+          "codes": [
+            "ro-RO"
+          ]
+        },
+        "/termini-e-condizioni": {
+          "codes": [
+            "it-IT"
+          ]
+        },
+        "/terminos-y-condiciones": {
+          "codes": [
+            "es-AR",
+            "es-ES",
+            "es-MX"
+          ]
+        },
+        "/termos-e-condicoes": {
+          "codes": [
+            "pt-BR",
+            "pt-PT"
+          ]
+        },
+        "/terms": {
+          "codes": [
+            "en-AU",
+            "en-GB",
+            "en-IE",
+            "en-NZ",
+            "en-US",
+            "ga-IE"
+          ]
+        },
+        "/terms-condition": {
+          "codes": [
+            "en-AU",
+            "en-GB",
+            "en-IE",
+            "en-NZ",
+            "en-US",
+            "ga-IE"
+          ]
+        },
+        "/vilkar-og-betingelser": {
+          "codes": [
+            "da-DK",
+            "nb-NO"
+          ]
+        },
+        "/vseobecne-obchodni-podminky": {
+          "codes": [
+            "cs-CZ"
+          ]
+        }
       },
-      "aliases": ["regler"]
+      "aliases": [
+        "terms",
+        "terms-condition"
+      ]
+    },
+    "verification": {
+      "description": "Верификация",
+      "slugs": {
+        "/azonositas": {
+          "codes": [
+            "hu-HU"
+          ]
+        },
+        "/epivevaiosi-taytotitas": {
+          "codes": [
+            "el-GR"
+          ]
+        },
+        "/konto-kinnitus": {
+          "codes": [
+            "et-EE"
+          ]
+        },
+        "/overeni-identity": {
+          "codes": [
+            "cs-CZ"
+          ]
+        },
+        "/preverjanje": {
+          "codes": [
+            "sl-SI"
+          ]
+        },
+        "/tunnistautuminen": {
+          "codes": [
+            "fi-FI"
+          ]
+        },
+        "/verifica-identita": {
+          "codes": [
+            "it-IT"
+          ]
+        },
+        "/verificacao-de-identidade": {
+          "codes": [
+            "pt-BR",
+            "pt-PT"
+          ]
+        },
+        "/verificacion-identidad": {
+          "codes": [
+            "es-AR",
+            "es-ES",
+            "es-MX"
+          ]
+        },
+        "/verificare-identitate": {
+          "codes": [
+            "ro-RO"
+          ]
+        },
+        "/verificatie": {
+          "codes": [
+            "nl-NL"
+          ]
+        },
+        "/verification": {
+          "codes": [
+            "en-AU",
+            "en-GB",
+            "en-IE",
+            "en-NZ",
+            "en-US",
+            "ga-IE"
+          ]
+        },
+        "/verification-identite": {
+          "codes": [
+            "fr-FR"
+          ]
+        },
+        "/verificering": {
+          "codes": [
+            "da-DK"
+          ]
+        },
+        "/verifiering": {
+          "codes": [
+            "sv-SE"
+          ]
+        },
+        "/verifisering": {
+          "codes": [
+            "nb-NO"
+          ]
+        },
+        "/verifizierung": {
+          "codes": [
+            "de-AT",
+            "de-DE"
+          ]
+        },
+        "/weryfikacja": {
+          "codes": [
+            "pl-PL"
+          ]
+        }
+      }
+    },
+    "vipProgram": {
+      "description": "VIP программа",
+      "slugs": {
+        "/program-vip": {
+          "codes": [
+            "pl-PL",
+            "ro-RO"
+          ]
+        },
+        "/programa-vip": {
+          "codes": [
+            "es-AR",
+            "es-ES",
+            "es-MX",
+            "pt-BR",
+            "pt-PT"
+          ]
+        },
+        "/programma-vip": {
+          "codes": [
+            "it-IT"
+          ]
+        },
+        "/programme-vip": {
+          "codes": [
+            "fr-FR"
+          ]
+        },
+        "/vip-klub": {
+          "codes": [
+            "sl-SI"
+          ]
+        },
+        "/vip-ohjelma": {
+          "codes": [
+            "fi-FI"
+          ]
+        },
+        "/vip-program": {
+          "codes": [
+            "cs-CZ",
+            "da-DK",
+            "en-AU",
+            "en-GB",
+            "en-IE",
+            "en-NZ",
+            "en-US",
+            "ga-IE",
+            "hu-HU",
+            "nb-NO",
+            "sv-SE"
+          ]
+        },
+        "/vip-programm": {
+          "codes": [
+            "de-AT",
+            "de-DE",
+            "et-EE"
+          ]
+        },
+        "/vip-programma": {
+          "codes": [
+            "el-GR",
+            "nl-NL"
+          ]
+        }
+      }
+    },
+    "withdrawal": {
+      "description": "Вывод средств",
+      "slugs": {
+        "/analipsi": {
+          "codes": [
+            "el-GR"
+          ]
+        },
+        "/auszahlung": {
+          "codes": [
+            "de-AT",
+            "de-DE"
+          ]
+        },
+        "/dvig": {
+          "codes": [
+            "sl-SI"
+          ]
+        },
+        "/kifizetes": {
+          "codes": [
+            "hu-HU"
+          ]
+        },
+        "/kotiutus": {
+          "codes": [
+            "fi-FI"
+          ]
+        },
+        "/levantamento": {
+          "codes": [
+            "pt-BR",
+            "pt-PT"
+          ]
+        },
+        "/nosto": {
+          "codes": [
+            "fi-FI"
+          ]
+        },
+        "/prelievo": {
+          "codes": [
+            "it-IT"
+          ]
+        },
+        "/retiro": {
+          "codes": [
+            "es-AR",
+            "es-ES",
+            "es-MX"
+          ]
+        },
+        "/retiros": {
+          "codes": [
+            "es-AR",
+            "es-ES",
+            "es-MX"
+          ]
+        },
+        "/retragere": {
+          "codes": [
+            "ro-RO"
+          ]
+        },
+        "/retrageri": {
+          "codes": [
+            "ro-RO"
+          ]
+        },
+        "/retrait": {
+          "codes": [
+            "fr-FR"
+          ]
+        },
+        "/udbetaling": {
+          "codes": [
+            "da-DK"
+          ]
+        },
+        "/uitbetaling": {
+          "codes": [
+            "nl-NL"
+          ]
+        },
+        "/utbetalning": {
+          "codes": [
+            "sv-SE"
+          ]
+        },
+        "/uttag": {
+          "codes": [
+            "sv-SE"
+          ]
+        },
+        "/uttak": {
+          "codes": [
+            "nb-NO"
+          ]
+        },
+        "/valjamakse": {
+          "codes": [
+            "et-EE"
+          ]
+        },
+        "/vyber": {
+          "codes": [
+            "cs-CZ"
+          ]
+        },
+        "/withdrawal": {
+          "codes": [
+            "en-AU",
+            "en-GB",
+            "en-IE",
+            "en-NZ",
+            "en-US",
+            "ga-IE"
+          ]
+        },
+        "/wyplata": {
+          "codes": [
+            "pl-PL"
+          ]
+        },
+        "/wyplaty": {
+          "codes": [
+            "pl-PL"
+          ]
+        }
+      }
     }
   }
 }

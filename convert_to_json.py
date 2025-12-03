@@ -12,8 +12,9 @@ import json
 import sys
 from dataclasses import dataclass
 from datetime import datetime
+import re
 from pathlib import Path
-from typing import Dict, Iterable, List
+from typing import Dict, Iterable, List, Sequence, Set
 
 import pandas as pd
 
@@ -97,6 +98,12 @@ class PageBlock:
     rows: List[pd.Series]
 
 
+@dataclass
+class LanguageColumn:
+    label: str
+    codes: List[str]
+
+
 def load_blocks(df: pd.DataFrame) -> Iterable[PageBlock]:
     current_slug: str | None = None
     buffer: List[pd.Series] = []
@@ -129,35 +136,63 @@ def resolve_group(slug: str) -> str:
     return TYPE_TO_GROUP.get(slug) or TYPE_TO_GROUP.get(key) or key
 
 
-def block_entries(block: PageBlock, headers: List[str]) -> Dict[str, str]:
-    entries: Dict[str, str] = {}
+def parse_codes(cell: str) -> List[str]:
+    if not cell or str(cell).strip().lower() in {"", "nan"}:
+        return []
+    normalized = re.sub(r"\s+I\s+", "|", str(cell))
+    parts = [part.strip() for part in normalized.split("|") if part.strip()]
+    return parts if parts else []
+
+
+def build_language_columns(df: pd.DataFrame) -> List[LanguageColumn]:
+    labels = df.iloc[0]
+    codes_row = df.iloc[1]
+    columns: List[LanguageColumn] = []
+    for idx in range(len(df.columns)):
+        label = str(labels.iloc[idx]).strip() if idx < len(labels) and pd.notna(labels.iloc[idx]) else ""
+        code_cell = str(codes_row.iloc[idx]).strip() if idx < len(codes_row) and pd.notna(codes_row.iloc[idx]) else ""
+        columns.append(LanguageColumn(label=label, codes=parse_codes(code_cell)))
+    return columns
+
+
+def block_entries(block: PageBlock, languages: Sequence[LanguageColumn]) -> Dict[str, Set[str]]:
+    entries: Dict[str, Set[str]] = {}
     for row in block.rows:
         for idx, value in enumerate(row):
-            if idx >= len(headers):
+            if idx >= len(languages):
                 continue
             if pd.isna(value) or not str(value).strip():
                 continue
-            entries[clean_slug(str(value))] = headers[idx]
+            slug = clean_slug(str(value))
+            bucket = entries.setdefault(slug, set())
+            bucket.update(languages[idx].codes)
     return entries
 
 
-def build_groups(blocks: Iterable[PageBlock], headers: List[str]) -> Dict[str, Dict[str, Dict[str, str]]]:
-    groups: Dict[str, Dict[str, Dict[str, str]]] = {}
+def build_groups(blocks: Iterable[PageBlock], languages: Sequence[LanguageColumn]) -> Dict[str, Dict[str, Dict[str, Set[str]]]]:
+    groups: Dict[str, Dict[str, Dict[str, Set[str]]]] = {}
     for block in blocks:
         group_key = resolve_group(block.slug)
-        entries = block_entries(block, headers)
+        entries = block_entries(block, languages)
         bucket = groups.setdefault(group_key, {"slugs": {}})
-        bucket["slugs"].update(entries)
+        for slug, codes in entries.items():
+            target = bucket["slugs"].setdefault(slug, set())
+            target.update(codes)
     return groups
 
 
-def merge_with_metadata(groups: Dict[str, Dict[str, Dict[str, str]]]) -> Dict[str, Dict[str, object]]:
+def merge_with_metadata(groups: Dict[str, Dict[str, Dict[str, Set[str]]]]) -> Dict[str, Dict[str, object]]:
     merged: Dict[str, Dict[str, object]] = {}
     for key, info in groups.items():
         meta = PAGE_GROUPS.get(key, {"description": key})
+        normalized_slugs = {}
+        for slug, codes in info["slugs"].items():
+            normalized_slugs[slug] = {
+                "codes": sorted(codes)
+            }
         merged[key] = {
             "description": meta["description"],
-            "slugs": dict(sorted(info["slugs"].items())),
+            "slugs": dict(sorted(normalized_slugs.items())),
         }
         if aliases := meta.get("aliases"):
             merged[key]["aliases"] = aliases
@@ -166,10 +201,10 @@ def merge_with_metadata(groups: Dict[str, Dict[str, Dict[str, str]]]) -> Dict[st
 
 def convert(input_path: Path, output_path: Path) -> None:
     df = pd.read_csv(input_path, header=None)
-    headers = [str(col).strip() for col in df.iloc[1]]
+    language_columns = build_language_columns(df)
     payload = df.iloc[2:].reset_index(drop=True)
     blocks = list(load_blocks(payload))
-    raw_groups = build_groups(blocks, headers)
+    raw_groups = build_groups(blocks, language_columns)
     final_groups = merge_with_metadata(raw_groups)
 
     data = {
