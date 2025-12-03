@@ -32,7 +32,7 @@
       if(/^https?[:/][^/]/.test(rawHref)){hasError=true;entryErrors.push('Неправильный протокол в URL');}
       if(!group){hasError=true;entryErrors.push('URL не найден в базе слагов');}
       else if(currentGroup&&group!==currentGroup){hasError=true;entryErrors.push('Неправильная группа: '+group+' вместо '+currentGroup);}
-      if(match&&match.codes&&match.codes.length&&!codesMatch(match.codes,hreflang)){hasError=true;var normalizedCode=(hreflang||'').trim().toLowerCase();var expected=(codeIndex[normalizedCode]&&codeIndex[normalizedCode].slugs)||[];var expectedText=expected.length?expected.join(', '):'slug для этого языка не найден в базе';entryErrors.push('Неверный hreflang для '+hreflang+': ожидается '+expectedText);}
+      if(match&&match.codes&&match.codes.length&&!codesMatch(match.codes,hreflang)){hasError=true;var normalizedCode=(hreflang||'').trim().toLowerCase();var expectedList=(codeIndex[normalizedCode]&&codeIndex[normalizedCode].slugs)||[];var expectedSlug=expectedList.length?expectedList[0]:null;var expectedText=expectedSlug||'slug для этого языка не найден в базе';entryErrors.push('Неверный hreflang для '+hreflang+': ожидается '+expectedText);}
       var isHome=url.pathname==='/'||url.pathname==='';
       if(canonicalUrl&&isCurrent){var canonicalHref=link.getAttribute('href');if(canonicalHref!==canonicalUrl){entryWarnings.push('Не совпадает с canonical');warnings.push({href:rawHref,hreflang:hreflang,msg:'Не совпадает с canonical: '+canonicalUrl});}}
       if(rawHref.indexOf('_')>-1){entryWarnings.push('Нижнее подчёркивание в URL');}
