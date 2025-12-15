@@ -1,6 +1,6 @@
 {
   "version": "2.7",
-  "updated": "2025-12-03",
+  "updated": "2025-12-15",
   "pageGroups": {
     "app": {
       "description": "Мобильное приложение",
@@ -651,158 +651,6 @@
         "cookies"
       ]
     },
-    "en": {
-      "description": "en",
-      "slugs": {
-        "/cs": {
-          "codes": [
-            "cs-CZ"
-          ]
-        },
-        "/da": {
-          "codes": [
-            "da-DK"
-          ]
-        },
-        "/de": {
-          "codes": [
-            "de-DE"
-          ]
-        },
-        "/de-at": {
-          "codes": [
-            "de-AT"
-          ]
-        },
-        "/de-ch": {
-          "codes": [
-            "de-CH",
-            "fr-CH",
-            "it-CH"
-          ]
-        },
-        "/el": {
-          "codes": [
-            "el-GR"
-          ]
-        },
-        "/en": {
-          "codes": [
-            "en-GB",
-            "en-US"
-          ]
-        },
-        "/en-au": {
-          "codes": [
-            "en-AU"
-          ]
-        },
-        "/en-ca": {
-          "codes": [
-            "en-CA",
-            "fr-CA"
-          ]
-        },
-        "/en-ie": {
-          "codes": [
-            "en-IE",
-            "ga-IE"
-          ]
-        },
-        "/en-nz": {
-          "codes": [
-            "en-NZ"
-          ]
-        },
-        "/es": {
-          "codes": [
-            "es-ES"
-          ]
-        },
-        "/es-ar": {
-          "codes": [
-            "es-AR"
-          ]
-        },
-        "/es-mx": {
-          "codes": [
-            "es-MX"
-          ]
-        },
-        "/et": {
-          "codes": [
-            "et-EE"
-          ]
-        },
-        "/fi": {
-          "codes": [
-            "fi-FI"
-          ]
-        },
-        "/fr": {
-          "codes": [
-            "fr-FR"
-          ]
-        },
-        "/hu": {
-          "codes": [
-            "hu-HU"
-          ]
-        },
-        "/it": {
-          "codes": [
-            "it-IT"
-          ]
-        },
-        "/nb": {
-          "codes": [
-            "nb-NO"
-          ]
-        },
-        "/nl": {
-          "codes": [
-            "nl-NL"
-          ]
-        },
-        "/nl-be": {
-          "codes": [
-            "de-BE",
-            "fr-BE",
-            "nl-BE"
-          ]
-        },
-        "/pl": {
-          "codes": [
-            "pl-PL"
-          ]
-        },
-        "/pt": {
-          "codes": [
-            "pt-PT"
-          ]
-        },
-        "/pt-br": {
-          "codes": [
-            "pt-BR"
-          ]
-        },
-        "/ro": {
-          "codes": [
-            "ro-RO"
-          ]
-        },
-        "/sl": {
-          "codes": [
-            "sl-SI"
-          ]
-        },
-        "/sv": {
-          "codes": [
-            "sv-SE"
-          ]
-        }
-      }
-    },
     "faq": {
       "description": "Часто задаваемые вопросы",
       "slugs": {
@@ -1436,14 +1284,34 @@
             "sv-SE"
           ]
         },
+        "/cs": {
+          "codes": [
+            "cs-CZ"
+          ]
+        },
         "/cs-cz": {
           "codes": [
             "cs-CZ"
           ]
         },
+        "/da": {
+          "codes": [
+            "da-DK"
+          ]
+        },
         "/da-dk": {
           "codes": [
             "da-DK"
+          ]
+        },
+        "/de": {
+          "codes": [
+            "de-DE"
+          ]
+        },
+        "/de-at": {
+          "codes": [
+            "de-AT"
           ]
         },
         "/de-be": {
@@ -1453,9 +1321,21 @@
             "nl-BE"
           ]
         },
+        "/de-ch": {
+          "codes": [
+            "de-CH",
+            "fr-CH",
+            "it-CH"
+          ]
+        },
         "/de-de": {
           "codes": [
             "de-DE"
+          ]
+        },
+        "/el": {
+          "codes": [
+            "el-GR"
           ]
         },
         "/el-gr": {
@@ -1463,9 +1343,37 @@
             "el-GR"
           ]
         },
+        "/en": {
+          "codes": [
+            "en-GB",
+            "en-US"
+          ]
+        },
+        "/en-au": {
+          "codes": [
+            "en-AU"
+          ]
+        },
+        "/en-ca": {
+          "codes": [
+            "en-CA",
+            "fr-CA"
+          ]
+        },
         "/en-gb": {
           "codes": [
             "en-GB"
+          ]
+        },
+        "/en-ie": {
+          "codes": [
+            "en-IE",
+            "ga-IE"
+          ]
+        },
+        "/en-nz": {
+          "codes": [
+            "en-NZ"
           ]
         },
         "/en-us": {
@@ -1473,9 +1381,29 @@
             "en-US"
           ]
         },
+        "/es": {
+          "codes": [
+            "es-ES"
+          ]
+        },
+        "/es-ar": {
+          "codes": [
+            "es-AR"
+          ]
+        },
         "/es-es": {
           "codes": [
             "es-ES"
+          ]
+        },
+        "/es-mx": {
+          "codes": [
+            "es-MX"
+          ]
+        },
+        "/et": {
+          "codes": [
+            "et-EE"
           ]
         },
         "/et-ee": {
@@ -1483,9 +1411,19 @@
             "et-EE"
           ]
         },
+        "/fi": {
+          "codes": [
+            "fi-FI"
+          ]
+        },
         "/fi-fi": {
           "codes": [
             "fi-FI"
+          ]
+        },
+        "/fr": {
+          "codes": [
+            "fr-FR"
           ]
         },
         "/fr-be": {
@@ -1519,9 +1457,19 @@
             "ga-IE"
           ]
         },
+        "/hu": {
+          "codes": [
+            "hu-HU"
+          ]
+        },
         "/hu-hu": {
           "codes": [
             "hu-HU"
+          ]
+        },
+        "/it": {
+          "codes": [
+            "it-IT"
           ]
         },
         "/it-ch": {
@@ -1536,9 +1484,26 @@
             "it-IT"
           ]
         },
+        "/nb": {
+          "codes": [
+            "nb-NO"
+          ]
+        },
         "/nb-no": {
           "codes": [
             "nb-NO"
+          ]
+        },
+        "/nl": {
+          "codes": [
+            "nl-NL"
+          ]
+        },
+        "/nl-be": {
+          "codes": [
+            "de-BE",
+            "fr-BE",
+            "nl-BE"
           ]
         },
         "/nl-nl": {
@@ -1546,9 +1511,24 @@
             "nl-NL"
           ]
         },
+        "/pl": {
+          "codes": [
+            "pl-PL"
+          ]
+        },
         "/pl-pl": {
           "codes": [
             "pl-PL"
+          ]
+        },
+        "/pt": {
+          "codes": [
+            "pt-PT"
+          ]
+        },
+        "/pt-br": {
+          "codes": [
+            "pt-BR"
           ]
         },
         "/pt-pt": {
@@ -1556,14 +1536,29 @@
             "pt-PT"
           ]
         },
+        "/ro": {
+          "codes": [
+            "ro-RO"
+          ]
+        },
         "/ro-ro": {
           "codes": [
             "ro-RO"
           ]
         },
+        "/sl": {
+          "codes": [
+            "sl-SI"
+          ]
+        },
         "/sl-si": {
           "codes": [
             "sl-SI"
+          ]
+        },
+        "/sv": {
+          "codes": [
+            "sv-SE"
           ]
         },
         "/sv-se": {
