@@ -1,6 +1,6 @@
 (function(){
   var dataUrl='https://yarikbes.github.io/SEO------/slugs.json';
-  var hreflangCodes=['x-default','sv-SE','sv','nl-NL','nl-BE','nl','de-DE','de','fr-FR','fr-BE','fr','es-ES','es','it-IT','it','pl-PL','pl','fi-FI','fi','da-DK','da','nb-NO','nb','pt-PT','pt','cs-CZ','cs','ro-RO','ro','sl-SI','sl','el-GR','el','et-EE','et','hu-HU','hu','en-GB','en-NZ','en-CA','en-AU','en-US','en-IE','ga-IE','en','es-AR','es-MX','fr-CA','fr-CH','pt-BR','de-AT','de-CH','it-CH'];
+  var hreflangCodes=['x-default','sv-SE','sv','nl-NL','nl-BE','nl','de-DE','de','fr-FR','fr-BE','fr','es-ES','es','it-IT','it','pl-PL','pl','fi-FI','fi','da-DK','da','nb-NO','nb','pt-PT','pt','cs-CZ','cs','ro-RO','ro','sl-SI','sl','el-GR','el','et-EE','et','hu-HU','hu','en-GB','en-NZ','en-CA','en-AU','en-US','en-IE','ga-IE','en','es-AR','es-MX','fr-CA','fr-CH','pt-BR','de-AT','de-CH','it-CH','ja-JP','hi-IN','en-IN','fil-PH','en-PH','ar-AE','en-AE'];
   var reloadCookie='showCloak';
   var widgetClass='hreflang-checker-widget';
   var emptyClass='hreflang-empty-widget';
