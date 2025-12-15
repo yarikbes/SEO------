@@ -44,14 +44,18 @@
       var slashPattern=null;
       var hasSlash=rawHref.endsWith('/');
       slashPattern=hasSlash?'with':'without';
-      if(isHome){homePatterns.push(slashPattern);if(hasSlash){entryWarnings.push('Главная: URL со слешем, проверьте консистентность');}}
-      else{rows.forEach(function(prev){if(prev.slashPattern&&prev.slashPattern!==slashPattern){hasError=true;entryErrors.push('Несогласованный trailing slash');}});if(!rows.slashPattern){rows.slashPattern=slashPattern;}}
+      // Консистентность слэша проверяем только для внутренних страниц;
+      // для главных ничего не сигнализируем.
+      if(!isHome){
+        if(rows._internalSlashPattern&&rows._internalSlashPattern!==slashPattern){hasError=true;entryErrors.push('Несогласованный trailing slash между языковыми версиями');}
+        if(!rows._internalSlashPattern){rows._internalSlashPattern=slashPattern;}
+      }
       var row={href:rawHref,hreflang:hreflang,group:group,err:hasError,msg:entryErrors.join('; '),warn:entryWarnings.length>0,warnMsg:entryWarnings.join('; '),cur:isCurrent,slashPattern:slashPattern};
       rows.push(row);
       if(hasError){errors.push({href:rawHref,hreflang:hreflang,group:group,msg:row.msg});}
       if(entryWarnings.length>0){warnings.push({href:rawHref,hreflang:hreflang,msg:row.warnMsg});}
     });
-    if(homePatterns.length>1){warnings.push({href:'/',hreflang:'',msg:'Главная: разные trailing slash между версиями'});}
+    // Для главной страницы trailing slash не контролируем (можем переосмыслить позже для всего сайта).
     var widget=create('div');widget.className=widgetClass;widget.style.cssText='position:fixed!important;top:20px!important;left:20px!important;background:#fff!important;border:1px solid #ccc!important;box-shadow:0 2px 10px rgba(0,0,0,0.2)!important;z-index:2147483647!important;max-width:1200px!important;max-height:80vh!important;overflow:auto!important;font-family:Arial,sans-serif!important;font-size:13px!important;border-radius:8px!important';
     var headerBg=errors.length>0?'#ffebee':warnings.length>0?'#fff3cd':'#e8f5e9';
     var headerColor=errors.length>0?'#c62828':warnings.length>0?'#856404':'#2e7d32';
