@@ -22,6 +22,7 @@
   function ensureAlias(map,key,value){map[key]=value;if(key.charAt(0)!=='/'){map['/'+key]=value;}}
   function hasDoubleSlash(url){var remainder=url.replace(/^https?:\/\/[^\/]+/i,'');return remainder.indexOf('//')>-1;}
   function removeExistingWidgets(){var nodes=document.querySelectorAll('.'+widgetClass+',.'+emptyClass);nodes.forEach(function(node){node.remove();});}
+  function buildClipboardText(rows,errors,warnings){var lines=[];lines.push('Всего: '+rows.length+' | Ошибок: '+errors.length+' | Предупреждений: '+warnings.length);rows.forEach(function(row){var status='OK';if(row.err){status='ERR: '+(row.msg||'');}else if(row.warn){status='WARN: '+(row.warnMsg||'');}lines.push((row.hreflang||'')+'\t'+row.href+'\t'+status);});return lines.join('\n');}
 
   function showEmptyWidget(){var emptyWidget=create('div');emptyWidget.className=emptyClass;emptyWidget.style.cssText='position:fixed!important;top:20px!important;left:20px!important;background:#fff!important;border:1px solid #ccc!important;box-shadow:0 2px 10px rgba(0,0,0,0.2)!important;z-index:2147483647!important;max-width:500px!important;font-family:Arial,sans-serif!important;font-size:14px!important;border-radius:8px!important';emptyWidget.innerHTML='<div style="background:#fff3cd!important;padding:16px!important;border-bottom:1px solid #ccc!important;display:flex!important;justify-content:space-between!important;align-items:center!important;min-height:40px!important"><span style="font-weight:bold!important;color:#856404!important;flex:1!important">Hreflang не найдены</span><button class="hreflang-close-btn" style="background:none!important;border:none!important;font-size:24px!important;line-height:1!important;padding:0!important;margin:0!important;width:24px!important;height:24px!important;min-width:24px!important;min-height:24px!important;flex-shrink:0!important;cursor:pointer!important;color:#856404!important;font-weight:bold!important;display:flex!important;align-items:center!important;justify-content:center!important">X</button></div><div style="padding:20px!important"><p style="margin:0 0 12px 0!important;color:#000!important">На этой странице не найдены теги <code style="background:#f5f5f5!important;padding:2px 6px!important;border-radius:3px!important;color:#000!important">&lt;link rel="alternate" hreflang="..."&gt;</code></p><p style="margin:0!important;color:#333!important;font-size:13px!important"><strong>Возможные причины:</strong><br>&bull; Страница не мультиязычная<br>&bull; Теги скрыты JavaScript (клоакинг)<br>&bull; Теги еще не загружены</p></div>';
     document.body.appendChild(emptyWidget);
@@ -97,8 +98,14 @@
     });
     table.appendChild(tbody);
     widget.appendChild(table);
-    var footer=create('div',{padding:'8px 12px',background:'#f5f5f5',borderTop:'1px solid #ccc',color:'#000'});
-    footer.textContent='Всего: '+alternates.length+' | Ошибок: '+errors.length+' | Предупреждений: '+warnings.length;
+    var footer=create('div',{padding:'8px 12px',background:'#f5f5f5',borderTop:'1px solid #ccc',color:'#000',position:'sticky',bottom:'0',display:'flex',alignItems:'center',justifyContent:'space-between',gap:'12px'});
+    var footerText=create('span',{color:'#000'});
+    footerText.textContent='Всего: '+alternates.length+' | Ошибок: '+errors.length+' | Предупреждений: '+warnings.length;
+    footer.appendChild(footerText);
+    var copyBtn=create('button',{background:'#1558d6',color:'#fff',border:'none',padding:'6px 10px',borderRadius:'4px',cursor:'pointer',fontWeight:'bold'});
+    copyBtn.textContent='Скопировать результат';
+    copyBtn.addEventListener('click',function(ev){ev.preventDefault();ev.stopPropagation();var text=buildClipboardText(rows,errors,warnings);if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).catch(function(err){alert('Не удалось скопировать: '+err.message);});}else{alert('Копирование не поддерживается в этом браузере');}});
+    footer.appendChild(copyBtn);
     widget.appendChild(footer);
     document.body.appendChild(widget);
   }).catch(function(err){alert('Ошибка загрузки базы слагов: '+err.message);});}
