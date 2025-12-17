@@ -64,7 +64,7 @@
       if(hrefCount[row.normalizedHref]>1){errs.push('Один URL использован для нескольких hreflang: '+row.normalizedHref);}
       if(hostIssues[row.normalizedHref]==='error'){errs.push('Другой домен в hreflang: '+row.hrefHost+' вместо '+baseHost);}
       else if(hostIssues[row.normalizedHref]==='warn'){warns.push('Поддомен отличается от текущего: '+row.hrefHost);}
-      if(row.href!==row.normalizedHref){errs.push('Фактический href после разбора: >>> '+row.normalizedHref+' <<<');}
+      if(row.href!==row.normalizedHref){errs.push('Фактический href: '+row.normalizedHref);}
       row.msg=errs.join('; ');
       row.warnMsg=warns.join('; ');
       row.err=errs.length>0;
@@ -113,7 +113,6 @@
       tr.appendChild(hlCell);
       var statusCell=create('td',{padding:'4px 12px',fontSize:'11px'});
       var hasContent=false;
-      if(entry.href!==entry.normalizedHref){var parsed=create('div',{color:'#c62828',fontWeight:'bold',marginBottom:'2px'});parsed.textContent='Фактический href: '+entry.normalizedHref;statusCell.appendChild(parsed);hasContent=true;}
       if(entry.err){statusCell.appendChild(createList('[ERR] Ошибка', '#c62828', formatMessages(entry.msg)));hasContent=true;}
       if(entry.warn){statusCell.appendChild(createList('[WARN] Предупреждение', '#856404', formatMessages(entry.warnMsg)));hasContent=true;}
       if(!hasContent){var ok=create('span',{color:'#2e7d32'});ok.textContent='OK ('+(entry.group||'')+')';statusCell.appendChild(ok);}
