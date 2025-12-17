@@ -64,7 +64,7 @@
       if(hrefCount[row.normalizedHref]>1){errs.push('Один URL использован для нескольких hreflang: '+row.normalizedHref);}
       if(hostIssues[row.normalizedHref]==='error'){errs.push('Другой домен в hreflang: '+row.hrefHost+' вместо '+baseHost);}
       else if(hostIssues[row.normalizedHref]==='warn'){warns.push('Поддомен отличается от текущего: '+row.hrefHost);}
-      if(row.href!==row.normalizedHref){warns.push('Фактический href после разбора: '+row.normalizedHref);}
+      if(row.href!==row.normalizedHref){errs.push('Фактический href после разбора: >>> '+row.normalizedHref+' <<<');}
       row.msg=errs.join('; ');
       row.warnMsg=warns.join('; ');
       row.err=errs.length>0;
