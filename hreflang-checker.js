@@ -1,8 +1,7 @@
 ﻿(function(){
   var dataUrl='https://yarikbes.github.io/SEO------/slugs.json';
   var telemetryUrl='https://hreflang-checker.dorian-grei33.workers.dev/ping';
-  var hreflangCodes=['x-default','sv-SE','sv','nl-NL','nl-BE','nl','de-DE','de','fr-FR','fr-BE','fr','es-ES','es','it-IT','it','pl-PL','pl','fi-FI','fi','da-DK','da','nb-NO','nb','no-NO','no','pt-PT','pt','cs-CZ','cs','ro-RO','ro','sl-SI','sl','el-GR','el','et-EE','et','hu-HU','hu','en-GB','en-NZ','en-CA','en-AU','en-US','en-IE','ga-IE','en','es-AR','es-MX','fr-CA','fr-CH','pt-BR','de-AT','de-CH','it-CH','ja','ja-JP','hi-IN','en-IN','fil-PH','en-PH','ar-AE','en-AE'];
-    var hreflangCodes=['x-default','sv-SE','sv','nl-NL','nl-BE','nl','de-DE','de','fr-FR','fr-BE','fr','es-ES','es','it-IT','it','pl-PL','pl','fi-FI','fi','da-DK','da','nb-NO','nb','no-NO','no','pt-PT','pt','cs-CZ','cs','ro-RO','ro','sl-SI','sl','el-GR','el','et-EE','et','hu-HU','hu','en-GB','en-NZ','en-CA','en-AU','en-US','en-IE','ga-IE','en','es-AR','es-MX','fr-CA','fr-CH','pt-BR','de-AT','de-CH','it-CH','ja','ja-JP','hi-IN','en-IN','fil-PH','en-PH','ar-AE','en-AE','no','no-NO','in','sh'];
+  var hreflangCodes=['x-default','sv-SE','sv','nl-NL','nl-BE','nl','de-DE','de','fr-FR','fr-BE','fr','es-ES','es','it-IT','it','pl-PL','pl','fi-FI','fi','da-DK','da','nb-NO','nb','no-NO','no','pt-PT','pt','cs-CZ','cs','ro-RO','ro','sl-SI','sl','el-GR','el','et-EE','et','hu-HU','hu','en-GB','en-NZ','en-CA','en-AU','en-US','en-IE','ga-IE','en','es-AR','es-MX','fr-CA','fr-CH','pt-BR','de-AT','de-CH','it-CH','ja','ja-JP','hi-IN','en-IN','fil-PH','en-PH','ar-AE','en-AE','in','sh'];
     var specialHreflangHints={
       'no':'Используйте nb-NO (норвежский Bokmål)',
       'no-no':'Используйте nb-NO (норвежский Bokmål)',
