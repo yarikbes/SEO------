@@ -16,7 +16,7 @@
 
   function stripLangPrefix(path){return path.replace(/^\/(?:[a-z]{2}(?:-[A-Z]{2})?)\//,'/');}
   function cleanPath(path){var cleaned=path.replace(/\/+/g,'/').replace(/\/$/,'');return cleaned||'/';}
-  function normalizePath(path){var cleaned=cleanPath(path);return cleaned||'/';}
+  function normalizePath(path){if(!path)return'/';var normalized=path.replace(/\/+/g,'/');if(normalized.charAt(0)!=='/'){normalized='/'+normalized;}return normalized||'/';}
   function normalizeUrl(raw){var parsed=new URL(raw,location.origin);return parsed.origin+normalizePath(parsed.pathname);}
   function formatMessages(text){return text?text.split('; ').filter(Boolean):[];}
   function normalizeCodes(entry){if(!entry)return[];if(Array.isArray(entry))return entry.filter(Boolean);if(typeof entry==='object'&&Array.isArray(entry.codes))return entry.codes.filter(Boolean);return[];}
