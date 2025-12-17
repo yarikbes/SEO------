@@ -113,6 +113,7 @@
       tr.appendChild(hlCell);
       var statusCell=create('td',{padding:'4px 12px',fontSize:'11px'});
       var hasContent=false;
+      if(entry.href!==entry.normalizedHref){var parsed=create('div',{color:'#c62828',fontWeight:'bold',marginBottom:'2px'});parsed.textContent='Фактический href: '+entry.normalizedHref;statusCell.appendChild(parsed);hasContent=true;}
       if(entry.err){statusCell.appendChild(createList('[ERR] Ошибка', '#c62828', formatMessages(entry.msg)));hasContent=true;}
       if(entry.warn){statusCell.appendChild(createList('[WARN] Предупреждение', '#856404', formatMessages(entry.warnMsg)));hasContent=true;}
       if(!hasContent){var ok=create('span',{color:'#2e7d32'});ok.textContent='OK ('+(entry.group||'')+')';statusCell.appendChild(ok);}
