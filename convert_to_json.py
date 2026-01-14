@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import json
 import sys
+import argparse
 from dataclasses import dataclass
 from datetime import datetime
 import re
@@ -21,6 +22,8 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parent
 DEFAULT_INPUT = ROOT / "URL на разных языках - Вариант Б (развёрнутый).csv"
 DEFAULT_OUTPUT = ROOT / "slugs.json"
+
+DEFAULT_VERSION_FALLBACK = "2.8.1"
 
 PAGE_GROUPS = {
     "main": {"description": "Главная страница", "aliases": ["", "/"]},
@@ -264,7 +267,26 @@ def merge_with_metadata(groups: Dict[str, Dict[str, Dict[str, Set[str]]]]) -> Di
     return dict(sorted(merged.items()))
 
 
-def convert(input_path: Path, output_path: Path) -> None:
+def read_existing_version(path: Path) -> str | None:
+    """Пытается прочитать version из уже существующего slugs.json.
+
+    Нужна, чтобы конвертер не откатывал версию назад при перегенерации.
+    """
+
+    if not path.exists():
+        return None
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return None
+    if not isinstance(data, dict):
+        return None
+    version = data.get("version")
+    version = str(version).strip() if version else ""
+    return version or None
+
+
+def convert(input_path: Path, output_path: Path, version: str | None = None) -> None:
     df = pd.read_csv(input_path, header=None)
     language_columns = build_language_columns(df)
     payload = df.iloc[2:].reset_index(drop=True)
@@ -272,8 +294,10 @@ def convert(input_path: Path, output_path: Path) -> None:
     raw_groups = build_groups(blocks, language_columns)
     final_groups = merge_with_metadata(raw_groups)
 
+    resolved_version = (version or "").strip() or read_existing_version(output_path) or DEFAULT_VERSION_FALLBACK
+
     data = {
-        "version": "2.7",
+        "version": resolved_version,
         "updated": datetime.now().strftime("%Y-%m-%d"),
         "pageGroups": final_groups,
     }
@@ -285,12 +309,23 @@ def convert(input_path: Path, output_path: Path) -> None:
 
 
 def main(args: List[str]) -> int:
-    input_path = Path(args[0]).expanduser() if args else DEFAULT_INPUT
-    output_path = Path(args[1]).expanduser() if len(args) > 1 else DEFAULT_OUTPUT
+    parser = argparse.ArgumentParser(description="Инструмент конвертации CSV в slugs.json")
+    parser.add_argument("input_csv", nargs="?", default=str(DEFAULT_INPUT), help="Путь к CSV")
+    parser.add_argument("output_json", nargs="?", default=str(DEFAULT_OUTPUT), help="Путь к slugs.json")
+    parser.add_argument(
+        "--version",
+        dest="version",
+        default=None,
+        help="Версия slugs.json (например 2.9). Если не указана — берётся из текущего output_json.",
+    )
+    ns = parser.parse_args(args)
+
+    input_path = Path(ns.input_csv).expanduser()
+    output_path = Path(ns.output_json).expanduser()
     if not input_path.exists():
         print(f"❌ Файл не найден: {input_path}", file=sys.stderr)
         return 1
-    convert(input_path, output_path)
+    convert(input_path, output_path, version=ns.version)
     return 0
 
 
