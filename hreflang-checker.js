@@ -155,6 +155,7 @@
     var enableNetworkCheck=options&&Object.prototype.hasOwnProperty.call(options,'enableNetworkCheck')?Boolean(options.enableNetworkCheck):true;
     var maxNetworkChecks=options&&Number.isFinite(options.maxNetworkChecks)?options.maxNetworkChecks:120;
     var concurrency=options&&Number.isFinite(options.concurrency)?options.concurrency:8;
+    var isMultilingual=Boolean(options&&options.isMultilingual);
 
     var anchors=Array.prototype.slice.call(document.querySelectorAll('a[href]'));
     var totalFound=anchors.length;
@@ -232,6 +233,16 @@
       }catch(e){return false;}
     }
 
+    function isAllowedInternalHost(host){
+      var h=String(host||'').toLowerCase();
+      if(!h)return false;
+      if(h===baseHost)return true;
+      // Допускаем языковые поддомены/варианты: de.site.tld, site.tld vs www.site.tld
+      if(h.endsWith('.'+baseHost))return true;
+      if(baseHost.endsWith('.'+h))return true;
+      return false;
+    }
+
     function buildExpectedSlugText(lang,group){
       if(!codeIndex||!lang)return '';
       var normalized=String(lang).trim().toLowerCase();
@@ -265,7 +276,7 @@
       }
 
       // Внешние ссылки считаем отдельно
-      if(url.hostname&&String(url.hostname).toLowerCase()!==baseHost){
+      if(url.hostname&&!isAllowedInternalHost(String(url.hostname))){
         externalCount+=1;
         if(externalSamples.length<30){externalSamples.push(url.href);}
         scanned+=1;
@@ -308,6 +319,7 @@
         normalizedHref:normalizedHref,
         hrefHost:baseHost,
         url:stripHash(normalizedHref),
+        isSameOrigin:(url.origin===location.origin),
         errs:errs,
         warns:warns,
         partnerCandidate:partner,
@@ -372,13 +384,16 @@
         }
 
         // Проверка соответствия внутреннего URL языку/таблице (ТОЛЬКО для реальных страниц)
+        // Важно: на многоязычном сайте ссылка на другую языковую версию (напр. /nl/) — не ошибка.
         if(rec.kind==='page'&&enableSlugChecks&&slugIndex&&expectedLang&&currentGroup){
           if(!rec.match){
             unknownInternalCount+=1;
             if(!rec.partnerCandidate){warns.push('URL не найден в базе слагов');}
           }else if(rec.match.codes&&rec.match.codes.length&&!codesMatch(rec.match.codes,expectedLang)){
-            var expectedSlug=buildExpectedSlugText(expectedLang,rec.match.group||currentGroup);
-            errs.push('Slug не соответствует языку страницы ('+expectedLang+')'+(expectedSlug?'; ожидаемый slug — '+expectedSlug:''));
+            if(!isMultilingual){
+              var expectedSlug=buildExpectedSlugText(expectedLang,rec.match.group||currentGroup);
+              errs.push('Slug не соответствует языку страницы ('+expectedLang+')'+(expectedSlug?'; ожидаемый slug — '+expectedSlug:''));
+            }
           }
         }
 
@@ -401,7 +416,9 @@
 
     function maybeRunNetworkChecks(){
       if(!enableNetworkCheck)return Promise.resolve();
-      var toCheck=internalRecords.slice(0,Math.min(maxNetworkChecks,internalRecords.length));
+      // Сетевую проверку делаем только для same-origin URL, иначе будет много CORS ошибок.
+      var sameOriginRecords=internalRecords.filter(function(r){return r&&r.isSameOrigin;});
+      var toCheck=sameOriginRecords.slice(0,Math.min(maxNetworkChecks,sameOriginRecords.length));
       var skipped=Math.max(0,internalRecords.length-toCheck.length);
       networkSkippedCount=skipped;
       if(toCheck.length===0)return Promise.resolve();
@@ -563,12 +580,15 @@
         lines.push('');
         lines.push(label+':');
         arr.forEach(function(r){
-          var parts2=[];
-          if(r.httpStatus){parts2.push('HTTP '+r.httpStatus);}
-          if(r.finalUrl&&r.finalUrl!==r.normalizedHref){parts2.push('FINAL: '+r.finalUrl);}
-          if(r.err&&r.msg){parts2.push('ERR: '+r.msg);}
-          if(r.warn&&r.warnMsg){parts2.push('WARN: '+r.warnMsg);}
-          var status2=parts2.length?parts2.join(' | '):'OK';
+          var status2='OK'+(r.httpStatus?(' (HTTP '+r.httpStatus+')'):'');
+          if(r.err||r.warn){
+            var parts2=[];
+            if(r.httpStatus){parts2.push('HTTP '+r.httpStatus);}
+            if(r.finalUrl&&r.finalUrl!==r.normalizedHref){parts2.push('FINAL: '+r.finalUrl);}
+            if(r.err&&r.msg){parts2.push('ERR: '+r.msg);}
+            if(r.warn&&r.warnMsg){parts2.push('WARN: '+r.warnMsg);}
+            status2=parts2.length?parts2.join(' | '):status2;
+          }
           var base=(r.hreflang||'')+'\t'+(r.href||'')+'\t'+status2;
           if((r.err||r.warn)&&r.href&&r.normalizedHref&&r.href!==r.normalizedHref){
             base+='\t'+'Фактический href: '+r.normalizedHref;
@@ -765,14 +785,22 @@
             tr.appendChild(urlCell);
 
             var statusCell=create('td',{padding:'4px 10px',fontSize:'11px'});
+            var isOk=!(r.err||r.warn);
             var hasContent=false;
+
+            if(isOk){
+              var ok=create('span',{color:'#2e7d32',fontWeight:'bold'});
+              ok.textContent='OK'+(r.httpStatus?(' (HTTP '+r.httpStatus+')'):'');
+              statusCell.appendChild(ok);
+              hasContent=true;
+            }
             if((r.err||r.warn)&&r.href!==r.normalizedHref){
               var parsedTop=create('div',{color:r.err?'#c62828':'#856404',fontWeight:'bold',marginBottom:'2px'});
               parsedTop.textContent='Фактический href: '+r.normalizedHref;
               statusCell.appendChild(parsedTop);
               hasContent=true;
             }
-            if(r.httpStatus){
+            if(!isOk&&r.httpStatus){
               var httpLine=create('div',{color:'#333',marginBottom:'2px'});
               httpLine.textContent='HTTP: '+r.httpStatus;
               statusCell.appendChild(httpLine);
@@ -786,7 +814,7 @@
             }
             if(r.err){statusCell.appendChild(createList('[ERR] Ошибка', '#c62828', formatMessages(r.msg)));hasContent=true;}
             if(r.warn){statusCell.appendChild(createList('[WARN] Предупреждение', '#856404', formatMessages(r.warnMsg)));hasContent=true;}
-            if(!hasContent){var ok=create('span',{color:'#2e7d32'});ok.textContent='OK';statusCell.appendChild(ok);}
+            if(!hasContent){var ok2=create('span',{color:'#2e7d32'});ok2.textContent='OK';statusCell.appendChild(ok2);}
             tr.appendChild(statusCell);
             aBody.appendChild(tr);
           });
@@ -1045,9 +1073,10 @@
       renderWidget(report);
     }
 
-    auditInternalLinks({maxLinks:400,expectedSlashPattern:expectedSlashPattern,baseHost:baseHost,enableSlugChecks:enableSlugChecks,expectedLang:expectedLang,currentGroup:currentGroup,slugIndex:slugIndex,codeIndex:codeIndex,enableNetworkCheck:true,maxNetworkChecks:120,concurrency:8}).then(afterLinkAudit).catch(function(e){
+    var isMultilingualPage=Boolean(alternates&&alternates.length>0);
+    auditInternalLinks({maxLinks:400,expectedSlashPattern:expectedSlashPattern,baseHost:baseHost,enableSlugChecks:enableSlugChecks,expectedLang:expectedLang,currentGroup:currentGroup,slugIndex:slugIndex,codeIndex:codeIndex,isMultilingual:isMultilingualPage,enableNetworkCheck:true,maxNetworkChecks:120,concurrency:8}).then(afterLinkAudit).catch(function(e){
       // Если сетевой аудит упал, всё равно покажем отчёт, но без сетевой части
-      auditInternalLinks({maxLinks:400,expectedSlashPattern:expectedSlashPattern,baseHost:baseHost,enableSlugChecks:enableSlugChecks,expectedLang:expectedLang,currentGroup:currentGroup,slugIndex:slugIndex,codeIndex:codeIndex,enableNetworkCheck:false}).then(afterLinkAudit);
+      auditInternalLinks({maxLinks:400,expectedSlashPattern:expectedSlashPattern,baseHost:baseHost,enableSlugChecks:enableSlugChecks,expectedLang:expectedLang,currentGroup:currentGroup,slugIndex:slugIndex,codeIndex:codeIndex,isMultilingual:isMultilingualPage,enableNetworkCheck:false}).then(afterLinkAudit);
     });
   }).catch(function(err){alert('Ошибка загрузки базы слагов: '+err.message);});}
 
