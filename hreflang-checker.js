@@ -526,13 +526,33 @@
     footer.appendChild(footerText);
     var copyBtn=create('button',{background:'#1558d6',color:'#fff',border:'none',padding:'6px 10px',borderRadius:'4px',cursor:'pointer',fontWeight:'bold'});
     copyBtn.textContent='Скопировать результат';
+    var copyBtnBase={bg:'#1558d6',text:'Скопировать результат'};
+    function flashCopyBtn(state){
+      try{
+        if(!copyBtn)return;
+        if(copyBtn._flashTimer){clearTimeout(copyBtn._flashTimer);copyBtn._flashTimer=null;}
+        if(state==='ok'){
+          copyBtn.style.background='#2e7d32';
+          copyBtn.textContent='Скопировано!';
+        }else if(state==='error'){
+          copyBtn.style.background='#c62828';
+          copyBtn.textContent='Ошибка копирования';
+        }else{
+          copyBtn.style.background=copyBtnBase.bg;
+          copyBtn.textContent=copyBtnBase.text;
+          return;
+        }
+        copyBtn._flashTimer=setTimeout(function(){flashCopyBtn('reset');},1500);
+      }catch(e){}
+    }
     copyBtn.addEventListener('click',function(ev){
       ev.preventDefault();
       ev.stopPropagation();
       var text=buildClipboardText(rows,errors,warnings);
       if(navigator.clipboard&&navigator.clipboard.writeText){
-        navigator.clipboard.writeText(text).catch(function(err){alert('Не удалось скопировать: '+err.message);});
+        navigator.clipboard.writeText(text).then(function(){flashCopyBtn('ok');}).catch(function(err){flashCopyBtn('error');alert('Не удалось скопировать: '+err.message);});
       }else{
+        flashCopyBtn('error');
         alert('Копирование не поддерживается в этом браузере');
       }
     });
