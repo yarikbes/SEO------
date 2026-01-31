@@ -1,7 +1,6 @@
 ﻿(function(){
   var dataUrl='https://yarikbes.github.io/SEO------/slugs.json';
   var telemetryUrl='https://hreflang-checker.dorian-grei33.workers.dev/ping';
-  var hreflangCodes=['x-default','sv-SE','sv','nl-NL','nl-BE','nl','de-DE','de','fr-FR','fr-BE','fr','es-ES','es','it-IT','it','pl-PL','pl','fi-FI','fi','da-DK','da','nb-NO','nb','no-NO','no','pt-PT','pt','cs-CZ','cs','ro-RO','ro','sl-SI','sl','el-GR','el','et-EE','et','hu-HU','hu','en-GB','en-NZ','en-CA','en-AU','en-US','en-IE','ga-IE','en','es-AR','es-MX','fr-CA','fr-CH','pt-BR','de-AT','de-CH','it-CH','ja','ja-JP','hi-IN','en-IN','fil-PH','en-PH','ar-AE','en-AE','in','sh'];
     var specialHreflangHints={
       'in':'Устаревший код, используйте id (например id-ID)',
       'sh':'Устаревший код, используйте sr/hr/bs с регионом'
@@ -17,6 +16,31 @@
   function normalizePath(path){if(!path)return'/';var normalized=path.replace(/\/+/g,'/');if(normalized.charAt(0)!=='/'){normalized='/'+normalized;}return normalized||'/';}
   function normalizeUrl(raw){var parsed=new URL(raw,location.origin);return parsed.origin+normalizePath(parsed.pathname);}
   function formatMessages(text){return text?text.split('; ').filter(Boolean):[];}
+  function isValidHreflangCode(code){
+    if(code===null||code===undefined)return false;
+    var raw=String(code).trim();
+    if(!raw)return false;
+    var lower=raw.toLowerCase();
+    if(lower==='x-default')return true;
+    var parts=raw.split('-');
+    if(parts.length===1){return /^[a-z]{2,3}$/i.test(parts[0]);}
+    if(parts.length===2){
+      if(!/^[a-z]{2,3}$/i.test(parts[0]))return false;
+      if(/^[a-z]{4}$/i.test(parts[1]))return true; // script
+      if(/^[a-z]{2}$/i.test(parts[1]))return true; // region
+      if(/^\d{3}$/.test(parts[1]))return true; // UN M.49
+      return false;
+    }
+    if(parts.length===3){
+      if(!/^[a-z]{2,3}$/i.test(parts[0]))return false;
+      if(/^[a-z]{4}$/i.test(parts[1])&&(/^[a-z]{2}$/i.test(parts[2])||/^\d{3}$/.test(parts[2])))return true; // lang-script-region
+      if((/^[a-z]{2}$/i.test(parts[1])||/^\d{3}$/.test(parts[1]))&&/^[a-z0-9]{4,8}$/i.test(parts[2]))return true; // lang-region-variant (упрощенно)
+      return false;
+    }
+    if(!/^[a-z]{2,3}$/i.test(parts[0]))return false;
+    for(var i=1;i<parts.length;i+=1){if(!/^[a-z0-9]{1,8}$/i.test(parts[i]))return false;}
+    return true;
+  }
   function normalizeCodes(entry){if(!entry)return[];if(Array.isArray(entry))return entry.filter(Boolean);if(typeof entry==='object'&&Array.isArray(entry.codes))return entry.codes.filter(Boolean);return[];}
   function addCodeMapping(codeIndex,code,groupKey,slug){var normalizedCode=code.toLowerCase();var primary=normalizedCode.split('-')[0];[normalizedCode,primary].forEach(function(key){var entry=codeIndex[key]||{display:code,defaultSlug:null,groups:{}};if(!entry.defaultSlug){entry.defaultSlug=slug;}if(!entry.groups[groupKey]){entry.groups[groupKey]=slug;}codeIndex[key]=entry;});}
   function buildSlugIndex(pageGroups){var slugIndex={};var codeIndex={};Object.keys(pageGroups).forEach(function(rawGroup){var groupKey=/^[a-z]{2}(?:-[a-z]{2})?$/i.test(rawGroup)?'main':rawGroup;var group=pageGroups[rawGroup];Object.keys(group.slugs).forEach(function(slug){var normalizedSlug=slug||'';if(normalizedSlug&&normalizedSlug.charAt(0)!=='/'){normalizedSlug='/'+normalizedSlug;}var codes=normalizeCodes(group.slugs[slug]);var uniqueCodes=[];codes.forEach(function(code){var trimmed=code.trim();if(trimmed&&uniqueCodes.indexOf(trimmed)===-1){uniqueCodes.push(trimmed);}addCodeMapping(codeIndex,trimmed,groupKey,normalizedSlug);});slugIndex[normalizedSlug]={group:groupKey,codes:uniqueCodes};});});return {slugIndex:slugIndex,codeIndex:codeIndex};}
@@ -218,7 +242,7 @@
         entryErrors.push('Пробелы в hreflang: "'+hreflang+'"');
         hreflangForMatch=hreflang.trim();
       }
-      if(!hreflangCodes.includes(hreflangForMatch)){
+      if(!isValidHreflangCode(hreflangForMatch)){
         hasError=true;
         entryErrors.push('Неправильный код hreflang: "'+hreflang+'"');
       }
@@ -232,7 +256,7 @@
         }
         var hasSpecialHint=Boolean(specialHreflangHints[lowerHreflang]);
         if(hasSpecialHint){entryWarnings.push(specialHreflangHints[lowerHreflang]);}
-        else if(/^[a-z]{2}$/i.test(hreflangForMatch)&&lowerHreflang!=='x-default'){entryWarnings.push('Рекомендуется указать регион (например '+hreflangForMatch+'-XX)');}
+        else if(/^[a-z]{2,3}$/i.test(hreflangForMatch)&&lowerHreflang!=='x-default'){entryWarnings.push('Рекомендуется указать регион (например '+hreflangForMatch+'-XX)');}
       }
       if(/^https?[:/][^/]/.test(rawHref)){hasError=true;entryErrors.push('Неправильный протокол в URL');}
       if(!group){hasError=true;entryErrors.push('URL не найден в базе слагов');}
