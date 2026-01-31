@@ -177,7 +177,8 @@
     var pageIssues=[];
     var redirectIssues=[];
     var redirectSamples=[];
-    var pageSamples=[];
+    var pageRows=[];
+    var redirectRows=[];
 
     function stripHash(url){try{var u=new URL(url,location.origin);return u.origin+u.pathname+(u.search||'');}catch(e){return String(url||'').split('#')[0];}}
     function isProbablyHtml(contentType){if(!contentType)return true;var ct=String(contentType).toLowerCase();return ct.indexOf('text/html')>-1||ct.indexOf('application/xhtml+xml')>-1;}
@@ -336,19 +337,20 @@
       pageCount=0;
       redirectCount=0;
       redirectSamples=[];
-      pageSamples=[];
+      pageRows=[];
+      redirectRows=[];
 
       internalRecords.forEach(function(rec){
         if(!rec)return;
         var errs=rec.errs||[];
         var warns=rec.warns||[];
 
-        if(rec.kind==='redirect'){
+        var isRedirect=(rec.kind==='redirect');
+        if(isRedirect){
           redirectCount+=1;
           if(redirectSamples.length<30){redirectSamples.push({href:rec.href,normalizedHref:rec.normalizedHref,httpStatus:rec.httpStatus,finalUrl:rec.finalUrl,fetchError:rec.fetchError});}
         }else{
           pageCount+=1;
-          if(pageSamples.length<30){pageSamples.push({href:rec.href,normalizedHref:rec.normalizedHref,httpStatus:rec.httpStatus,finalUrl:rec.finalUrl,fetchError:rec.fetchError});}
         }
 
         // HTTP результаты
@@ -363,6 +365,10 @@
           if(rec.kind==='page'&&!isProbablyHtml(rec.contentType)){
             warns.push('Не HTML (Content-Type: '+String(rec.contentType||'')+')');
           }
+        }else if(enableNetworkCheck&&networkSkippedCount){
+          // Если включена сетка и часть ссылок не проверялась (лимит), показываем это как предупреждение.
+          // Это не ошибка, но влияет на уверенность в классификации page/redirect.
+          warns.push('Сетевая проверка не выполнена (лимит)');
         }
 
         // Проверка соответствия внутреннего URL языку/таблице (ТОЛЬКО для реальных страниц)
@@ -381,11 +387,14 @@
         if(hasErr)errorCount+=1;
         if(hasWarn)warnCount+=1;
 
-        // Для обратной совместимости: rows = все проблемные строки
+        // Полная строка для UI: добавляем ВСЕ ссылки
+        var rowObj={href:rec.href,normalizedHref:rec.normalizedHref,err:hasErr,msg:errs.join('; '),warn:hasWarn,warnMsg:warns.join('; '),cur:false,group:'',hreflang:isRedirect?'[redirect]':'[page]',hrefHost:baseHost,kind:rec.kind,httpStatus:rec.httpStatus,finalUrl:rec.finalUrl};
+        if(isRedirect){redirectRows.push(rowObj);}else{pageRows.push(rowObj);}
+
+        // Для подсчётов/копирования проблем оставляем отдельные массивы
         if(hasErr||hasWarn){
-          var rowObj={href:rec.href,normalizedHref:rec.normalizedHref,err:hasErr,msg:errs.join('; '),warn:hasWarn,warnMsg:warns.join('; '),cur:false,group:'',hreflang:rec.kind==='redirect'?'[redirect]':'[page]',hrefHost:baseHost,kind:rec.kind,httpStatus:rec.httpStatus,finalUrl:rec.finalUrl};
           issueRows.push(rowObj);
-          if(rec.kind==='redirect'){redirectIssues.push(rowObj);}else{pageIssues.push(rowObj);}
+          if(isRedirect){redirectIssues.push(rowObj);}else{pageIssues.push(rowObj);}
         }
       });
     }
@@ -448,10 +457,11 @@
         errorCount:errorCount,
         warnCount:warnCount,
         rows:issueRows,
+        pageRows:pageRows,
+        redirectRows:redirectRows,
         pageIssues:pageIssues,
         redirectIssues:redirectIssues,
         redirectSamples:redirectSamples,
-        pageSamples:pageSamples,
         partnerCandidateCount:partnerCandidateCount,
         unknownInternalCount:unknownInternalCount,
         pageCandidateCount:pageCandidateCount,
@@ -567,34 +577,14 @@
         });
       }
 
-      if((linkAudit.pageIssues&&linkAudit.pageIssues.length)||(linkAudit.redirectIssues&&linkAudit.redirectIssues.length)){
-        pushAuditRows('Страницы (проблемные)',linkAudit.pageIssues);
-        pushAuditRows('Редиректы (проблемные)',linkAudit.redirectIssues);
+      if((linkAudit.pageRows&&linkAudit.pageRows.length)||(linkAudit.redirectRows&&linkAudit.redirectRows.length)){
+        pushAuditRows('Страницы',linkAudit.pageRows);
+        pushAuditRows('Редиректы/заглушки',linkAudit.redirectRows);
       }else if(linkAudit.rows&&linkAudit.rows.length){
         // fallback для совместимости
-        pushAuditRows('Внутренние ссылки (проблемные)',linkAudit.rows);
+        pushAuditRows('Внутренние ссылки',linkAudit.rows);
       }else{
-        lines.push('Проблем во внутренних ссылках не найдено.');
-      }
-
-      if(linkAudit.redirectSamples&&linkAudit.redirectSamples.length){
-        lines.push('');
-        lines.push('Редиректы (примеры):');
-        linkAudit.redirectSamples.forEach(function(r){
-          var p=[];
-          if(r.httpStatus){p.push('HTTP '+r.httpStatus);}
-          if(r.finalUrl&&r.finalUrl!==r.normalizedHref){p.push('FINAL: '+r.finalUrl);}
-          if(r.fetchError){p.push('ERR: '+r.fetchError);}
-          lines.push('- '+(r.href||'')+(p.length?' | '+p.join(' | '):''));
-        });
-      }
-
-      if(linkAudit.pageSamples&&linkAudit.pageSamples.length){
-        lines.push('');
-        lines.push('Страницы (примеры):');
-        linkAudit.pageSamples.forEach(function(r){
-          lines.push('- '+(r.href||''));
-        });
+        lines.push('Внутренних ссылок для проверки не найдено.');
       }
 
       if(linkAudit.externalCount){
@@ -747,9 +737,6 @@
         note2.textContent='Проверка slug по базе не активна (страница не распознана в базе); выполнен только URL-санити.';
         section.appendChild(note2);
       }
-      var note3=create('div',{color:'#555',fontSize:'12px',marginBottom:'8px'});
-      note3.textContent='В таблицах ниже показаны только проблемные ссылки (ERR/WARN). Для ориентира добавлены примеры найденных страниц/редиректов.';
-      section.appendChild(note3);
       function renderAuditTable(rows,label){
         var wrap=create('div',{marginTop:'8px'});
         var h=create('div',{fontWeight:'bold',color:'#000',marginBottom:'4px'});
@@ -814,45 +801,15 @@
       }
 
       // Новая логика: отдельно страницы и редиректы
-      if(audit.pageIssues||audit.redirectIssues){
-        section.appendChild(renderAuditTable(audit.pageIssues,'Страницы (проверка slug применяется)'));
-        section.appendChild(renderAuditTable(audit.redirectIssues,'Редиректы/заглушки (проверка slug НЕ применяется)'));
-
-        if(audit.pageSamples&&audit.pageSamples.length){
-          var ps=create('div',{marginTop:'10px',color:'#000'});
-          var psTitle=create('div',{fontWeight:'bold',marginBottom:'4px'});
-          psTitle.textContent='Страницы (примеры, первые '+audit.pageSamples.length+'): ';
-          ps.appendChild(psTitle);
-          audit.pageSamples.forEach(function(r){
-            var line=create('div',{fontSize:'11px'});
-            line.textContent='- '+(r.href||'');
-            ps.appendChild(line);
-          });
-          section.appendChild(ps);
-        }
-
-        if(audit.redirectSamples&&audit.redirectSamples.length){
-          var rs=create('div',{marginTop:'10px',color:'#000'});
-          var rsTitle=create('div',{fontWeight:'bold',marginBottom:'4px'});
-          rsTitle.textContent='Редиректы (примеры, первые '+audit.redirectSamples.length+'): ';
-          rs.appendChild(rsTitle);
-          audit.redirectSamples.forEach(function(r){
-            var line=create('div',{fontSize:'11px'});
-            var parts=[];
-            if(r.httpStatus){parts.push('HTTP '+r.httpStatus);}
-            if(r.finalUrl&&r.finalUrl!==r.normalizedHref){parts.push('→ '+r.finalUrl);}
-            if(r.fetchError){parts.push('ERR: '+r.fetchError);}
-            line.textContent='- '+(r.href||'')+(parts.length?' ('+parts.join(' ')+')':'');
-            rs.appendChild(line);
-          });
-          section.appendChild(rs);
-        }
+      if(audit.pageRows||audit.redirectRows){
+        section.appendChild(renderAuditTable(audit.pageRows,'Страницы (проверка slug применяется)'));
+        section.appendChild(renderAuditTable(audit.redirectRows,'Редиректы/заглушки (проверка slug НЕ применяется), только базовые проверки'));
       }else if(audit.rows&&audit.rows.length>0){
         // fallback
-        section.appendChild(renderAuditTable(audit.rows,'Внутренние ссылки (проблемные)'));
+        section.appendChild(renderAuditTable(audit.rows,'Внутренние ссылки'));
       }else{
         var ok=create('div',{color:'#2e7d32',fontSize:'12px'});
-        ok.textContent='Проблем во внутренних ссылках не найдено.';
+        ok.textContent='Внутренних ссылок для проверки не найдено.';
         section.appendChild(ok);
       }
 
