@@ -580,7 +580,7 @@
         lines.push('');
         lines.push(label+':');
         arr.forEach(function(r){
-          var status2='OK'+(r.httpStatus?(' (HTTP '+r.httpStatus+')'):'');
+          var status2='Все проверки: OK'+(r.httpStatus?(', HTTP '+r.httpStatus):'');
           if(r.err||r.warn){
             var parts2=[];
             if(r.httpStatus){parts2.push('HTTP '+r.httpStatus);}
@@ -789,8 +789,13 @@
             var hasContent=false;
 
             if(isOk){
-              var ok=create('span',{color:'#2e7d32',fontWeight:'bold'});
-              ok.textContent='OK'+(r.httpStatus?(' (HTTP '+r.httpStatus+')'):'');
+              if(r.httpStatus){
+                var httpOk=create('div',{color:'#333',marginBottom:'2px'});
+                httpOk.textContent='HTTP: '+r.httpStatus;
+                statusCell.appendChild(httpOk);
+              }
+              var ok=create('div',{color:'#2e7d32',fontWeight:'bold'});
+              ok.textContent='Все проверки: OK';
               statusCell.appendChild(ok);
               hasContent=true;
             }
