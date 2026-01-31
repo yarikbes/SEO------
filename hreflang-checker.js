@@ -177,18 +177,24 @@
     var pageIssues=[];
     var redirectIssues=[];
     var redirectSamples=[];
+    var pageSamples=[];
 
     function stripHash(url){try{var u=new URL(url,location.origin);return u.origin+u.pathname+(u.search||'');}catch(e){return String(url||'').split('#')[0];}}
     function isProbablyHtml(contentType){if(!contentType)return true;var ct=String(contentType).toLowerCase();return ct.indexOf('text/html')>-1||ct.indexOf('application/xhtml+xml')>-1;}
     function fetchUrlInfo(url){
-      // Стараемся не качать body: сначала HEAD, потом GET (только headers, body не читаем)
+      // Стараемся не качать body: сначала HEAD, потом GET (только headers, body не читаем).
+      // Важно: redirect:'manual' — иначе редирект на другой домен часто даёт "Failed to fetch" (CORS).
       var reqUrl=String(url||'');
-      var headOpts={method:'HEAD',redirect:'follow',cache:'no-store',credentials:'same-origin'};
-      var getOpts={method:'GET',redirect:'follow',cache:'no-store',credentials:'same-origin',headers:{'Accept':'text/html,*/*;q=0.9'}};
+      var headOpts={method:'HEAD',redirect:'manual',cache:'no-store',credentials:'same-origin'};
+      var getOpts={method:'GET',redirect:'manual',cache:'no-store',credentials:'same-origin',headers:{'Accept':'text/html,*/*;q=0.9'}};
       function mapResponse(res){
         var ct='';
+        var loc='';
+        var type='';
         try{ct=res&&res.headers?res.headers.get('content-type')||'':'';}catch(e){}
-        return {ok:Boolean(res&&res.ok),status:res&&Number.isFinite(res.status)?res.status:0,redirected:Boolean(res&&res.redirected),finalUrl:res&&res.url?String(res.url):reqUrl,contentType:ct,error:''};
+        try{loc=res&&res.headers?res.headers.get('location')||'':'';}catch(e){}
+        try{type=res&&res.type?String(res.type):'';}catch(e){}
+        return {ok:Boolean(res&&res.ok),status:res&&Number.isFinite(res.status)?res.status:0,redirected:Boolean(res&&res.redirected),finalUrl:res&&res.url?String(res.url):reqUrl,contentType:ct,location:loc,responseType:type,opaqueRedirect:type==='opaqueredirect',error:''};
       }
       return fetch(reqUrl,headOpts).then(function(res){
         // Некоторые сервера возвращают 405 на HEAD — в этом случае пробуем GET
@@ -198,7 +204,7 @@
       }).catch(function(){
         return fetch(reqUrl,getOpts).then(function(res){return mapResponse(res);});
       }).catch(function(err){
-        return {ok:false,status:0,redirected:false,finalUrl:reqUrl,contentType:'',error:(err&&err.message)?String(err.message):'fetch failed'};
+        return {ok:false,status:0,redirected:false,finalUrl:reqUrl,contentType:'',location:'',responseType:'',opaqueRedirect:false,error:(err&&err.message)?String(err.message):'fetch failed'};
       });
     }
     function mapWithConcurrency(items,limit,iter){
@@ -312,7 +318,9 @@
         finalUrl:'',
         redirected:false,
         contentType:'',
-        fetchError:''
+        fetchError:'',
+        opaqueRedirect:false,
+        redirectLocation:''
       });
 
       scanned+=1;
@@ -328,6 +336,7 @@
       pageCount=0;
       redirectCount=0;
       redirectSamples=[];
+      pageSamples=[];
 
       internalRecords.forEach(function(rec){
         if(!rec)return;
@@ -339,11 +348,15 @@
           if(redirectSamples.length<30){redirectSamples.push({href:rec.href,normalizedHref:rec.normalizedHref,httpStatus:rec.httpStatus,finalUrl:rec.finalUrl,fetchError:rec.fetchError});}
         }else{
           pageCount+=1;
+          if(pageSamples.length<30){pageSamples.push({href:rec.href,normalizedHref:rec.normalizedHref,httpStatus:rec.httpStatus,finalUrl:rec.finalUrl,fetchError:rec.fetchError});}
         }
 
         // HTTP результаты
         if(rec.fetchError){
           errs.push('Не удалось проверить ссылку: '+rec.fetchError);
+        }else if(rec.opaqueRedirect){
+          // Редирект на другой origin в режиме manual: браузер скрывает Location.
+          warns.push('Редирект на другой домен/зону (CORS): финальный URL недоступен');
         }else if(rec.httpStatus){
           if(rec.httpStatus>=400){errs.push('HTTP '+rec.httpStatus);}
           // На всякий случай: если не HTML — это предупреждение (для страниц)
@@ -387,10 +400,31 @@
         return fetchUrlInfo(rec.url).then(function(info){
           networkCheckedCount+=1;
           rec.httpStatus=info.status||0;
-          rec.finalUrl=info.finalUrl||rec.url;
           rec.redirected=Boolean(info.redirected);
           rec.contentType=info.contentType||'';
           rec.fetchError=info.error||'';
+          rec.opaqueRedirect=Boolean(info.opaqueRedirect);
+          rec.redirectLocation=info.location||'';
+
+          // Если это явный 3xx — считаем редиректом и показываем Location (если есть)
+          if(rec.httpStatus>=300&&rec.httpStatus<400){
+            rec.kind='redirect';
+            if(rec.redirectLocation){
+              try{rec.finalUrl=new URL(rec.redirectLocation,rec.url).href;}catch(e){rec.finalUrl=rec.redirectLocation;}
+            }else{rec.finalUrl='';}
+            return;
+          }
+
+          // Opaque redirect (обычно редирект на другой origin)
+          if(rec.opaqueRedirect){
+            rec.kind='redirect';
+            rec.finalUrl='';
+            rec.fetchError='';
+            return;
+          }
+
+          // Без редиректов
+          rec.finalUrl=info.finalUrl||rec.url;
 
           var req=stripHash(rec.url);
           var fin=stripHash(rec.finalUrl||rec.url);
@@ -417,6 +451,7 @@
         pageIssues:pageIssues,
         redirectIssues:redirectIssues,
         redirectSamples:redirectSamples,
+        pageSamples:pageSamples,
         partnerCandidateCount:partnerCandidateCount,
         unknownInternalCount:unknownInternalCount,
         pageCandidateCount:pageCandidateCount,
@@ -551,6 +586,14 @@
           if(r.finalUrl&&r.finalUrl!==r.normalizedHref){p.push('FINAL: '+r.finalUrl);}
           if(r.fetchError){p.push('ERR: '+r.fetchError);}
           lines.push('- '+(r.href||'')+(p.length?' | '+p.join(' | '):''));
+        });
+      }
+
+      if(linkAudit.pageSamples&&linkAudit.pageSamples.length){
+        lines.push('');
+        lines.push('Страницы (примеры):');
+        linkAudit.pageSamples.forEach(function(r){
+          lines.push('- '+(r.href||''));
         });
       }
 
@@ -704,6 +747,9 @@
         note2.textContent='Проверка slug по базе не активна (страница не распознана в базе); выполнен только URL-санити.';
         section.appendChild(note2);
       }
+      var note3=create('div',{color:'#555',fontSize:'12px',marginBottom:'8px'});
+      note3.textContent='В таблицах ниже показаны только проблемные ссылки (ERR/WARN). Для ориентира добавлены примеры найденных страниц/редиректов.';
+      section.appendChild(note3);
       function renderAuditTable(rows,label){
         var wrap=create('div',{marginTop:'8px'});
         var h=create('div',{fontWeight:'bold',color:'#000',marginBottom:'4px'});
@@ -771,6 +817,19 @@
       if(audit.pageIssues||audit.redirectIssues){
         section.appendChild(renderAuditTable(audit.pageIssues,'Страницы (проверка slug применяется)'));
         section.appendChild(renderAuditTable(audit.redirectIssues,'Редиректы/заглушки (проверка slug НЕ применяется)'));
+
+        if(audit.pageSamples&&audit.pageSamples.length){
+          var ps=create('div',{marginTop:'10px',color:'#000'});
+          var psTitle=create('div',{fontWeight:'bold',marginBottom:'4px'});
+          psTitle.textContent='Страницы (примеры, первые '+audit.pageSamples.length+'): ';
+          ps.appendChild(psTitle);
+          audit.pageSamples.forEach(function(r){
+            var line=create('div',{fontSize:'11px'});
+            line.textContent='- '+(r.href||'');
+            ps.appendChild(line);
+          });
+          section.appendChild(ps);
+        }
 
         if(audit.redirectSamples&&audit.redirectSamples.length){
           var rs=create('div',{marginTop:'10px',color:'#000'});
