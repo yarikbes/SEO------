@@ -147,6 +147,11 @@
     var maxLinks=options&&Number.isFinite(options.maxLinks)?options.maxLinks:400;
     var expectedSlashPattern=options&&options.expectedSlashPattern?options.expectedSlashPattern:null;
     var baseHost=options&&options.baseHost?options.baseHost:String(location.hostname||'').toLowerCase();
+    var enableSlugChecks=Boolean(options&&options.enableSlugChecks);
+    var expectedLang=(options&&options.expectedLang)?String(options.expectedLang):'';
+    var currentGroup=(options&&options.currentGroup)?String(options.currentGroup):'';
+    var slugIndex=options&&options.slugIndex?options.slugIndex:null;
+    var codeIndex=options&&options.codeIndex?options.codeIndex:null;
 
     var anchors=Array.prototype.slice.call(document.querySelectorAll('a[href]'));
     var totalFound=anchors.length;
@@ -156,6 +161,34 @@
     var warnCount=0;
     var issueRows=[];
     var seen={};
+    var skippedCount=0;
+    var externalCount=0;
+    var externalSamples=[];
+    var partnerCandidateCount=0;
+    var unknownInternalCount=0;
+    var pageCandidateCount=0;
+
+    function isPartnerCandidate(urlObj){
+      try{
+        var path=String(urlObj.pathname||'').toLowerCase();
+        var search=String(urlObj.search||'').toLowerCase();
+        if(/\/(go|out|redirect|redir|r|ref|aff|click)\b/.test(path))return true;
+        if(/[?&](aff|affiliate|ref|refid|clickid|subid|utm_|gclid|fbclid)=/.test(search))return true;
+        return false;
+      }catch(e){return false;}
+    }
+
+    function buildExpectedSlugText(lang,group){
+      if(!codeIndex||!lang)return '';
+      var normalized=String(lang).trim().toLowerCase();
+      var primary=normalized.split('-')[0];
+      var expectedEntry=codeIndex[normalized]||codeIndex[primary];
+      if(!expectedEntry)return '';
+      var slug=null;
+      if(group&&expectedEntry.groups&&expectedEntry.groups[group]){slug=expectedEntry.groups[group];}
+      else{slug=expectedEntry.defaultSlug;}
+      return slug?String(slug):'';
+    }
 
     for(var i=0;i<anchors.length;i+=1){
       if(scanned>=maxLinks){truncated=true;break;}
@@ -175,8 +208,13 @@
         continue;
       }
 
-      // Только внутренние ссылки
-      if(url.hostname&&String(url.hostname).toLowerCase()!==baseHost)continue;
+      // Внешние ссылки считаем отдельно
+      if(url.hostname&&String(url.hostname).toLowerCase()!==baseHost){
+        externalCount+=1;
+        if(externalSamples.length<30){externalSamples.push(url.href);}
+        scanned+=1;
+        continue;
+      }
 
       var absoluteNoHash=url.origin+url.pathname+(url.search||'');
       var normalizedHref=url.origin+normalizePath(url.pathname)+(url.search||'');
@@ -202,6 +240,27 @@
         if(pattern!==expectedSlashPattern){warns.push('Trailing slash отличается от текущей страницы');}
       }
 
+      // Проверка соответствия внутреннего URL языку/таблице (только если текущая страница определена в базе)
+      if(enableSlugChecks&&slugIndex&&expectedLang&&currentGroup){
+        var cleanedPath=cleanPath(url.pathname);
+        var stripped=stripLangPrefix(cleanedPath);
+        var match=matchSlugWithAliases(slugIndex,cleanedPath,slugAliasMap)||matchSlugWithAliases(slugIndex,stripped,slugAliasMap);
+        if(!match){
+          if(isPartnerCandidate(url)){
+            partnerCandidateCount+=1;
+          }else{
+            unknownInternalCount+=1;
+            warns.push('URL не найден в базе слагов');
+          }
+        }else{
+          pageCandidateCount+=1;
+          if(match.codes&&match.codes.length&&!codesMatch(match.codes,expectedLang)){
+            var expectedSlug=buildExpectedSlugText(expectedLang,match.group||currentGroup);
+            errs.push('Slug не соответствует языку страницы ('+expectedLang+')'+(expectedSlug?'; ожидаемый slug — '+expectedSlug:''));
+          }
+        }
+      }
+
       if(errs.length>0||warns.length>0){
         if(errs.length>0)errorCount+=1;
         if(warns.length>0)warnCount+=1;
@@ -211,7 +270,7 @@
       scanned+=1;
     }
 
-    return {totalFound:totalFound,scanned:scanned,truncated:truncated,errorCount:errorCount,warnCount:warnCount,rows:issueRows};
+    return {totalFound:totalFound,scanned:scanned,truncated:truncated,skippedCount:skippedCount,externalCount:externalCount,externalSamples:externalSamples,errorCount:errorCount,warnCount:warnCount,rows:issueRows,partnerCandidateCount:partnerCandidateCount,unknownInternalCount:unknownInternalCount,pageCandidateCount:pageCandidateCount,enableSlugChecks:enableSlugChecks,expectedLang:expectedLang,currentGroup:currentGroup};
   }
 
   function looksSingleLanguageHreflangSet(rows){
@@ -378,9 +437,25 @@
       var audit=report.linkAudit;
       var section=create('div',{padding:'10px 12px',borderTop:'1px solid #e0e0e0',background:'#fafafa'});
       var title=create('div',{fontWeight:'bold',color:'#000',marginBottom:'6px'});
-      var summary='Внутренние ссылки: проверено '+audit.scanned+(audit.truncated?'+':'')+' из '+audit.totalFound+' | проблем: '+audit.errorCount+' ERR, '+audit.warnCount+' WARN';
+      var extra=[];
+      if(audit.externalCount){extra.push('внешних: '+audit.externalCount);} 
+      if(audit.enableSlugChecks){
+        if(audit.pageCandidateCount){extra.push('страниц в базе: '+audit.pageCandidateCount);} 
+        if(audit.partnerCandidateCount){extra.push('партнёр/редирект: '+audit.partnerCandidateCount);} 
+        if(audit.unknownInternalCount){extra.push('неизвестных: '+audit.unknownInternalCount);} 
+      }
+      var summary='Ссылки: проверено '+audit.scanned+(audit.truncated?'+':'')+' из '+audit.totalFound+' | проблем: '+audit.errorCount+' ERR, '+audit.warnCount+' WARN'+(extra.length?' | '+extra.join(', '):'');
       title.textContent=summary;
       section.appendChild(title);
+      if(audit.enableSlugChecks){
+        var note=create('div',{color:'#555',fontSize:'12px',marginBottom:'8px'});
+        note.textContent='Проверка slug по базе выполняется для языка страницы: '+(audit.expectedLang||'')+' (группа: '+(audit.currentGroup||'')+')';
+        section.appendChild(note);
+      }else{
+        var note2=create('div',{color:'#555',fontSize:'12px',marginBottom:'8px'});
+        note2.textContent='Проверка slug по базе не активна (страница не распознана в базе); выполнен только URL-санити.';
+        section.appendChild(note2);
+      }
       if(audit.rows&&audit.rows.length>0){
         var auditTable=create('table');
         auditTable.style.cssText='width:100%!important;border-collapse:collapse!important;table-layout:auto!important;background:#fff!important;border:1px solid #e0e0e0!important;border-radius:6px!important';
@@ -423,6 +498,24 @@
         var ok=create('div',{color:'#2e7d32',fontSize:'12px'});
         ok.textContent='Проблем во внутренних ссылках не найдено.';
         section.appendChild(ok);
+      }
+
+      if(audit.externalCount){
+        var ext=create('div',{marginTop:'10px',color:'#000'});
+        var extTitle=create('div',{fontWeight:'bold',marginBottom:'4px'});
+        extTitle.textContent='Внешние/партнёрские ссылки: '+audit.externalCount+' (как страницы не проверяются)';
+        ext.appendChild(extTitle);
+        if(audit.externalSamples&&audit.externalSamples.length){
+          var extHint=create('div',{color:'#555',fontSize:'12px',marginBottom:'4px'});
+          extHint.textContent='Примеры (первые '+audit.externalSamples.length+'): ';
+          ext.appendChild(extHint);
+          audit.externalSamples.forEach(function(u){
+            var line=create('div',{fontSize:'11px'});
+            line.textContent='- '+u;
+            ext.appendChild(line);
+          });
+        }
+        section.appendChild(ext);
       }
       widget.appendChild(section);
     }
@@ -581,7 +674,9 @@
     function runChecker(){removeExistingWidgets();fetch(dataUrl).then(function(r){return r.json();}).then(function(payload){var pageGroups=payload.pageGroups;var indexes=buildSlugIndex(pageGroups);var slugIndex=indexes.slugIndex;var codeIndex=indexes.codeIndex;var aliasMap={};Object.keys(pageGroups).forEach(function(groupKey){aliasMap[groupKey]=groupKey;var group=pageGroups[groupKey];if(Array.isArray(group.aliases)){group.aliases.forEach(function(alias){ensureAlias(aliasMap,alias,groupKey);});}});var alternates=document.querySelectorAll('link[rel="alternate"][hreflang]');var canonical=document.querySelector('link[rel="canonical"]');var canonicalUrl=canonical?canonical.getAttribute('href'):'';var htmlLang=normalizeHtmlLang(document.documentElement?document.documentElement.getAttribute('lang'):'' );var currentPath=cleanPath(location.pathname);var normalizedCurrent=location.origin+normalizePath(location.pathname);var strippedPath=stripLangPrefix(currentPath);var currentMatch=matchSlugWithAliases(slugIndex,currentPath,slugAliasMap)||matchSlugWithAliases(slugIndex,strippedPath,slugAliasMap);var currentGroup=currentMatch?currentMatch.group:aliasMap[currentPath]||aliasMap[strippedPath]||aliasMap[strippedPath.replace(/^\//,'')];var baseHost=location.hostname.toLowerCase();
 
     var expectedSlashPattern=(location.pathname&&location.pathname.endsWith('/'))?'with':'without';
-    var linkAudit=auditInternalLinks({maxLinks:400,expectedSlashPattern:expectedSlashPattern,baseHost:baseHost});
+    var expectedLang=htmlLang||'';
+    var enableSlugChecks=Boolean(currentGroup&&slugIndex&&codeIndex);
+    var linkAudit=auditInternalLinks({maxLinks:400,expectedSlashPattern:expectedSlashPattern,baseHost:baseHost,enableSlugChecks:enableSlugChecks,expectedLang:expectedLang,currentGroup:currentGroup,slugIndex:slugIndex,codeIndex:codeIndex});
 
     if(alternates.length===0){
       if(!document.cookie.split(';').some(function(c){return c.trim().indexOf(reloadCookie+'=')===0;})){
@@ -600,6 +695,9 @@
     }
 
     var analysis=analyzeAlternates(alternates,{slugIndex:slugIndex,codeIndex:codeIndex,aliasMap:aliasMap,currentGroup:currentGroup,normalizedCurrent:normalizedCurrent,canonicalUrl:canonicalUrl,baseHost:baseHost,origin:location.origin});
+    // Уточняем язык страницы по self hreflang, если он есть
+    for(var si=0;si<analysis.rows.length;si+=1){if(analysis.rows[si]&&analysis.rows[si].cur){expectedLang=analysis.rows[si].matchHreflang||analysis.rows[si].hreflang||expectedLang;break;}}
+    if(linkAudit&&linkAudit.enableSlugChecks){linkAudit.expectedLang=expectedLang;}
     applyHtmlLangCrossCheck(analysis.rows,htmlLang);
     if(looksSingleLanguageHreflangSet(analysis.rows)){
       // Если нашёлся только self, подсвечиваем как подсказку: hreflang может быть избыточен.
