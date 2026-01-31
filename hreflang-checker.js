@@ -142,6 +142,96 @@
     rows.push(row);
     return rows;
   }
+
+  function auditInternalLinks(options){
+    var maxLinks=options&&Number.isFinite(options.maxLinks)?options.maxLinks:400;
+    var expectedSlashPattern=options&&options.expectedSlashPattern?options.expectedSlashPattern:null;
+    var baseHost=options&&options.baseHost?options.baseHost:String(location.hostname||'').toLowerCase();
+
+    var anchors=Array.prototype.slice.call(document.querySelectorAll('a[href]'));
+    var totalFound=anchors.length;
+    var scanned=0;
+    var truncated=false;
+    var errorCount=0;
+    var warnCount=0;
+    var issueRows=[];
+    var seen={};
+
+    for(var i=0;i<anchors.length;i+=1){
+      if(scanned>=maxLinks){truncated=true;break;}
+      var a=anchors[i];
+      var raw=String(a.getAttribute('href')||'').trim();
+      if(!raw)continue;
+      if(raw.charAt(0)==='#')continue;
+      if(/^javascript:/i.test(raw))continue;
+      if(/^mailto:/i.test(raw))continue;
+      if(/^tel:/i.test(raw))continue;
+
+      var url;
+      try{url=new URL(raw,location.origin);}catch(e){
+        warnCount+=1;
+        issueRows.push({href:raw,normalizedHref:raw,err:false,msg:'',warn:true,warnMsg:'Некорректный URL в ссылке',cur:false,group:'',hreflang:'',hrefHost:''});
+        scanned+=1;
+        continue;
+      }
+
+      // Только внутренние ссылки
+      if(url.hostname&&String(url.hostname).toLowerCase()!==baseHost)continue;
+
+      var absoluteNoHash=url.origin+url.pathname+(url.search||'');
+      var normalizedHref=url.origin+normalizePath(url.pathname)+(url.search||'');
+
+      if(seen[normalizedHref])continue;
+      seen[normalizedHref]=true;
+
+      var errs=[];
+      var warns=[];
+
+      if(raw.indexOf('_')>-1){warns.push('Нижнее подчёркивание в URL');}
+      if(/[A-Z]/.test(raw)){warns.push('Заглавные буквы в URL');}
+      if(raw.indexOf('%20')>-1){warns.push('Пробелы (%20) в URL');}
+      if(hasDoubleSlash(raw)){warns.push('Двойные слэши в URL');}
+      if(/[^a-z0-9\-._~:/?#[\]@!$&'()*+,;=%]/.test(raw.toLowerCase())){warns.push('Недопустимые символы в URL');}
+
+      if(absoluteNoHash!==normalizedHref){warns.push('URL не нормализован');}
+
+      var isHome=url.pathname==='/'||url.pathname==='';
+      if(expectedSlashPattern&&(!isHome)){
+        var hasSlash=url.pathname&&url.pathname.endsWith('/');
+        var pattern=hasSlash?'with':'without';
+        if(pattern!==expectedSlashPattern){warns.push('Trailing slash отличается от текущей страницы');}
+      }
+
+      if(errs.length>0||warns.length>0){
+        if(errs.length>0)errorCount+=1;
+        if(warns.length>0)warnCount+=1;
+        issueRows.push({href:raw,normalizedHref:normalizedHref,err:errs.length>0,msg:errs.join('; '),warn:warns.length>0,warnMsg:warns.join('; '),cur:false,group:'',hreflang:'[internal]',hrefHost:baseHost});
+      }
+
+      scanned+=1;
+    }
+
+    return {totalFound:totalFound,scanned:scanned,truncated:truncated,errorCount:errorCount,warnCount:warnCount,rows:issueRows};
+  }
+
+  function looksSingleLanguageHreflangSet(rows){
+    // Эвристика: если альтернативы по сути не дают языкового разнообразия
+    // (один язык/регион + один URL), то это часто одноязычный сайт, где hreflang избыточен.
+    var langSet={};
+    var urlSet={};
+    var hasSelf=false;
+    for(var i=0;i<rows.length;i+=1){
+      var r=rows[i];
+      if(!r)continue;
+      if(r.cur)hasSelf=true;
+      var lang=(r.matchHreflang||r.hreflang||'').trim().toLowerCase();
+      if(lang&&lang!=='x-default'){langSet[lang]=true;}
+      if(r.normalizedHref){urlSet[r.normalizedHref]=true;}
+    }
+    var langCount=Object.keys(langSet).length;
+    var urlCount=Object.keys(urlSet).length;
+    return hasSelf&&langCount<=1&&urlCount<=1;
+  }
   function normalizeCodes(entry){if(!entry)return[];if(Array.isArray(entry))return entry.filter(Boolean);if(typeof entry==='object'&&Array.isArray(entry.codes))return entry.codes.filter(Boolean);return[];}
   function addCodeMapping(codeIndex,code,groupKey,slug){var normalizedCode=code.toLowerCase();var primary=normalizedCode.split('-')[0];[normalizedCode,primary].forEach(function(key){var entry=codeIndex[key]||{display:code,defaultSlug:null,groups:{}};if(!entry.defaultSlug){entry.defaultSlug=slug;}if(!entry.groups[groupKey]){entry.groups[groupKey]=slug;}codeIndex[key]=entry;});}
   function buildSlugIndex(pageGroups){var slugIndex={};var codeIndex={};Object.keys(pageGroups).forEach(function(rawGroup){var groupKey=/^[a-z]{2}(?:-[a-z]{2})?$/i.test(rawGroup)?'main':rawGroup;var group=pageGroups[rawGroup];Object.keys(group.slugs).forEach(function(slug){var normalizedSlug=slug||'';if(normalizedSlug&&normalizedSlug.charAt(0)!=='/'){normalizedSlug='/'+normalizedSlug;}var codes=normalizeCodes(group.slugs[slug]);var uniqueCodes=[];codes.forEach(function(code){var trimmed=code.trim();if(trimmed&&uniqueCodes.indexOf(trimmed)===-1){uniqueCodes.push(trimmed);}addCodeMapping(codeIndex,trimmed,groupKey,normalizedSlug);});slugIndex[normalizedSlug]={group:groupKey,codes:uniqueCodes};});});return {slugIndex:slugIndex,codeIndex:codeIndex};}
@@ -283,6 +373,59 @@
     });
     table.appendChild(tbody);
     widget.appendChild(table);
+
+    if(report.linkAudit){
+      var audit=report.linkAudit;
+      var section=create('div',{padding:'10px 12px',borderTop:'1px solid #e0e0e0',background:'#fafafa'});
+      var title=create('div',{fontWeight:'bold',color:'#000',marginBottom:'6px'});
+      var summary='Внутренние ссылки: проверено '+audit.scanned+(audit.truncated?'+':'')+' из '+audit.totalFound+' | проблем: '+audit.errorCount+' ERR, '+audit.warnCount+' WARN';
+      title.textContent=summary;
+      section.appendChild(title);
+      if(audit.rows&&audit.rows.length>0){
+        var auditTable=create('table');
+        auditTable.style.cssText='width:100%!important;border-collapse:collapse!important;table-layout:auto!important;background:#fff!important;border:1px solid #e0e0e0!important;border-radius:6px!important';
+        var aThead=create('thead');
+        var aHr=create('tr');
+        aHr.style.cssText='background:#f0f0f0!important';
+        ['URL','Статус'].forEach(function(label){var th=create('th',{padding:'4px 10px',textAlign:'left',color:'#000',fontWeight:'bold'});th.textContent=label;aHr.appendChild(th);});
+        aThead.appendChild(aHr);
+        auditTable.appendChild(aThead);
+        var aBody=document.createElement('tbody');
+        audit.rows.forEach(function(r,idx){
+          var bg=r.err?'#ffebee':r.warn?'#fff3cd':(idx%2?'#f9f9f9':'#fff');
+          var tr=create('tr',{backgroundColor:bg});
+          var urlCell=create('td',{padding:'4px 10px',fontSize:'11px',whiteSpace:'nowrap'});
+          var linkEl=create('a',{color:r.err?'#c62828':r.warn?'#856404':'#1558d6',textDecoration:'none'});
+          linkEl.textContent=r.href;
+          linkEl.href=r.href;
+          linkEl.target='_blank';
+          linkEl.rel='noreferrer noopener';
+          urlCell.appendChild(linkEl);
+          tr.appendChild(urlCell);
+
+          var statusCell=create('td',{padding:'4px 10px',fontSize:'11px'});
+          var hasContent=false;
+          if((r.err||r.warn)&&r.href!==r.normalizedHref){
+            var parsedTop=create('div',{color:r.err?'#c62828':'#856404',fontWeight:'bold',marginBottom:'2px'});
+            parsedTop.textContent='Фактический href: '+r.normalizedHref;
+            statusCell.appendChild(parsedTop);
+            hasContent=true;
+          }
+          if(r.err){statusCell.appendChild(createList('[ERR] Ошибка', '#c62828', formatMessages(r.msg)));hasContent=true;}
+          if(r.warn){statusCell.appendChild(createList('[WARN] Предупреждение', '#856404', formatMessages(r.warnMsg)));hasContent=true;}
+          if(!hasContent){var ok=create('span',{color:'#2e7d32'});ok.textContent='OK';statusCell.appendChild(ok);}
+          tr.appendChild(statusCell);
+          aBody.appendChild(tr);
+        });
+        auditTable.appendChild(aBody);
+        section.appendChild(auditTable);
+      }else{
+        var ok=create('div',{color:'#2e7d32',fontSize:'12px'});
+        ok.textContent='Проблем во внутренних ссылках не найдено.';
+        section.appendChild(ok);
+      }
+      widget.appendChild(section);
+    }
 
     var footer=create('div',{padding:'8px 12px',background:'#f5f5f5',borderTop:'1px solid #ccc',color:'#000',position:'sticky',bottom:'0',display:'flex',alignItems:'center',justifyContent:'space-between',gap:'12px'});
     var footerText=create('span',{color:'#000'});
@@ -437,6 +580,9 @@
 
     function runChecker(){removeExistingWidgets();fetch(dataUrl).then(function(r){return r.json();}).then(function(payload){var pageGroups=payload.pageGroups;var indexes=buildSlugIndex(pageGroups);var slugIndex=indexes.slugIndex;var codeIndex=indexes.codeIndex;var aliasMap={};Object.keys(pageGroups).forEach(function(groupKey){aliasMap[groupKey]=groupKey;var group=pageGroups[groupKey];if(Array.isArray(group.aliases)){group.aliases.forEach(function(alias){ensureAlias(aliasMap,alias,groupKey);});}});var alternates=document.querySelectorAll('link[rel="alternate"][hreflang]');var canonical=document.querySelector('link[rel="canonical"]');var canonicalUrl=canonical?canonical.getAttribute('href'):'';var htmlLang=normalizeHtmlLang(document.documentElement?document.documentElement.getAttribute('lang'):'' );var currentPath=cleanPath(location.pathname);var normalizedCurrent=location.origin+normalizePath(location.pathname);var strippedPath=stripLangPrefix(currentPath);var currentMatch=matchSlugWithAliases(slugIndex,currentPath,slugAliasMap)||matchSlugWithAliases(slugIndex,strippedPath,slugAliasMap);var currentGroup=currentMatch?currentMatch.group:aliasMap[currentPath]||aliasMap[strippedPath]||aliasMap[strippedPath.replace(/^\//,'')];var baseHost=location.hostname.toLowerCase();
 
+    var expectedSlashPattern=(location.pathname&&location.pathname.endsWith('/'))?'with':'without';
+    var linkAudit=auditInternalLinks({maxLinks:400,expectedSlashPattern:expectedSlashPattern,baseHost:baseHost});
+
     if(alternates.length===0){
       if(!document.cookie.split(';').some(function(c){return c.trim().indexOf(reloadCookie+'=')===0;})){
         document.cookie=reloadCookie+'=1; path=/';
@@ -448,16 +594,22 @@
       singleReport.currentPath=currentPath;
       singleReport.currentGroup=currentGroup;
       singleReport.totalAlternates=0;
+      singleReport.linkAudit=linkAudit;
       renderWidget(singleReport);
       return;
     }
 
     var analysis=analyzeAlternates(alternates,{slugIndex:slugIndex,codeIndex:codeIndex,aliasMap:aliasMap,currentGroup:currentGroup,normalizedCurrent:normalizedCurrent,canonicalUrl:canonicalUrl,baseHost:baseHost,origin:location.origin});
     applyHtmlLangCrossCheck(analysis.rows,htmlLang);
+    if(looksSingleLanguageHreflangSet(analysis.rows)){
+      // Если нашёлся только self, подсвечиваем как подсказку: hreflang может быть избыточен.
+      for(var i=0;i<analysis.rows.length;i+=1){if(analysis.rows[i]&&analysis.rows[i].cur){appendWarn(analysis.rows[i],'Набор hreflang выглядит одноязычным (возможно hreflang не нужен)');break;}}
+    }
     var report=finalizeAnalysis(analysis.rows,analysis.warnings,analysis.codeCount,analysis.hrefCount,analysis.hostIssues,baseHost,normalizedCurrent);
     report.currentPath=currentPath;
     report.currentGroup=currentGroup;
     report.totalAlternates=alternates.length;
+    report.linkAudit=linkAudit;
     renderWidget(report);
   }).catch(function(err){alert('Ошибка загрузки базы слагов: '+err.message);});}
 
