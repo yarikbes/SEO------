@@ -321,7 +321,60 @@
   function uuid(){return'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,function(c){var r=Math.random()*16|0,v=c==='x'?r:(r&0x3|0x8);return v.toString(16);});}
   function getInstallInfo(){var fallback={id:'anon',isNew:false};try{var key='hreflang_checker_install_id';var saved=localStorage.getItem(key);if(saved){return {id:saved,isNew:false};}var id=uuid();localStorage.setItem(key,id);return {id:id,isNew:true};}catch(e){return fallback;}}
   function sendTelemetry(event,force){try{if(!telemetryUrl)return;var info=getInstallInfo();if(event==='install'&&!force&&!info.isNew){return;}var id=info.id;var version='1.0.0';var url=telemetryUrl+'?event='+encodeURIComponent(event)+'&version='+encodeURIComponent(version)+'&id='+encodeURIComponent(id);fetch(url,{method:'GET',mode:'no-cors',cache:'no-store',keepalive:true});}catch(e){}}
-  function buildClipboardText(rows,errors,warnings){var lines=[];lines.push('Всего: '+rows.length+' | Ошибок: '+errors.length+' | Предупреждений: '+warnings.length);rows.forEach(function(row){var parts=[];if(row.err&&row.msg){parts.push('ERR: '+row.msg);}if(row.warn&&row.warnMsg){parts.push('WARN: '+row.warnMsg);}var status=parts.length?parts.join(' | '):'OK';lines.push((row.hreflang||'')+'\t'+row.href+'\t'+status);});return lines.join('\n');}
+  function buildClipboardText(rows,errors,warnings,linkAudit){
+    var lines=[];
+    lines.push('Hreflang: Всего: '+rows.length+' | Ошибок: '+errors.length+' | Предупреждений: '+warnings.length);
+    rows.forEach(function(row){
+      var parts=[];
+      if(row.err&&row.msg){parts.push('ERR: '+row.msg);}
+      if(row.warn&&row.warnMsg){parts.push('WARN: '+row.warnMsg);}
+      var status=parts.length?parts.join(' | '):'OK';
+      lines.push((row.hreflang||'')+'\t'+row.href+'\t'+status);
+    });
+
+    if(linkAudit){
+      lines.push('');
+      var extra=[];
+      if(linkAudit.externalCount){extra.push('внешних: '+linkAudit.externalCount);}
+      if(linkAudit.enableSlugChecks){
+        if(linkAudit.pageCandidateCount){extra.push('страниц в базе: '+linkAudit.pageCandidateCount);}
+        if(linkAudit.partnerCandidateCount){extra.push('партнёр/редирект: '+linkAudit.partnerCandidateCount);}
+        if(linkAudit.unknownInternalCount){extra.push('неизвестных: '+linkAudit.unknownInternalCount);}
+      }
+      lines.push('Ссылки: проверено '+linkAudit.scanned+(linkAudit.truncated?'+':'')+' из '+linkAudit.totalFound+' | проблем: '+linkAudit.errorCount+' ERR, '+linkAudit.warnCount+' WARN'+(extra.length?' | '+extra.join(', '):''));
+      if(linkAudit.enableSlugChecks){
+        lines.push('Проверка slug по базе: язык '+(linkAudit.expectedLang||'')+' | группа '+(linkAudit.currentGroup||''));
+      }else{
+        lines.push('Проверка slug по базе: не активна (страница не распознана в базе)');
+      }
+
+      if(linkAudit.rows&&linkAudit.rows.length){
+        linkAudit.rows.forEach(function(r){
+          var parts2=[];
+          if(r.err&&r.msg){parts2.push('ERR: '+r.msg);}
+          if(r.warn&&r.warnMsg){parts2.push('WARN: '+r.warnMsg);}
+          var status2=parts2.length?parts2.join(' | '):'OK';
+          var base=(r.hreflang||'')+'\t'+(r.href||'')+'\t'+status2;
+          if((r.err||r.warn)&&r.href&&r.normalizedHref&&r.href!==r.normalizedHref){
+            base+='\t'+'Фактический href: '+r.normalizedHref;
+          }
+          lines.push(base);
+        });
+      }else{
+        lines.push('Проблем во внутренних ссылках не найдено.');
+      }
+
+      if(linkAudit.externalCount){
+        lines.push('');
+        lines.push('Внешние/партнёрские ссылки: '+linkAudit.externalCount);
+        if(linkAudit.externalSamples&&linkAudit.externalSamples.length){
+          linkAudit.externalSamples.forEach(function(u){lines.push('- '+u);});
+        }
+      }
+    }
+
+    return lines.join('\n');
+  }
 
   function showEmptyWidget(){var emptyWidget=create('div');emptyWidget.className=emptyClass;emptyWidget.style.cssText='position:fixed!important;top:20px!important;left:20px!important;background:#fff!important;border:1px solid #ccc!important;box-shadow:0 2px 10px rgba(0,0,0,0.2)!important;z-index:2147483647!important;max-width:500px!important;font-family:Arial,sans-serif!important;font-size:14px!important;border-radius:8px!important';emptyWidget.innerHTML='<div style="background:#fff3cd!important;padding:16px!important;border-bottom:1px solid #ccc!important;display:flex!important;justify-content:space-between!important;align-items:center!important;min-height:40px!important"><span style="font-weight:bold!important;color:#856404!important;flex:1!important">Hreflang не найдены</span><button class="hreflang-close-btn" style="background:none!important;border:none!important;font-size:24px!important;line-height:1!important;padding:0!important;margin:0!important;width:24px!important;height:24px!important;min-width:24px!important;min-height:24px!important;flex-shrink:0!important;cursor:pointer!important;color:#856404!important;font-weight:bold!important;display:flex!important;align-items:center!important;justify-content:center!important">X</button></div><div style="padding:20px!important"><p style="margin:0 0 12px 0!important;color:#000!important">На этой странице не найдены теги <code style="background:#f5f5f5!important;padding:2px 6px!important;border-radius:3px!important;color:#000!important">&lt;link rel="alternate" hreflang="..."&gt;</code></p><p style="margin:0!important;color:#333!important;font-size:13px!important"><strong>Возможные причины:</strong><br>&bull; Страница не мультиязычная<br>&bull; Теги скрыты JavaScript (клоакинг)<br>&bull; Теги еще не загружены</p></div>';
     document.body.appendChild(emptyWidget);
@@ -548,7 +601,7 @@
     copyBtn.addEventListener('click',function(ev){
       ev.preventDefault();
       ev.stopPropagation();
-      var text=buildClipboardText(rows,errors,warnings);
+      var text=buildClipboardText(rows,errors,warnings,report.linkAudit);
       if(navigator.clipboard&&navigator.clipboard.writeText){
         navigator.clipboard.writeText(text).then(function(){flashCopyBtn('ok');}).catch(function(err){flashCopyBtn('error');alert('Не удалось скопировать: '+err.message);});
       }else{
