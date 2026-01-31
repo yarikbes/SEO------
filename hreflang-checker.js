@@ -180,6 +180,25 @@
     var redirectSamples=[];
     var pageRows=[];
     var redirectRows=[];
+    var occurrencesByUrl={};
+
+    function normalizeLabelText(text){
+      return String(text||'').replace(/\s+/g,' ').trim();
+    }
+    function getAnchorLabel(a){
+      try{
+        var t=normalizeLabelText(a&&a.textContent?a.textContent:'');
+        if(t)return t;
+        var aria=normalizeLabelText(a&&a.getAttribute?a.getAttribute('aria-label'):'');
+        if(aria)return aria;
+        var title=normalizeLabelText(a&&a.getAttribute?a.getAttribute('title'):'');
+        if(title)return title;
+        var img=a&&a.querySelector?a.querySelector('img[alt]'):null;
+        var alt=normalizeLabelText(img&&img.getAttribute?img.getAttribute('alt'):'');
+        if(alt)return alt;
+        return '';
+      }catch(e){return '';}
+    }
 
     function stripHash(url){try{var u=new URL(url,location.origin);return u.origin+u.pathname+(u.search||'');}catch(e){return String(url||'').split('#')[0];}}
     function isProbablyHtml(contentType){if(!contentType)return true;var ct=String(contentType).toLowerCase();return ct.indexOf('text/html')>-1||ct.indexOf('application/xhtml+xml')>-1;}
@@ -286,8 +305,27 @@
       var absoluteNoHash=url.origin+url.pathname+(url.search||'');
       var normalizedHref=url.origin+normalizePath(url.pathname)+(url.search||'');
 
-      if(seen[normalizedHref])continue;
+      var label=getAnchorLabel(a);
+
+      if(seen[normalizedHref]){
+        // Не плодим сетевые проверки и строки в таблице, но учитываем повторы.
+        var occ=occurrencesByUrl[normalizedHref];
+        if(!occ){occ={count:0,texts:[],textKeys:{}};occurrencesByUrl[normalizedHref]=occ;}
+        occ.count+=1;
+        if(label){
+          var key=label.toLowerCase();
+          if(!occ.textKeys[key]){occ.textKeys[key]=true;occ.texts.push(label);}
+        }
+        continue;
+      }
       seen[normalizedHref]=true;
+      var occ2=occurrencesByUrl[normalizedHref];
+      if(!occ2){occ2={count:0,texts:[],textKeys:{}};occurrencesByUrl[normalizedHref]=occ2;}
+      occ2.count+=1;
+      if(label){
+        var key2=label.toLowerCase();
+        if(!occ2.textKeys[key2]){occ2.textKeys[key2]=true;occ2.texts.push(label);}
+      }
 
       var errs=[];
       var warns=[];
@@ -333,7 +371,9 @@
         contentType:'',
         fetchError:'',
         opaqueRedirect:false,
-        redirectLocation:''
+        redirectLocation:'',
+        occurrences:0,
+        distinctAnchorTexts:[]
       });
 
       scanned+=1;
@@ -356,6 +396,17 @@
         if(!rec)return;
         var errs=rec.errs||[];
         var warns=rec.warns||[];
+
+        // Дубликаты URL под разными лейблами
+        var occ=occurrencesByUrl[rec.normalizedHref];
+        if(occ){
+          rec.occurrences=occ.count||0;
+          rec.distinctAnchorTexts=Array.isArray(occ.texts)?occ.texts.slice(0):[];
+          if((occ.count||0)>1 && occ.texts && occ.texts.length>=2){
+            var sample=occ.texts.slice(0,5).join(' | ');
+            warns.push('Возможная ошибка навигации: разные тексты ссылок ведут на один URL (повторов: '+occ.count+'): '+sample+(occ.texts.length>5?' …':'') );
+          }
+        }
 
         var isRedirect=(rec.kind==='redirect');
         if(isRedirect){
