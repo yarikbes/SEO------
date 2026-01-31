@@ -573,6 +573,21 @@
   function codesMatch(expected,actual){if(!expected||expected.length===0)return true;var value=(actual||'').trim().toLowerCase();if(!value)return false;var valuePrimary=value.split('-')[0];return expected.some(function(code){var c=code.toLowerCase();if(c===value)return true;var cPrimary=c.split('-')[0];return cPrimary===valuePrimary;});}
   function setStyles(el,css){Object.keys(css).forEach(function(key){el.style[key]=css[key];});}
   function create(tag,css){var el=document.createElement(tag);if(css)setStyles(el,css);return el;}
+  function createIsolatedHost(className){
+    var host=document.createElement('div');
+    host.className=className;
+    var root=host;
+    try{
+      if(host.attachShadow){
+        var shadow=host.attachShadow({mode:'open'});
+        var style=document.createElement('style');
+        style.textContent=':host{all:initial!important;}*,*::before,*::after{box-sizing:border-box;}table{border-spacing:0;}a{color:inherit;}button{font:inherit;}';
+        shadow.appendChild(style);
+        root=shadow;
+      }
+    }catch(e){}
+    return {host:host,root:root};
+  }
   function createList(label,color,messages){var wrap=create('div',{padding:'4px 0'});var badge=create('span',{color:color,fontWeight:'bold',display:'inline-block',marginBottom:messages.length?'4px':'0'});badge.textContent=label;wrap.appendChild(badge);messages.forEach(function(msg){if(/^Фактический href:/i.test(msg)){return;}var line=create('div',{color:'#000',fontSize:'11px'});line.textContent='- '+msg;wrap.appendChild(line);});return wrap;}
   function attachCloseHandler(btn,widget){btn.addEventListener('click',function(ev){ev.preventDefault();ev.stopPropagation();widget.remove();},true);}
   function ensureAlias(map,key,value){map[key]=value;if(key.charAt(0)!=='/'){map['/'+key]=value;}}
@@ -670,10 +685,17 @@
     return lines.join('\n');
   }
 
-  function showEmptyWidget(){var emptyWidget=create('div');emptyWidget.className=emptyClass;emptyWidget.style.cssText='position:fixed!important;top:20px!important;left:20px!important;background:#fff!important;border:1px solid #ccc!important;box-shadow:0 2px 10px rgba(0,0,0,0.2)!important;z-index:2147483647!important;max-width:500px!important;font-family:Arial,sans-serif!important;font-size:14px!important;border-radius:8px!important';emptyWidget.innerHTML='<div style="background:#fff3cd!important;padding:16px!important;border-bottom:1px solid #ccc!important;display:flex!important;justify-content:space-between!important;align-items:center!important;min-height:40px!important"><span style="font-weight:bold!important;color:#856404!important;flex:1!important">Hreflang не найдены</span><button class="hreflang-close-btn" style="background:none!important;border:none!important;font-size:24px!important;line-height:1!important;padding:0!important;margin:0!important;width:24px!important;height:24px!important;min-width:24px!important;min-height:24px!important;flex-shrink:0!important;cursor:pointer!important;color:#856404!important;font-weight:bold!important;display:flex!important;align-items:center!important;justify-content:center!important">X</button></div><div style="padding:20px!important"><p style="margin:0 0 12px 0!important;color:#000!important">На этой странице не найдены теги <code style="background:#f5f5f5!important;padding:2px 6px!important;border-radius:3px!important;color:#000!important">&lt;link rel="alternate" hreflang="..."&gt;</code></p><p style="margin:0!important;color:#333!important;font-size:13px!important"><strong>Возможные причины:</strong><br>&bull; Страница не мультиязычная<br>&bull; Теги скрыты JavaScript (клоакинг)<br>&bull; Теги еще не загружены</p></div>';
-    document.body.appendChild(emptyWidget);
-    var btn=emptyWidget.querySelector('.hreflang-close-btn');
-    if(btn){btn.addEventListener('click',function(ev){ev.preventDefault();ev.stopPropagation();emptyWidget.remove();},true);} }
+  function showEmptyWidget(){
+    var mount=createIsolatedHost(emptyClass);
+    var host=mount.host;
+    var root=mount.root;
+    var panel=create('div');
+    panel.style.cssText='position:fixed!important;top:20px!important;left:20px!important;background:#fff!important;border:1px solid #ccc!important;box-shadow:0 2px 10px rgba(0,0,0,0.2)!important;z-index:2147483647!important;max-width:500px!important;font-family:Arial,sans-serif!important;font-size:14px!important;border-radius:8px!important';
+    panel.innerHTML='<div style="background:#fff3cd!important;padding:16px!important;border-bottom:1px solid #ccc!important;display:flex!important;justify-content:space-between!important;align-items:center!important;min-height:40px!important"><span style="font-weight:bold!important;color:#856404!important;flex:1!important">Hreflang не найдены</span><button class="hreflang-close-btn" style="background:none!important;border:none!important;font-size:24px!important;line-height:1!important;padding:0!important;margin:0!important;width:24px!important;height:24px!important;min-width:24px!important;min-height:24px!important;flex-shrink:0!important;cursor:pointer!important;color:#856404!important;font-weight:bold!important;display:flex!important;align-items:center!important;justify-content:center!important">X</button></div><div style="padding:20px!important"><p style="margin:0 0 12px 0!important;color:#000!important">На этой странице не найдены теги <code style="background:#f5f5f5!important;padding:2px 6px!important;border-radius:3px!important;color:#000!important">&lt;link rel="alternate" hreflang="..."&gt;</code></p><p style="margin:0!important;color:#333!important;font-size:13px!important"><strong>Возможные причины:</strong><br>&bull; Страница не мультиязычная<br>&bull; Теги скрыты JavaScript (клоакинг)<br>&bull; Теги еще не загружены</p></div>';
+    root.appendChild(panel);
+    document.body.appendChild(host);
+    var btn=panel.querySelector('.hreflang-close-btn');
+    if(btn){btn.addEventListener('click',function(ev){ev.preventDefault();ev.stopPropagation();host.remove();},true);} }
 
   function finalizeAnalysis(rows,warnings,codeCount,hrefCount,hostIssues,baseHost,normalizedCurrent){
     // Пост-обработка: дубликаты, домены, self-ref
@@ -710,9 +732,13 @@
     var currentGroup=report.currentGroup||'';
     var totalAlternates=Number.isFinite(report.totalAlternates)?report.totalAlternates:rows.length;
 
+    var mount=createIsolatedHost(widgetClass);
+    var host=mount.host;
+    var root=mount.root;
+
     var widget=create('div');
-    widget.className=widgetClass;
     widget.style.cssText='position:fixed!important;top:20px!important;left:20px!important;background:#fff!important;border:1px solid #ccc!important;box-shadow:0 2px 10px rgba(0,0,0,0.2)!important;z-index:2147483647!important;max-width:1200px!important;max-height:80vh!important;overflow:auto!important;font-family:Arial,sans-serif!important;font-size:13px!important;border-radius:8px!important';
+    root.appendChild(widget);
 
     var headerBg=errors.length>0?'#ffebee':warnings.length>0?'#fff3cd':'#e8f5e9';
     var headerColor=errors.length>0?'#c62828':warnings.length>0?'#856404':'#2e7d32';
@@ -721,7 +747,7 @@
     headerTitle.textContent='Hreflang Check: '+(errors.length>0?errors.length+' ошибок':warnings.length>0?warnings.length+' предупреждений':'Всё ОК');
     var closeBtn=create('button',{background:'none',border:'none',cursor:'pointer',fontSize:'24px',lineHeight:'1',padding:'0',margin:'0',width:'24px',height:'24px',minWidth:'24px',minHeight:'24px',flexShrink:'0',color:headerColor,fontWeight:'bold',display:'flex',alignItems:'center',justifyContent:'center'});
     closeBtn.textContent='X';
-    attachCloseHandler(closeBtn,widget);
+    attachCloseHandler(closeBtn,host);
     header.appendChild(headerTitle);
     header.appendChild(closeBtn);
     widget.appendChild(header);
@@ -955,7 +981,7 @@
     });
     footer.appendChild(copyBtn);
     widget.appendChild(footer);
-    document.body.appendChild(widget);
+    document.body.appendChild(host);
   }
 
   function analyzeAlternates(alternates,context){
