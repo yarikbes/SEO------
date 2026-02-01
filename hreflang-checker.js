@@ -16,6 +16,80 @@
   function normalizePath(path){if(!path)return'/';var normalized=path.replace(/\/+/g,'/');if(normalized.charAt(0)!=='/'){normalized='/'+normalized;}return normalized||'/';}
   function normalizeUrl(raw){var parsed=new URL(raw,location.origin);return parsed.origin+normalizePath(parsed.pathname);}
   function formatMessages(text){return text?text.split('; ').filter(Boolean):[];}
+
+  function primaryLang(code){
+    var v=String(code||'').trim().toLowerCase();
+    if(!v)return '';
+    return v.split('-')[0];
+  }
+  function slugForModel(path){
+    // Убираем ведущий / и завершающий /, оставляем только значимую часть.
+    var p=String(path||'').toLowerCase();
+    p=p.replace(/^\/+/, '').replace(/\/+$/, '');
+    // Уберём query/fragment на всякий случай
+    p=p.split('?')[0].split('#')[0];
+    // Оставляем буквы/цифры/дефис/слэш
+    p=p.replace(/[^a-z0-9\-\/]/g,'');
+    return p;
+  }
+  function extractNgrams(text,n){
+    var t=String(text||'');
+    var grams=[];
+    if(!t)return grams;
+    if(t.length<n){grams.push(t);return grams;}
+    for(var i=0;i<=t.length-n;i+=1){grams.push(t.slice(i,i+n));}
+    return grams;
+  }
+  function buildSlugLanguageModel(slugIndex){
+    // Модель по триграммам: для каждого primary языка считаем частоты.
+    var model={langs:[],stats:{},vocab:{},vocabSize:0};
+    if(!slugIndex)return model;
+    Object.keys(slugIndex).forEach(function(rawSlug){
+      var entry=slugIndex[rawSlug];
+      if(!entry||!entry.codes||!entry.codes.length)return;
+      var s=slugForModel(stripLangPrefix(cleanPath(rawSlug)));
+      if(!s||s.length<3)return;
+      var grams=extractNgrams(s,3);
+      grams.forEach(function(g){model.vocab[g]=true;});
+      entry.codes.forEach(function(code){
+        var lang=primaryLang(code);
+        if(!lang)return;
+        var st=model.stats[lang];
+        if(!st){st={counts:{},total:0};model.stats[lang]=st;}
+        grams.forEach(function(g){st.counts[g]=(st.counts[g]||0)+1;st.total+=1;});
+      });
+    });
+    model.langs=Object.keys(model.stats);
+    model.vocabSize=Object.keys(model.vocab).length||1;
+    return model;
+  }
+  function guessSlugLanguage(model,path){
+    if(!model||!model.langs||!model.langs.length)return {lang:'',confident:false,reason:'no-model'};
+    var s=slugForModel(path);
+    if(!s||s.length<3)return {lang:'',confident:false,reason:'too-short'};
+    var grams=extractNgrams(s,3);
+    if(!grams.length)return {lang:'',confident:false,reason:'no-ngrams'};
+    var bestLang='';
+    var bestScore=-Infinity;
+    var secondScore=-Infinity;
+    var V=model.vocabSize||1;
+    model.langs.forEach(function(lang){
+      var st=model.stats[lang];
+      var denom=(st.total||0)+V;
+      var score=0;
+      grams.forEach(function(g){
+        var c=(st.counts&&st.counts[g])?st.counts[g]:0;
+        // log((c+1)/denom)
+        score+=Math.log((c+1)/denom);
+      });
+      if(score>bestScore){secondScore=bestScore;bestScore=score;bestLang=lang;}
+      else if(score>secondScore){secondScore=score;}
+    });
+    var diff=bestScore-secondScore;
+    // Порог довольно консервативный, чтобы не ошибаться на коротких/универсальных slug.
+    var confident=(isFinite(diff)&&diff>1.0);
+    return {lang:bestLang,confident:confident,diff:diff};
+  }
   function isValidHreflangCode(code){
     if(code===null||code===undefined)return false;
     var raw=String(code).trim();
@@ -156,6 +230,7 @@
     var maxNetworkChecks=options&&Number.isFinite(options.maxNetworkChecks)?options.maxNetworkChecks:120;
     var concurrency=options&&Number.isFinite(options.concurrency)?options.concurrency:8;
     var isMultilingual=Boolean(options&&options.isMultilingual);
+    var langModel=options&&options.langModel?options.langModel:null;
 
     var anchors=Array.prototype.slice.call(document.querySelectorAll('a[href]'));
     var totalFound=anchors.length;
@@ -439,7 +514,19 @@
         if(rec.kind==='page'&&enableSlugChecks&&slugIndex&&expectedLang&&currentGroup){
           if(!rec.match){
             unknownInternalCount+=1;
-            if(!rec.partnerCandidate){warns.push('URL не найден в базе слагов');}
+            if(!rec.partnerCandidate){
+              var expectedPrimary=primaryLang(expectedLang);
+              var guess=guessSlugLanguage(langModel,slugForModel(rec.strippedPath||rec.cleanedPath||''));
+              if(guess&&guess.confident&&guess.lang&&expectedPrimary){
+                if(guess.lang===expectedPrimary){
+                  warns.push('URL не найден в базе, но похоже соответствует языку страницы ('+expectedLang+')');
+                }else{
+                  errs.push('URL не найден в базе и похоже соответствует другому языку ('+guess.lang+')');
+                }
+              }else{
+                warns.push('URL не найден в базе слагов');
+              }
+            }
           }else if(rec.match.codes&&rec.match.codes.length&&!codesMatch(rec.match.codes,expectedLang)){
             if(!isMultilingual){
               var expectedSlug=buildExpectedSlugText(expectedLang,rec.match.group||currentGroup);
@@ -988,6 +1075,7 @@
     var slugIndex=context.slugIndex;
     var codeIndex=context.codeIndex;
     var aliasMap=context.aliasMap;
+    var langModel=context.langModel;
     var currentGroup=context.currentGroup;
     var normalizedCurrent=context.normalizedCurrent;
     var canonicalUrl=context.canonicalUrl;
@@ -1039,8 +1127,21 @@
         else if(/^[a-z]{2,3}$/i.test(hreflangForMatch)&&lowerHreflang!=='x-default'){entryWarnings.push('Рекомендуется указать регион (например '+hreflangForMatch+'-XX)');}
       }
       if(/^https?[:/][^/]/.test(rawHref)){hasError=true;entryErrors.push('Неправильный протокол в URL');}
-      if(!group){hasError=true;entryErrors.push('URL не найден в базе слагов');}
-      else if(matchAliasUsed){entryWarnings.push('Slug использует /'+aliasFrom+'; рекомендуется /'+aliasTo);}
+      if(!match){
+        var expectedPrimary=primaryLang(hreflangForMatch);
+        var guess=guessSlugLanguage(langModel,stripped);
+        if(guess&&guess.confident&&guess.lang&&expectedPrimary){
+          if(guess.lang===expectedPrimary){
+            entryWarnings.push('URL не найден в базе, но похоже соответствует языку hreflang ('+hreflangForMatch+')');
+          }else{
+            hasError=true;
+            entryErrors.push('URL не найден в базе и похоже соответствует другому языку ('+guess.lang+')');
+          }
+        }else{
+          entryWarnings.push('URL не найден в базе слагов');
+        }
+        if(currentGroup&&group&&group!==currentGroup){hasError=true;entryErrors.push('Неправильная группа: '+group+' вместо '+currentGroup);} 
+      }else if(matchAliasUsed){entryWarnings.push('Slug использует /'+aliasFrom+'; рекомендуется /'+aliasTo);}
       else if(currentGroup&&group!==currentGroup){hasError=true;entryErrors.push('Неправильная группа: '+group+' вместо '+currentGroup);} 
 
       if(!matchAliasUsed&&match&&match.codes&&match.codes.length&&!codesMatch(match.codes,hreflangForMatch)){
@@ -1114,7 +1215,7 @@
     return {rows:rows,warnings:warnings,codeCount:codeCount,hrefCount:hrefCount,hostIssues:hostIssues};
   }
 
-    function runChecker(){removeExistingWidgets();fetch(dataUrl).then(function(r){return r.json();}).then(function(payload){var pageGroups=payload.pageGroups;var indexes=buildSlugIndex(pageGroups);var slugIndex=indexes.slugIndex;var codeIndex=indexes.codeIndex;var aliasMap={};Object.keys(pageGroups).forEach(function(groupKey){aliasMap[groupKey]=groupKey;var group=pageGroups[groupKey];if(Array.isArray(group.aliases)){group.aliases.forEach(function(alias){ensureAlias(aliasMap,alias,groupKey);});}});var alternates=document.querySelectorAll('link[rel="alternate"][hreflang]');var canonical=document.querySelector('link[rel="canonical"]');var canonicalUrl=canonical?canonical.getAttribute('href'):'';var htmlLang=normalizeHtmlLang(document.documentElement?document.documentElement.getAttribute('lang'):'' );var currentPath=cleanPath(location.pathname);var normalizedCurrent=location.origin+normalizePath(location.pathname);var strippedPath=stripLangPrefix(currentPath);var currentMatch=matchSlugWithAliases(slugIndex,currentPath,slugAliasMap)||matchSlugWithAliases(slugIndex,strippedPath,slugAliasMap);var currentGroup=currentMatch?currentMatch.group:aliasMap[currentPath]||aliasMap[strippedPath]||aliasMap[strippedPath.replace(/^\//,'')];var baseHost=location.hostname.toLowerCase();
+    function runChecker(){removeExistingWidgets();fetch(dataUrl).then(function(r){return r.json();}).then(function(payload){var pageGroups=payload.pageGroups;var indexes=buildSlugIndex(pageGroups);var slugIndex=indexes.slugIndex;var codeIndex=indexes.codeIndex;var langModel=buildSlugLanguageModel(slugIndex);var aliasMap={};Object.keys(pageGroups).forEach(function(groupKey){aliasMap[groupKey]=groupKey;var group=pageGroups[groupKey];if(Array.isArray(group.aliases)){group.aliases.forEach(function(alias){ensureAlias(aliasMap,alias,groupKey);});}});var alternates=document.querySelectorAll('link[rel="alternate"][hreflang]');var canonical=document.querySelector('link[rel="canonical"]');var canonicalUrl=canonical?canonical.getAttribute('href'):'';var htmlLang=normalizeHtmlLang(document.documentElement?document.documentElement.getAttribute('lang'):'' );var currentPath=cleanPath(location.pathname);var normalizedCurrent=location.origin+normalizePath(location.pathname);var strippedPath=stripLangPrefix(currentPath);var currentMatch=matchSlugWithAliases(slugIndex,currentPath,slugAliasMap)||matchSlugWithAliases(slugIndex,strippedPath,slugAliasMap);var currentGroup=currentMatch?currentMatch.group:aliasMap[currentPath]||aliasMap[strippedPath]||aliasMap[strippedPath.replace(/^\//,'')];var baseHost=location.hostname.toLowerCase();
 
     var isHomeCurrent=(location.pathname==='/'||location.pathname==='');
     var expectedSlashPattern=isHomeCurrent?null:((location.pathname&&location.pathname.endsWith('/'))?'with':'without');
@@ -1138,7 +1239,7 @@
         return;
       }
 
-      var analysis=analyzeAlternates(alternates,{slugIndex:slugIndex,codeIndex:codeIndex,aliasMap:aliasMap,currentGroup:currentGroup,normalizedCurrent:normalizedCurrent,canonicalUrl:canonicalUrl,baseHost:baseHost,origin:location.origin});
+      var analysis=analyzeAlternates(alternates,{slugIndex:slugIndex,codeIndex:codeIndex,aliasMap:aliasMap,langModel:langModel,currentGroup:currentGroup,normalizedCurrent:normalizedCurrent,canonicalUrl:canonicalUrl,baseHost:baseHost,origin:location.origin});
       // Уточняем язык страницы по self hreflang, если он есть
       for(var si=0;si<analysis.rows.length;si+=1){if(analysis.rows[si]&&analysis.rows[si].cur){expectedLang=analysis.rows[si].matchHreflang||analysis.rows[si].hreflang||expectedLang;break;}}
       if(linkAudit&&linkAudit.enableSlugChecks){linkAudit.expectedLang=expectedLang;}
@@ -1156,9 +1257,9 @@
     }
 
     var isMultilingualPage=Boolean(alternates&&alternates.length>0);
-    auditInternalLinks({maxLinks:400,expectedSlashPattern:expectedSlashPattern,baseHost:baseHost,enableSlugChecks:enableSlugChecks,expectedLang:expectedLang,currentGroup:currentGroup,slugIndex:slugIndex,codeIndex:codeIndex,isMultilingual:isMultilingualPage,enableNetworkCheck:true,maxNetworkChecks:120,concurrency:8}).then(afterLinkAudit).catch(function(e){
+    auditInternalLinks({maxLinks:400,expectedSlashPattern:expectedSlashPattern,baseHost:baseHost,enableSlugChecks:enableSlugChecks,expectedLang:expectedLang,currentGroup:currentGroup,slugIndex:slugIndex,codeIndex:codeIndex,langModel:langModel,isMultilingual:isMultilingualPage,enableNetworkCheck:true,maxNetworkChecks:120,concurrency:8}).then(afterLinkAudit).catch(function(e){
       // Если сетевой аудит упал, всё равно покажем отчёт, но без сетевой части
-      auditInternalLinks({maxLinks:400,expectedSlashPattern:expectedSlashPattern,baseHost:baseHost,enableSlugChecks:enableSlugChecks,expectedLang:expectedLang,currentGroup:currentGroup,slugIndex:slugIndex,codeIndex:codeIndex,isMultilingual:isMultilingualPage,enableNetworkCheck:false}).then(afterLinkAudit);
+      auditInternalLinks({maxLinks:400,expectedSlashPattern:expectedSlashPattern,baseHost:baseHost,enableSlugChecks:enableSlugChecks,expectedLang:expectedLang,currentGroup:currentGroup,slugIndex:slugIndex,codeIndex:codeIndex,langModel:langModel,isMultilingual:isMultilingualPage,enableNetworkCheck:false}).then(afterLinkAudit);
     });
   }).catch(function(err){alert('Ошибка загрузки базы слагов: '+err.message);});}
 
