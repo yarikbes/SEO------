@@ -3,7 +3,9 @@
   var telemetryUrl='https://hreflang-checker.dorian-grei33.workers.dev/ping';
     var specialHreflangHints={
       'in':'Устаревший код, используйте id (например id-ID)',
-      'sh':'Устаревший код, используйте sr/hr/bs с регионом'
+      'sh':'Устаревший код, используйте sr/hr/bs с регионом',
+      'tl':'Код tl — Tagalog. Для Filipino часто используют fil (например fil-PH). Рекомендуется выбрать единый стандарт на сайте',
+      'tl-ph':'Код tl-PH — Tagalog (Филиппины). Для Filipino часто используют fil-PH. Рекомендуется выбрать единый стандарт на сайте'
     };
   var slugAliasMap={'no':'nb','cz':'cs','gr':'el','se':'sv','dk':'da','jp':'ja','cn':'zh','ua':'uk','in':'id','iw':'he'};
   var hreflangCanonicalMap={'no':'nb-NO','no-no':'nb-NO'};
