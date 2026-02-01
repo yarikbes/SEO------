@@ -11,7 +11,7 @@
   var widgetClass='hreflang-checker-widget';
   var emptyClass='hreflang-empty-widget';
 
-  function stripLangPrefix(path){return path.replace(/^\/(?:[a-z]{2}(?:-[A-Z]{2})?)\//,'/');}
+  function stripLangPrefix(path){return path.replace(/^\/(?:[a-z]{2}(?:-[a-z]{2})?)\//i,'/');}
   function cleanPath(path){var cleaned=path.replace(/\/+/g,'/').replace(/\/$/,'');return cleaned||'/';}
   function normalizePath(path){if(!path)return'/';var normalized=path.replace(/\/+/g,'/');if(normalized.charAt(0)!=='/'){normalized='/'+normalized;}return normalized||'/';}
   function normalizeUrl(raw){var parsed=new URL(raw,location.origin);return parsed.origin+normalizePath(parsed.pathname);}
@@ -22,15 +22,41 @@
     if(!v)return '';
     return v.split('-')[0];
   }
+  function safeDecodeUrlPath(input){
+    var s=String(input||'');
+    try{
+      // decodeURIComponent может упасть на частично-сломанных % последовательностях
+      return decodeURIComponent(s);
+    }catch(e){
+      return s;
+    }
+  }
   function slugForModel(path){
     // Убираем ведущий / и завершающий /, оставляем только значимую часть.
-    var p=String(path||'').toLowerCase();
+    var p=safeDecodeUrlPath(path);
+    p=String(p||'').toLowerCase();
     p=p.replace(/^\/+/, '').replace(/\/+$/, '');
     // Уберём query/fragment на всякий случай
     p=p.split('?')[0].split('#')[0];
-    // Оставляем буквы/цифры/дефис/слэш
-    p=p.replace(/[^a-z0-9\-\/]/g,'');
+    // Оставляем буквы/цифры/дефис/слэш. Поддерживаем кириллицу, чтобы ru/uk и т.п. не превращались в пустоту.
+    p=p.replace(/[^a-z0-9\u0400-\u04ff\-\/]/g,'');
     return p;
+  }
+  function detectSlugScript(path){
+    var p=safeDecodeUrlPath(path);
+    p=String(p||'');
+    var hasCyr=/[\u0400-\u04ff]/.test(p);
+    // Latin (включая диакритики)
+    var hasLatin=/[A-Za-z\u00C0-\u024F]/.test(p);
+    var hasAsciiLatin=/[A-Za-z]/.test(p);
+    if(hasCyr&&hasLatin)return 'mixed';
+    if(hasCyr)return 'cyrillic';
+    if(hasLatin){
+      // Отличаем «чисто ASCII» от латиницы с диакритиками
+      return /[\u00C0-\u024F]/.test(p)?'latin':'ascii-latin';
+    }
+    // Если нет букв — это slug-«мусор»/цифры, считаем «other»
+    return hasAsciiLatin?'ascii-latin':'other';
   }
   function extractNgrams(text,n){
     var t=String(text||'');
@@ -65,10 +91,11 @@
   }
   function guessSlugLanguage(model,path){
     if(!model||!model.langs||!model.langs.length)return {lang:'',confident:false,reason:'no-model'};
+    var script=detectSlugScript(path);
     var s=slugForModel(path);
-    if(!s||s.length<3)return {lang:'',confident:false,reason:'too-short'};
+    if(!s||s.length<3)return {lang:'',confident:false,reason:'too-short',script:script};
     var grams=extractNgrams(s,3);
-    if(!grams.length)return {lang:'',confident:false,reason:'no-ngrams'};
+    if(!grams.length)return {lang:'',confident:false,reason:'no-ngrams',script:script};
     var bestLang='';
     var bestScore=-Infinity;
     var secondScore=-Infinity;
@@ -86,9 +113,22 @@
       else if(score>secondScore){secondScore=score;}
     });
     var diff=bestScore-secondScore;
-    // Порог довольно консервативный, чтобы не ошибаться на коротких/универсальных slug.
-    var confident=(isFinite(diff)&&diff>1.0);
-    return {lang:bestLang,confident:confident,diff:diff};
+    // Более консервативная уверенность:
+    // - короткие/универсальные slug не классифицируем уверенно
+    // - ASCII-latin без диакритик НЕ пытаемся различать по «языкам», иначе появляются ложные nl/pl/et и т.п.
+    var minLen=8;
+    var minGrams=5;
+    var baseThreshold=2.4;
+    if(grams.length>=10)baseThreshold=2.0;
+    if(s.length<minLen||grams.length<minGrams){
+      return {lang:bestLang,confident:false,diff:diff,reason:'too-short',script:script};
+    }
+    // Если slug чисто ASCII (без диакритик/кириллицы), то «конфидентно» разрешаем только en.
+    if(script==='ascii-latin'&&bestLang&&bestLang!=='en'){
+      return {lang:bestLang,confident:false,diff:diff,reason:'ascii-ambiguous',script:script};
+    }
+    var confident=(isFinite(diff)&&diff>baseThreshold);
+    return {lang:bestLang,confident:confident,diff:diff,script:script};
   }
   function isValidHreflangCode(code){
     if(code===null||code===undefined)return false;
@@ -246,6 +286,8 @@
     var partnerCandidateCount=0;
     var unknownInternalCount=0;
     var pageCandidateCount=0;
+    var slugCoverage=0;
+    var slugIndexReliable=false;
     var networkCheckedCount=0;
     var networkSkippedCount=0;
     var pageCount=0;
@@ -467,6 +509,13 @@
       pageRows=[];
       redirectRows=[];
 
+      // Надёжность базы: если совпадений очень мало, то нельзя строго утверждать,
+      // что URL/slug «не того языка». В таком случае снижаем строгость проверок.
+      var pageLikeCount=0;
+      internalRecords.forEach(function(r){if(r&&r.kind==='page')pageLikeCount+=1;});
+      slugCoverage=pageLikeCount? (pageCandidateCount/pageLikeCount) : 0;
+      slugIndexReliable=(pageCandidateCount>=10 && slugCoverage>=0.2);
+
       internalRecords.forEach(function(rec){
         if(!rec)return;
         var errs=rec.errs||[];
@@ -516,21 +565,35 @@
             unknownInternalCount+=1;
             if(!rec.partnerCandidate){
               var expectedPrimary=primaryLang(expectedLang);
-              var guess=guessSlugLanguage(langModel,slugForModel(rec.strippedPath||rec.cleanedPath||''));
-              if(guess&&guess.confident&&guess.lang&&expectedPrimary){
+              var guess=guessSlugLanguage(langModel,(rec.strippedPath||rec.cleanedPath||''));
+              // Строгое ERR допускаем только если:
+              // - страница реально многоязычная (есть hreflang)
+              // - и база достаточно «покрывает» сайт (иначе будет много ложных ERR)
+              var canBeStrict=Boolean(isMultilingual && slugIndexReliable);
+              if(canBeStrict && guess&&guess.confident&&guess.lang&&expectedPrimary){
                 if(guess.lang===expectedPrimary){
                   warns.push('URL не найден в базе, но похоже соответствует языку страницы ('+expectedLang+')');
                 }else{
                   errs.push('URL не найден в базе и похоже соответствует другому языку ('+guess.lang+')');
                 }
               }else{
-                warns.push('URL не найден в базе слагов');
+                if(guess&&guess.lang&&expectedPrimary&&guess.lang===expectedPrimary&&(guess.confident||guess.script==='cyrillic')){
+                  warns.push('URL не найден в базе, но похоже соответствует языку страницы ('+expectedLang+')');
+                }else if(guess&&guess.lang&&expectedPrimary&&guess.lang!==expectedPrimary&&(guess.confident||guess.script!=='ascii-latin')){
+                  warns.push('URL не найден в базе слагов (подсказка: возможно другой язык — '+guess.lang+')');
+                }else{
+                  warns.push('URL не найден в базе слагов');
+                }
               }
             }
           }else if(rec.match.codes&&rec.match.codes.length&&!codesMatch(rec.match.codes,expectedLang)){
             if(!isMultilingual){
               var expectedSlug=buildExpectedSlugText(expectedLang,rec.match.group||currentGroup);
-              errs.push('Slug не соответствует языку страницы ('+expectedLang+')'+(expectedSlug?'; ожидаемый slug — '+expectedSlug:''));
+              if(slugIndexReliable){
+                errs.push('Slug не соответствует языку страницы ('+expectedLang+')'+(expectedSlug?'; ожидаемый slug — '+expectedSlug:''));
+              }else{
+                warns.push('Slug может не соответствовать языку страницы ('+expectedLang+')'+(expectedSlug?'; ожидаемый slug — '+expectedSlug:'')+'; низкое покрытие базы — проверка ослаблена');
+              }
             }
           }
         }
@@ -620,6 +683,8 @@
         partnerCandidateCount:partnerCandidateCount,
         unknownInternalCount:unknownInternalCount,
         pageCandidateCount:pageCandidateCount,
+        slugIndexReliable:slugIndexReliable,
+        slugCoverage:slugCoverage,
         enableSlugChecks:enableSlugChecks,
         expectedLang:expectedLang,
         currentGroup:currentGroup,
@@ -914,7 +979,12 @@
       section.appendChild(title);
       if(audit.enableSlugChecks){
         var note=create('div',{color:'#555',fontSize:'12px',marginBottom:'8px'});
-        note.textContent='Проверка slug по базе выполняется для языка страницы: '+(audit.expectedLang||'')+' (группа: '+(audit.currentGroup||'')+')';
+        var coverageText='';
+        if(typeof audit.slugCoverage==='number'&&isFinite(audit.slugCoverage)){
+          coverageText='; покрытие базы: '+Math.round(audit.slugCoverage*100)+'%';
+        }
+        var strictText=(audit.slugIndexReliable===false)?' (проверка ослаблена из-за низкого покрытия базы)':'';
+        note.textContent='Проверка slug по базе выполняется для языка страницы: '+(audit.expectedLang||'')+' (группа: '+(audit.currentGroup||'')+')'+coverageText+strictText;
         section.appendChild(note);
       }else{
         var note2=create('div',{color:'#555',fontSize:'12px',marginBottom:'8px'});
@@ -1128,19 +1198,25 @@
       }
       if(/^https?[:/][^/]/.test(rawHref)){hasError=true;entryErrors.push('Неправильный протокол в URL');}
       if(!match){
-        var expectedPrimary=primaryLang(hreflangForMatch);
-        var guess=guessSlugLanguage(langModel,stripped);
-        if(guess&&guess.confident&&guess.lang&&expectedPrimary){
-          if(guess.lang===expectedPrimary){
-            entryWarnings.push('URL не найден в базе, но похоже соответствует языку hreflang ('+hreflangForMatch+')');
-          }else{
-            hasError=true;
-            entryErrors.push('URL не найден в базе и похоже соответствует другому языку ('+guess.lang+')');
-          }
-        }else{
+        // Если группа страницы не определена, значит сайт/страница, скорее всего, не из нашей базы.
+        // В этом режиме не пытаемся «наказывать» за предположения по языку: это даст много ложных ERR.
+        if(!currentGroup){
           entryWarnings.push('URL не найден в базе слагов');
+        }else{
+          var expectedPrimary=primaryLang(hreflangForMatch);
+          var guess=guessSlugLanguage(langModel,stripped);
+          if(guess&&guess.confident&&guess.lang&&expectedPrimary){
+            if(guess.lang===expectedPrimary){
+              entryWarnings.push('URL не найден в базе, но похоже соответствует языку hreflang ('+hreflangForMatch+')');
+            }else{
+              hasError=true;
+              entryErrors.push('URL не найден в базе и похоже соответствует другому языку ('+guess.lang+')');
+            }
+          }else{
+            entryWarnings.push('URL не найден в базе слагов');
+          }
+          if(currentGroup&&group&&group!==currentGroup){hasError=true;entryErrors.push('Неправильная группа: '+group+' вместо '+currentGroup);} 
         }
-        if(currentGroup&&group&&group!==currentGroup){hasError=true;entryErrors.push('Неправильная группа: '+group+' вместо '+currentGroup);} 
       }else if(matchAliasUsed){entryWarnings.push('Slug использует /'+aliasFrom+'; рекомендуется /'+aliasTo);}
       else if(currentGroup&&group!==currentGroup){hasError=true;entryErrors.push('Неправильная группа: '+group+' вместо '+currentGroup);} 
 
