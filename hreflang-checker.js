@@ -358,6 +358,19 @@
       return '';
     }
 
+    function extractLangPrefixFromPath(path){
+      var p=String(path||'');
+      var m=p.match(/^\/([a-z]{2}(?:-[a-z]{2})?)(?:\/|$)/i);
+      return m?m[1]:'';
+    }
+    function isSameLanguageLink(path,expectedLang){
+      var expectedPrimary=primaryLang(expectedLang);
+      if(!expectedPrimary)return true;
+      var prefix=extractLangPrefixFromPath(path);
+      if(!prefix)return true; // нет /xx/ — считаем ссылку той же языковой версии
+      return primaryLang(prefix)===expectedPrimary;
+    }
+
     function addNavOccurrence(areaKey,normalizedHref,label,labelKey){
       if(!areaKey)return;
       var area=navOccurrencesByArea[areaKey];
@@ -684,7 +697,9 @@
               }
             }
           }else if(rec.match.codes&&rec.match.codes.length&&!codesMatch(rec.match.codes,expectedLang)){
-            if(!isMultilingual){
+            // На многоязычном сайте не ругаем ссылки, которые явно ведут на другой язык (/nl/ и т.п.).
+            // Но для ссылок "своего" языка mismatch по базе всё равно полезен.
+            if(!isMultilingual || isSameLanguageLink(rec.cleanedPath||'',expectedLang)){
               var expectedSlug=buildExpectedSlugText(expectedLang,rec.match.group||effectiveGroup);
               var currentSlug=rec.strippedPath||rec.cleanedPath||'';
               if(expectedSlug && isLikelySlugVariant(currentSlug,expectedSlug)){
