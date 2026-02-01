@@ -654,7 +654,10 @@
           }else if(rec.match.codes&&rec.match.codes.length&&!codesMatch(rec.match.codes,expectedLang)){
             if(!isMultilingual){
               var expectedSlug=buildExpectedSlugText(expectedLang,rec.match.group||currentGroup);
-              if(slugIndexReliable){
+              var currentSlug=rec.strippedPath||rec.cleanedPath||'';
+              if(expectedSlug && isLikelySlugVariant(currentSlug,expectedSlug)){
+                warns.push('Slug отличается от ожидаемого для '+expectedLang+': '+('/'+normalizeSlugForCompare(currentSlug))+' вместо '+expectedSlug);
+              }else if(slugIndexReliable){
                 errs.push('Slug не соответствует языку страницы ('+expectedLang+')'+(expectedSlug?'; ожидаемый slug — '+expectedSlug:''));
               }else{
                 warns.push('Slug может не соответствовать языку страницы ('+expectedLang+')'+(expectedSlug?'; ожидаемый slug — '+expectedSlug:'')+'; низкое покрытие базы — проверка ослаблена');
@@ -809,6 +812,35 @@
   function attachCloseHandler(btn,widget){btn.addEventListener('click',function(ev){ev.preventDefault();ev.stopPropagation();widget.remove();},true);}
   function ensureAlias(map,key,value){map[key]=value;if(key.charAt(0)!=='/'){map['/'+key]=value;}}
   function hasDoubleSlash(url){var remainder=url.replace(/^https?:\/\/[^\/]+/i,'');return remainder.indexOf('//')>-1;}
+  function normalizeSlugForCompare(path){
+    var p=String(path||'');
+    try{p=safeDecodeUrlPath(p);}catch(e){}
+    p=p.split('?')[0].split('#')[0];
+    p=cleanPath(p);
+    p=stripLangPrefix(p);
+    p=p.replace(/^\/+/, '').replace(/\/+$/, '');
+    return p.toLowerCase();
+  }
+  function isLikelySlugVariant(a,b){
+    var x=normalizeSlugForCompare(a);
+    var y=normalizeSlugForCompare(b);
+    if(!x||!y)return false;
+    if(x===y)return true;
+    if(x+'s'===y||y+'s'===x)return true;
+    var maxDist=1;
+    if(Math.abs(x.length-y.length)>maxDist)return false;
+    var i=0,j=0,edits=0;
+    while(i<x.length&&j<y.length){
+      if(x.charAt(i)===y.charAt(j)){i+=1;j+=1;continue;}
+      edits+=1;
+      if(edits>maxDist)return false;
+      if(x.length>y.length){i+=1;}
+      else if(y.length>x.length){j+=1;}
+      else{ i+=1; j+=1; }
+    }
+    edits+=Math.abs((x.length-i)-(y.length-j));
+    return edits<=maxDist;
+  }
   function isHomeTrailingSlashOnlyHrefMismatch(rawHref,parsedUrl){
     if(!rawHref||!parsedUrl)return false;
     if(rawHref.indexOf('#')>-1)return false;
