@@ -297,10 +297,24 @@
     var redirectSamples=[];
     var pageRows=[];
     var redirectRows=[];
-    var occurrencesByUrl={};
+
+    // Ошибки навигации ищем только в меню/шапке/футере, а не во всей перелинковке.
+    // Группируем по конкретному контейнеру, чтобы не ругаться на различия header vs footer.
+    var navOccurrencesByArea={};
+    var reportedNavIssues={url:{},label:{}};
 
     function normalizeLabelText(text){
       return String(text||'').replace(/\s+/g,' ').trim();
+    }
+    function normalizeLabelKey(text){
+      var t=String(text||'').toLowerCase();
+      t=t.replace(/[«»"'()\[\]{}<>]/g,' ');
+      t=t.replace(/[^a-z0-9\u0400-\u04ff\s\-]/g,' ');
+      t=t.replace(/\s+/g,' ').trim();
+      // убираем самые частые стоп-слова, чтобы «для/и/на» не считались отличием
+      t=t.replace(/\b(и|в|во|на|к|ко|по|о|об|от|до|за|из|с|со|у|при|для|the|a|an|to|for|of|in|on|at)\b/g,' ');
+      t=t.replace(/\s+/g,' ').trim();
+      return t;
     }
     function getAnchorLabel(a){
       try{
@@ -315,6 +329,50 @@
         if(alt)return alt;
         return '';
       }catch(e){return '';}
+    }
+
+    function getNavAreaKey(el){
+      try{
+        var cur=el;
+        while(cur&&cur!==document.documentElement&&cur!==document.body){
+          if(cur.nodeType!==1){cur=cur.parentNode;continue;}
+          var tag=(cur.tagName||'').toLowerCase();
+          var role=String(cur.getAttribute&&cur.getAttribute('role')||'').toLowerCase();
+          if(tag==='nav'||tag==='header'||tag==='footer'||role==='navigation'){
+            var id=cur.id?('#'+cur.id):'';
+            var cls='';
+            if(cur.className&&typeof cur.className==='string'){
+              var parts=cur.className.split(/\s+/).filter(Boolean).slice(0,3);
+              if(parts.length){cls='.'+parts.join('.');}
+            }
+            return tag+id+cls;
+          }
+          cur=cur.parentNode;
+        }
+      }catch(e){}
+      return '';
+    }
+
+    function addNavOccurrence(areaKey,normalizedHref,label,labelKey){
+      if(!areaKey)return;
+      var area=navOccurrencesByArea[areaKey];
+      if(!area){area={byUrl:{},byLabel:{}};navOccurrencesByArea[areaKey]=area;}
+
+      // url -> разные тексты
+      var u=area.byUrl[normalizedHref];
+      if(!u){u={count:0,labels:[],labelKeys:{}};area.byUrl[normalizedHref]=u;}
+      u.count+=1;
+      if(labelKey){
+        if(!u.labelKeys[labelKey]){u.labelKeys[labelKey]=true;u.labels.push(label);}
+      }
+
+      // текст -> разные url
+      if(labelKey){
+        var l=area.byLabel[labelKey];
+        if(!l){l={count:0,urls:[],urlKeys:{}};area.byLabel[labelKey]=l;}
+        l.count+=1;
+        if(!l.urlKeys[normalizedHref]){l.urlKeys[normalizedHref]=true;l.urls.push(normalizedHref);}
+      }
     }
 
     function stripHash(url){try{var u=new URL(url,location.origin);return u.origin+u.pathname+(u.search||'');}catch(e){return String(url||'').split('#')[0];}}
@@ -423,26 +481,16 @@
       var normalizedHref=url.origin+normalizePath(url.pathname)+(url.search||'');
 
       var label=getAnchorLabel(a);
+      var labelKey=normalizeLabelKey(label);
+      var navAreaKey=getNavAreaKey(a);
 
       if(seen[normalizedHref]){
         // Не плодим сетевые проверки и строки в таблице, но учитываем повторы.
-        var occ=occurrencesByUrl[normalizedHref];
-        if(!occ){occ={count:0,texts:[],textKeys:{}};occurrencesByUrl[normalizedHref]=occ;}
-        occ.count+=1;
-        if(label){
-          var key=label.toLowerCase();
-          if(!occ.textKeys[key]){occ.textKeys[key]=true;occ.texts.push(label);}
-        }
+        if(navAreaKey&&labelKey){addNavOccurrence(navAreaKey,normalizedHref,label,labelKey);}
         continue;
       }
       seen[normalizedHref]=true;
-      var occ2=occurrencesByUrl[normalizedHref];
-      if(!occ2){occ2={count:0,texts:[],textKeys:{}};occurrencesByUrl[normalizedHref]=occ2;}
-      occ2.count+=1;
-      if(label){
-        var key2=label.toLowerCase();
-        if(!occ2.textKeys[key2]){occ2.textKeys[key2]=true;occ2.texts.push(label);}
-      }
+      if(navAreaKey&&labelKey){addNavOccurrence(navAreaKey,normalizedHref,label,labelKey);}
 
       var errs=[];
       var warns=[];
@@ -491,6 +539,9 @@
         redirectLocation:'',
         occurrences:0,
         distinctAnchorTexts:[]
+        ,navAreaKey:navAreaKey
+        ,anchorLabel:label
+        ,anchorLabelKey:labelKey
       });
 
       scanned+=1;
@@ -521,14 +572,28 @@
         var errs=rec.errs||[];
         var warns=rec.warns||[];
 
-        // Дубликаты URL под разными лейблами
-        var occ=occurrencesByUrl[rec.normalizedHref];
-        if(occ){
-          rec.occurrences=occ.count||0;
-          rec.distinctAnchorTexts=Array.isArray(occ.texts)?occ.texts.slice(0):[];
-          if((occ.count||0)>1 && occ.texts && occ.texts.length>=2){
-            var sample=occ.texts.slice(0,5).join(' | ');
-            warns.push('Возможная ошибка навигации: разные тексты ссылок ведут на один URL (повторов: '+occ.count+'): '+sample+(occ.texts.length>5?' …':'') );
+        // Возможные ошибки именно в навигации (header/nav/footer), а не во всей перелинковке.
+        if(rec.navAreaKey && navOccurrencesByArea[rec.navAreaKey]){
+          var area=navOccurrencesByArea[rec.navAreaKey];
+          // 1) разные тексты -> один URL
+          var uOcc=area.byUrl[rec.normalizedHref];
+          var urlIssueKey=rec.navAreaKey+'|url|'+rec.normalizedHref;
+          if(uOcc){
+            rec.occurrences=uOcc.count||0;
+            rec.distinctAnchorTexts=Array.isArray(uOcc.labels)?uOcc.labels.slice(0):[];
+            if(!reportedNavIssues.url[urlIssueKey] && (uOcc.count||0)>1 && uOcc.labels && uOcc.labels.length>=2){
+              reportedNavIssues.url[urlIssueKey]=true;
+              var sample=uOcc.labels.slice(0,5).join(' | ');
+              warns.push('Возможная ошибка навигации: разные тексты ссылок ведут на один URL (повторов: '+uOcc.count+'): '+sample+(uOcc.labels.length>5?' …':'') );
+            }
+          }
+          // 2) один и тот же текст -> разные URL
+          var lKey=rec.anchorLabelKey;
+          var lOcc=(lKey?area.byLabel[lKey]:null);
+          var labelIssueKey=rec.navAreaKey+'|label|'+lKey;
+          if(lOcc && !reportedNavIssues.label[labelIssueKey] && lOcc.urls && lOcc.urls.length>=2){
+            reportedNavIssues.label[labelIssueKey]=true;
+            warns.push('Возможная ошибка навигации: один и тот же текст ссылки ведёт на разные URL: '+lOcc.urls.slice(0,5).join(' | ')+(lOcc.urls.length>5?' …':'') );
           }
         }
 
