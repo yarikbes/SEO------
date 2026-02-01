@@ -290,6 +290,7 @@
     var pageCandidateCount=0;
     var slugCoverage=0;
     var slugIndexReliable=false;
+    var groupInferred=false;
     var networkCheckedCount=0;
     var networkSkippedCount=0;
     var pageCount=0;
@@ -514,7 +515,9 @@
 
       var cleanedPath=cleanPath(url.pathname);
       var stripped=stripLangPrefix(cleanedPath);
-      var match=(enableSlugChecks&&slugIndex)?(matchSlugWithAliases(slugIndex,cleanedPath,slugAliasMap)||matchSlugWithAliases(slugIndex,stripped,slugAliasMap)):null;
+      // match считаем всегда, если база загружена: это нужно, чтобы "узнавать" сайт даже на страницах,
+      // которых нет в таблице (например /policy).
+      var match=(slugIndex)?(matchSlugWithAliases(slugIndex,cleanedPath,slugAliasMap)||matchSlugWithAliases(slugIndex,stripped,slugAliasMap)):null;
       var partner=isPartnerCandidate(url);
       if(partner){partnerCandidateCount+=1;}
       if(match){pageCandidateCount+=1;}
@@ -568,6 +571,31 @@
       internalRecords.forEach(function(r){if(r&&r.kind==='page')pageLikeCount+=1;});
       slugCoverage=pageLikeCount? (pageCandidateCount/pageLikeCount) : 0;
       slugIndexReliable=(pageCandidateCount>=10 && slugCoverage>=0.2);
+
+      // Если текущая страница не распознана в базе, но по ссылкам видно, что сайт из нашей базы,
+      // пытаемся определить группу по большинству совпавших ссылок.
+      var effectiveGroup=currentGroup;
+      if(!effectiveGroup && slugIndexReliable){
+        var groupCounts={};
+        internalRecords.forEach(function(r){
+          if(!r||r.kind!=='page'||!r.match||!r.match.group)return;
+          groupCounts[r.match.group]=(groupCounts[r.match.group]||0)+1;
+        });
+        var bestGroup='';
+        var bestCount=0;
+        Object.keys(groupCounts).forEach(function(g){
+          var c=groupCounts[g]||0;
+          if(c>bestCount){bestCount=c;bestGroup=g;}
+        });
+        if(bestGroup){
+          effectiveGroup=bestGroup;
+          groupInferred=true;
+        }
+      }
+
+      // Итоговое решение: включаем slug-check, если есть язык + определена группа (явно или по ссылкам)
+      // и база действительно покрывает сайт.
+      var effectiveEnableSlugChecks=Boolean(slugIndex && codeIndex && expectedLang && effectiveGroup && (enableSlugChecks || slugIndexReliable));
 
       internalRecords.forEach(function(rec){
         if(!rec)return;
@@ -627,7 +655,7 @@
 
         // Проверка соответствия внутреннего URL языку/таблице (ТОЛЬКО для реальных страниц)
         // Важно: на многоязычном сайте ссылка на другую языковую версию (напр. /nl/) — не ошибка.
-        if(rec.kind==='page'&&enableSlugChecks&&slugIndex&&expectedLang&&currentGroup){
+        if(rec.kind==='page'&&effectiveEnableSlugChecks&&slugIndex&&expectedLang&&effectiveGroup){
           if(!rec.match){
             unknownInternalCount+=1;
             if(!rec.partnerCandidate){
@@ -655,7 +683,7 @@
             }
           }else if(rec.match.codes&&rec.match.codes.length&&!codesMatch(rec.match.codes,expectedLang)){
             if(!isMultilingual){
-              var expectedSlug=buildExpectedSlugText(expectedLang,rec.match.group||currentGroup);
+              var expectedSlug=buildExpectedSlugText(expectedLang,rec.match.group||effectiveGroup);
               var currentSlug=rec.strippedPath||rec.cleanedPath||'';
               if(expectedSlug && isLikelySlugVariant(currentSlug,expectedSlug)){
                 warns.push('Slug отличается от ожидаемого для '+expectedLang+': '+('/'+normalizeSlugForCompare(currentSlug))+' вместо '+expectedSlug);
@@ -755,9 +783,10 @@
         pageCandidateCount:pageCandidateCount,
         slugIndexReliable:slugIndexReliable,
         slugCoverage:slugCoverage,
-        enableSlugChecks:enableSlugChecks,
+        enableSlugChecks:effectiveEnableSlugChecks,
         expectedLang:expectedLang,
-        currentGroup:currentGroup,
+        currentGroup:effectiveGroup,
+        groupInferred:groupInferred,
         enableNetworkCheck:enableNetworkCheck,
         maxNetworkChecks:maxNetworkChecks,
         networkCheckedCount:networkCheckedCount,
@@ -1083,7 +1112,8 @@
           coverageText='; покрытие базы: '+Math.round(audit.slugCoverage*100)+'%';
         }
         var strictText=(audit.slugIndexReliable===false)?' (проверка ослаблена из-за низкого покрытия базы)':'';
-        note.textContent='Проверка slug по базе выполняется для языка страницы: '+(audit.expectedLang||'')+' (группа: '+(audit.currentGroup||'')+')'+coverageText+strictText;
+        var inferredText=audit.groupInferred?' (группа определена по ссылкам)':'';
+        note.textContent='Проверка slug по базе выполняется для языка страницы: '+(audit.expectedLang||'')+' (группа: '+(audit.currentGroup||'')+')'+inferredText+coverageText+strictText;
         section.appendChild(note);
       }else{
         var note2=create('div',{color:'#555',fontSize:'12px',marginBottom:'8px'});
