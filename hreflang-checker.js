@@ -291,6 +291,8 @@
     var slugCoverage=0;
     var slugIndexReliable=false;
     var groupInferred=false;
+    var effectiveGroup=currentGroup;
+    var effectiveEnableSlugChecks=enableSlugChecks;
     var networkCheckedCount=0;
     var networkSkippedCount=0;
     var pageCount=0;
@@ -574,7 +576,7 @@
 
       // Если текущая страница не распознана в базе, но по ссылкам видно, что сайт из нашей базы,
       // пытаемся определить группу по большинству совпавших ссылок.
-      var effectiveGroup=currentGroup;
+      effectiveGroup=currentGroup;
       if(!effectiveGroup && slugIndexReliable){
         var groupCounts={};
         internalRecords.forEach(function(r){
@@ -595,7 +597,7 @@
 
       // Итоговое решение: включаем slug-check, если есть язык + определена группа (явно или по ссылкам)
       // и база действительно покрывает сайт.
-      var effectiveEnableSlugChecks=Boolean(slugIndex && codeIndex && expectedLang && effectiveGroup && (enableSlugChecks || slugIndexReliable));
+      effectiveEnableSlugChecks=Boolean(slugIndex && codeIndex && expectedLang && effectiveGroup && (enableSlugChecks || slugIndexReliable));
 
       internalRecords.forEach(function(rec){
         if(!rec)return;
